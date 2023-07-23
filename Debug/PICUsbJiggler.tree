@@ -1,10 +1,20 @@
 // SourceBoost Linker Call Tree Dump
 
 _startup:"NoSourceFile",line = 0
-{  main:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 88
+{  main:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 91
   {    initialise:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 47
-    {    }    delay_ms:"NoSourceFile",line = 0
-    {    }  }}interrupt:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 80
+    {      timer_setup_0:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_timer.c",line = 26
+      {      }      turn_usb_ints_on:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 738
+      {      }      timer_start_0:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_timer.c",line = 66
+      {      }    }    tick_get_count:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_tick.c",line = 18
+    {    }    tick_calc_diff:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_tick.c",line = 32
+    {    }    usb_get_state:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 813
+    {    }    usb_send_data:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 188
+    {      serial_print_str:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 255
+      {        serial_putc:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 129
+        {          serial_tx_isr:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 173
+          {          }        }      }    }    delay_ms:"NoSourceFile",line = 0
+    {    }  }}interrupt:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 83
 {  usb_handle_isr:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 710
   {    usb_handle_transaction:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 424
     {      serial_print_str:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 255
@@ -245,6 +255,9 @@ _startup:"NoSourceFile",line = 0
     {      serial_print_str:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 255
       {        serial_putc:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 129
         {          serial_tx_isr:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 173
-          {          }        }      }    }  }  timer_0_callback:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 73
+          {          }        }      }    }  }  timer_0_callback:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 76
   {    handle_tick:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_tick.c",line = 40
+    {    }  }}serial_print_str:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 255
+{  serial_putc:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 129
+  {    serial_tx_isr:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 173
     {    }  }}

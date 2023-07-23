@@ -17,36 +17,43 @@ Address  Length   Unique Name      Name
 00000008:00000004 _interruptVector _interruptVector  
 0000000C:00000068 delay_ms_00000   delay_ms(unsigned char)  
 00000074:0000003A serial_tx__0000D serial_tx_isr(void)  
-000000AE:0000005E serial_put_00010 serial_putc(unsigned char)  
-0000010C:0000002A serial_pri_00012 serial_print_str(unsigned char*)  
-00000136:00000052 __rem_16_1_00006 __rem_16_16(unsigned short,unsigned short)  
-00000188:00000052 __div_16_1_00005 __div_16_16(unsigned short,unsigned short)  
-000001DA:000000DA usb_send_d_0003D usb_send_data_chunk(void)  
-000002B4:0000000C serial_pri_00018 serial_print_spc(void)  
-000002C0:00000094 serial_pri_00014 serial_print_int(unsigned short)  
-00000354:0000000C usb_stall__00020 usb_stall_ep0(void)  
-00000360:00000038 usb_send_o_0003F usb_send_one_byte(unsigned char)  
-00000398:00000030 usb_send_e_0001F usb_send_empty_data_pkt(void)  
-000003C8:0000024C usb_get_de_00025 usb_get_descriptor_callback(unsigned char,unsigned char,unsigned char**,unsigned short*)  
-00000614:00000058 usb_config_0003E usb_configure_endpoints(void)  
-0000066C:00000040 serial_pri_00015 serial_print_int_hex(unsigned char)  
-000006AC:00000028 usb_prime__00040 usb_prime_ep0_out(void)  
-000006D4:000001CC usb_handle_00041 usb_handle_standard_request(struct _setup_data_packet)  
-000008A0:00000002 usb_handle_00024 usb_handle_class_ctrl_write_callback(unsigned char*,unsigned short)  
-000008A2:00000002 usb_handle_00023 usb_handle_class_ctrl_read_callback(void)  
-000008A4:000000BA usb_handle_00022 usb_handle_class_request_callback(struct _setup_data_packet)  
-0000095E:00000044 memcpy8_00000    memcpy8(void*,void*,unsigned char)  
-000009A2:00000032 usb_handle_0003C usb_handle_stall(void)  
-000009D4:0000006A usb_handle_0003B usb_handle_reset(void)  
-00000A3E:000005AE usb_handle_0003A usb_handle_transaction(void)  
-00000FEC:00000008 handle_tic_00032 handle_tick(void)  
-00000FF4:00000026 usb_handle_0001D usb_handle_isr(void)  
-0000101A:00000006 timer_0_ca_00038 timer_0_callback(void)  
-00001020:00000020 initialise_00000 initialise(void)  
-00001040:0000002A main             main(void)  
-0000106A:0000027C _startup_00000   _startup(void)  
-000012E6:0000004C interrupt        interrupt(void)  
-00001332:00006CCE *Unused Block 
+000000AE:0000006A serial_put_00010 serial_putc(unsigned char)  
+00000118:00000028 serial_pri_00012 serial_print_str(unsigned char*)  
+00000140:0000003C __rem_16_1_00006 __rem_16_16(unsigned short,unsigned short)  
+0000017C:0000003C __div_16_1_00005 __div_16_16(unsigned short,unsigned short)  
+000001B8:000000F0 usb_send_d_0003D usb_send_data_chunk(void)  
+000002A8:0000000C serial_pri_00018 serial_print_spc(void)  
+000002B4:0000007E serial_pri_00014 serial_print_int(unsigned short)  
+00000332:0000000C usb_stall__00020 usb_stall_ep0(void)  
+0000033E:0000003E usb_send_o_0003F usb_send_one_byte(unsigned char)  
+0000037C:00000030 usb_send_e_0001F usb_send_empty_data_pkt(void)  
+000003AC:00000232 usb_get_de_00025 usb_get_descriptor_callback(unsigned char,unsigned char,unsigned char**,unsigned short*)  
+000005DE:00000056 usb_config_0003E usb_configure_endpoints(void)  
+00000634:0000003E serial_pri_00015 serial_print_int_hex(unsigned char)  
+00000672:00000028 usb_prime__00040 usb_prime_ep0_out(void)  
+0000069A:000001F6 usb_handle_00041 usb_handle_standard_request(struct _setup_data_packet)  
+00000890:00000002 usb_handle_00024 usb_handle_class_ctrl_write_callback(unsigned char*,unsigned short)  
+00000892:00000002 usb_handle_00023 usb_handle_class_ctrl_read_callback(void)  
+00000894:000000B2 usb_handle_00022 usb_handle_class_request_callback(struct _setup_data_packet)  
+00000946:0000005E memcpy8_00000    memcpy8(void*,void*,unsigned char)  
+000009A4:00000032 usb_handle_0003C usb_handle_stall(void)  
+000009D6:0000006C usb_handle_0003B usb_handle_reset(void)  
+00000A42:0000062A usb_handle_0003A usb_handle_transaction(void)  
+0000106C:00000008 handle_tic_00032 handle_tick(void)  
+00001074:00000026 usb_handle_0001D usb_handle_isr(void)  
+0000109A:00000006 timer_0_ca_00038 timer_0_callback(void)  
+000010A0:0000000A turn_usb_i_0002F turn_usb_ints_on(void)  
+000010AA:0000000E timer_star_00036 timer_start_0(void)  
+000010B8:0000002C timer_setu_00033 timer_setup_0(bit,unsigned char,unsigned short)  
+000010E4:000000FA usb_send_d_0001E usb_send_data(unsigned char,unsigned char*,unsigned char,bit)  
+000011DE:00000008 usb_get_st_00021 usb_get_state(void)  
+000011E6:00000028 tick_get_c_00030 tick_get_count(void)  
+0000120E:00000042 tick_calc__00031 tick_calc_diff(unsigned short,unsigned short)  
+00001250:00000038 initialise_00000 initialise(void)  
+00001288:000000AA main             main(void)  
+00001332:0000027C _startup_00000   _startup(void)  
+000015AE:0000004C interrupt        interrupt(void)  
+000015FA:00006A06 *Unused Block 
 
 Register usage
 ==============
@@ -62,74 +69,94 @@ Address  Bit Lengh Bit Mask   Unique Name                      Name
 00000078:000000A0             gbl_string_02                    string_02
 0000008C:00000090             gbl_my_device_descriptor         my_device_descriptor
 0000009E:00000040             gbl_usb_sdp                      usb_sdp
-000000A6:00000020             gbl_ep_out_bd_location           ep_out_bd_location
-000000AA:00000020             gbl_ep_in_buffer_location        ep_in_buffer_location
-000000AE:00000020             gbl_ep_out_buffer_location       ep_out_buffer_location
-000000B2:00000020             gbl_ep_in_buffer_size            ep_in_buffer_size
-000000B6:00000020             gbl_ep_out_buffer_size           ep_out_buffer_size
-000000BA:00000020             gbl_string_00                    string_00
-000000BE:00000010             gbl_22_tick                      tick
-000000C0:00000010             gbl_timer_0_start_value          timer_0_start_value
-000000C2:00000010             gbl_delivery_bytes_to_send       delivery_bytes_to_send
-000000C4:00000010             gbl_delivery_bytes_max_send      delivery_bytes_max_send
-000000C6:00000010             gbl_delivery_bytes_sent          delivery_bytes_sent
-000000C8:00000010             gbl_delivery_ptr                 delivery_ptr
-000000CA:00000010             gbl_delivery_buffer              delivery_buffer
-000000CC:00000010             gbl_delivery_bd                  delivery_bd
-000000CE:00000001  0b00000010 gbl_receive                      receive
-000000CF:00000008             gbl_do_task                      do_task
-000000D0:00000008             gbl_send_to                      send_to
-000000D1:00000008             gbl_tx_start                     tx_start
-000000D2:00000008             gbl_tx_end                       tx_end
-000000D3:00000008             gbl_rx_start                     rx_start
-000000D4:00000008             gbl_rx_end                       rx_end
-000000D5:00000008             gbl_usb_state                    usb_state
-000000D6:00000008             gbl_usb_address                  usb_address
-000000D7:00000008             gbl_control_mode                 control_mode
-000000D8:00000008             gbl_delivery_buffer_size         delivery_buffer_size
-000000D9:00000008             gbl_usb_status                   usb_status
-000000DA:00000008             gbl_buffer_byte                  buffer_byte
-000000DB:00000008             CompGblVar105                   
-000000DC:00000008             CompGblVar106                   
-000000DD:00000008             CompGblVar107                   
-000000DE:00000008             delay_ms_00000_arg_del           del
-000000DF:00000050             CompTempVar911                  
-000000E0:00000008             usb_handle_0003A_1_pid           pid
-000000E1:00000010             usb_handle_00024_arg_data        data
-000000E2:00000008             CompTempVar860                  
-000000E3:00000010             usb_handle_00024_arg_count       count
-000000E4:00000040             usb_handle_00022_arg_sdp         sdp
-000000E5:00000008             CompTempVar872                  
-000000E6:00000008             CompTempVar873                  
-000000E7:00000030             CompTempVar874                  
-000000E8:00000008             memcpy8_00000_arg_len            len
-000000E9:00000010             memcpy8_00000_1_dst2             dst2
-000000EB:00000010             memcpy8_00000_1_src2             src2
-000000ED:00000008             CompTempVar568                  
-000000EF:00000008             usb_handle_00041_1_descrip_00042 descriptor_type
-000000F0:00000008             usb_handle_00041_1_descrip_00043 descriptor_num
-000000F1:00000008             usb_get_de_00025_arg_descr_00026 descriptor_type
-000000F2:00000008             usb_get_de_00025_arg_descr_00027 descriptor_num
-000000F3:00000010             usb_get_de_00025_arg_rtn_d_00028 rtn_descriptor_ptr
-000000F5:00000010             usb_get_de_00025_arg_rtn_d_00029 rtn_descriptor_size
-000000F7:00000010             usb_get_de_00025_1_descrip_00048 descriptor_ptr
-000000F9:00000010             usb_get_de_00025_1_descrip_00049 descriptor_size
-000000FB:00000008             CompTempVar1010                 
-000000FD:00000008             serial_pri_00014_1_count         count
-000000FE:00000008             serial_put_00010_arg_c           c
-000000FF:00000008             serial_put_00010_1_tx_next       tx_next
+000000A6:00000020             gbl_ep_in_bd_location            ep_in_bd_location
+000000AA:00000020             gbl_ep_out_bd_location           ep_out_bd_location
+000000AE:00000020             gbl_ep_in_buffer_location        ep_in_buffer_location
+000000B2:00000020             gbl_ep_out_buffer_location       ep_out_buffer_location
+000000B6:00000020             gbl_ep_in_buffer_size            ep_in_buffer_size
+000000BA:00000020             gbl_ep_out_buffer_size           ep_out_buffer_size
+000000BE:00000020             gbl_string_00                    string_00
+000000C2:00000010             gbl_22_tick                      tick
+000000C4:00000010             gbl_timer_0_start_value          timer_0_start_value
+000000C6:00000010             gbl_delivery_bytes_to_send       delivery_bytes_to_send
+000000C8:00000010             gbl_delivery_bytes_max_send      delivery_bytes_max_send
+000000CA:00000010             gbl_delivery_bytes_sent          delivery_bytes_sent
+000000CC:00000010             gbl_delivery_ptr                 delivery_ptr
+000000CE:00000010             gbl_delivery_buffer              delivery_buffer
+000000D0:00000010             gbl_delivery_bd                  delivery_bd
+000000D2:00000001  0b00000010 gbl_receive                      receive
+000000D3:00000008             gbl_do_task                      do_task
+000000D4:00000008             gbl_send_to                      send_to
+000000D5:00000008             gbl_tx_start                     tx_start
+000000D6:00000008             gbl_tx_end                       tx_end
+000000D7:00000008             gbl_rx_start                     rx_start
+000000D8:00000008             gbl_rx_end                       rx_end
+000000D9:00000008             gbl_usb_state                    usb_state
+000000DA:00000008             gbl_usb_address                  usb_address
+000000DB:00000008             gbl_control_mode                 control_mode
+000000DC:00000008             gbl_delivery_buffer_size         delivery_buffer_size
+000000DD:00000008             gbl_usb_status                   usb_status
+000000DE:00000008             gbl_buffer_byte                  buffer_byte
+000000DF:00000008             CompGblVar105                   
+000000E0:00000008             CompGblVar106                   
+000000E1:00000008             CompGblVar107                   
+000000E2:00000010             main_1_tick_marker               tick_marker
+000000E4:00000010             main_1_test_tick                 test_tick
+000000E6:00000008             main_1_left_count                left_count
+000000E7:00000008             main_1_check_count               check_count
+000000E8:00000018             main_1_buffer                    buffer
+000000EB:00000008             delay_ms_00000_arg_del           del
+000000EC:00000008             usb_send_d_0001E_arg_ep          ep
+000000ED:00000010             usb_send_d_0001E_arg_data        data
+000000EE:00000010             CompTempVarRet840                $ret
+000000EF:00000008             usb_send_d_0001E_arg_send_count  send_count
+000000F0:00000001  0b00000001 usb_send_d_0001E_arg_first       first
+000000F1:00000008             usb_send_d_0001E_1_count         count
+000000F2:00000010             usb_send_d_0001E_1_bd            bd
+000000F3:00000008             CompTempVar849                  
+000000F4:00000010             usb_send_d_0001E_1_buffer        buffer
+000000F6:00000008             CompTempVar933                  
+000000F7:00000008             CompTempVar932                  
+000000F8:00000020             CompTempVar917                  
+000000F9:00000008             usb_handle_0003A_1_pid           pid
+000000FA:00000010             usb_handle_00024_arg_data        data
+000000FB:00000008             CompTempVar868                  
+000000FC:00000010             usb_handle_00024_arg_count       count
+000000FD:00000010             CompTempVar916                  
+000000FE:00000008             CompTempVar880                  
+000000FF:00000008             CompTempVar881                  
 00000100:000007F0             gbl_tx_buffer                    tx_buffer
-000001FE:00000001  0b00000001 serial_put_00010_1_my_store_gie  my_store_gie
-000001FF:00000008             serial_tx__0000D_1_tx_next       tx_next
-00000200:00000058             CompTempVar1013                 
-00000206:00000008             CompTempVar817                  
-00000207:00000008             CompTempVar818                  
-00000208:00000008             CompTempVar819                  
-00000209:00000010             __rem_16_1_00006_1_c             c
-0000020A:00000010             CompTempVarRet347                $ret
-0000020B:00000008             __rem_16_1_00006_1_i             i
-0000020C:00000008             CompTempVar352                  
-0000020D:00000010             CompTempVarRet350                $ret
+000001FE:00000008             usb_handle_00041_1_descrip_00042 descriptor_type
+000001FF:00000008             usb_handle_00041_1_descrip_00043 descriptor_num
+00000200:00000088             CompTempVar927                  
+00000211:00000040             usb_handle_00022_arg_sdp         sdp
+00000213:00000010             memcpy8_00000_1_src2             src2
+00000215:00000008             CompTempVar568                  
+00000219:00000058             CompTempVar1021                 
+0000021A:00000008             usb_get_de_00025_arg_descr_00027 descriptor_num
+0000021B:00000010             usb_get_de_00025_arg_rtn_d_00028 rtn_descriptor_ptr
+0000021D:00000010             usb_get_de_00025_arg_rtn_d_00029 rtn_descriptor_size
+0000021F:00000010             usb_get_de_00025_1_descrip_00048 descriptor_ptr
+00000221:00000010             usb_get_de_00025_1_descrip_00049 descriptor_size
+00000223:00000008             CompTempVar1018                 
+00000225:00000030             serial_pri_00014_1_buffer        buffer
+0000022B:00000008             serial_pri_00014_1_count         count
+0000022C:00000010             __rem_16_1_00006_arg_a           a
+0000022E:00000010             __rem_16_1_00006_arg_b           b
+00000230:00000008             CompTempVar825                  
+00000231:00000008             CompTempVar826                  
+00000232:00000008             CompTempVar827                  
+00000233:00000010             __rem_16_1_00006_1_c             c
+00000234:00000010             CompTempVarRet347                $ret
+00000235:00000008             __rem_16_1_00006_1_i             i
+00000236:00000008             CompTempVar352                  
+00000237:00000010             CompTempVarRet350                $ret
+0000023E:00000010             serial_pri_00012_arg_str         str
+00000240:00000008             serial_pri_00012_1_count         count
+00000241:00000008             serial_put_00010_arg_c           c
+00000242:00000008             serial_put_00010_1_tx_next       tx_next
+00000243:00000001  0b00000001 serial_put_00010_1_my_store_gie  my_store_gie
+00000244:00000008             serial_tx__0000D_1_tx_next       tx_next
 00000400:00000020             gbl_bd0out                       bd0out
 00000404:00000020             gbl_bd0in                        bd0in
 00000408:00000020             gbl_bd1out                       bd1out
@@ -285,6 +312,6 @@ Address  Bit Lengh Bit Mask   Unique Name                      Name
 
 Memory Usage Report
 ===================
-RAM available:2048 bytes, used:645 bytes (31.5%), free:1403 bytes (68.5%), 
+RAM available:2048 bytes, used:669 bytes (32.7%), free:1379 bytes (67.3%), 
 Heap size:744 bytes, Heap max single alloc:127 bytes
-ROM available:32768 bytes, used:4914 bytes (15.0%), free:27854 bytes (85.0%)
+ROM available:32768 bytes, used:5626 bytes (17.2%), free:27142 bytes (82.8%)

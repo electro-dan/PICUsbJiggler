@@ -62,11 +62,14 @@ void initialise() {
 
     intcon2.RBPU = 0; // Port B pull-ups enabled
 
-    intcon.PEIE = 1; // Enables all unmasked peripheral interrupts
     
-    LED = 1; // Standby LED
+    timer_setup_0(TIMER_16BIT_MODE, TIMER_PRESCALER_OFF, 59530); // close enough to 1ms at 24Mhz
 
+	turn_usb_ints_on();
+    intcon.PEIE = 1; // Enables all unmasked peripheral interrupts
     intcon.GIE = 1;
+    
+    timer_start_0();
 }
 
 // Interrupt routine - - - - - - - - - -
@@ -88,7 +91,31 @@ void interrupt(void) {
 void main() {
     initialise();
     
+    uns16 tick_marker = 0;
+	uns16 test_tick;
+	uns8 left_count = 0;
+	uns8 check_count = 0;
+	signed char buffer[3];
+    
     while (1) {
+		test_tick = tick_get_count();	// find out what we're up to
+		if (tick_calc_diff(tick_marker, test_tick) > 3) {	// every 3 ms
+			tick_marker = test_tick;
+			left_count++;
+			check_count++;
+			if (check_count == 5) {
+				check_count = 0;
+				if (usb_get_state() == st_CONFIGURED) {
+					buffer[0] = 0;
+					buffer[1] = 0 - left_count;	
+					buffer[2] = 0;
+					if (buffer[0] | buffer[1] | buffer[2])
+						usb_send_data(1, (uns8 *)&buffer, 3, /*first*/ 0); // ep 1
+				}
+				left_count = 0;
+				check_count = 0;
+			}	
+		}
         if (isJiggling) {
 			// Emit random movement
 			

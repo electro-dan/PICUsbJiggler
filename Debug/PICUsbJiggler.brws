@@ -1257,7 +1257,7 @@ intcon	C:\Program Files\SourceBoost\Include\pic18F2550.h	1317;"	v
 intcon2	C:\Program Files\SourceBoost\Include\pic18F2550.h	1316;"	v
 intcon3	C:\Program Files\SourceBoost\Include\pic18F2550.h	1315;"	v
 interface_descriptor	pic_pack_lib\pic_usb.h	306;"	t
-interrupt	PICUsbJiggler.c	80;"	f
+interrupt	PICUsbJiggler.c	83;"	f
 ipr1	C:\Program Files\SourceBoost\Include\pic18F2550.h	1232;"	v
 ipr2	C:\Program Files\SourceBoost\Include\pic18F2550.h	1235;"	v
 isJiggling	PICUsbJiggler.h	7;"	v
@@ -1267,7 +1267,7 @@ latb	C:\Program Files\SourceBoost\Include\pic18F2550.h	1219;"	v
 latc	C:\Program Files\SourceBoost\Include\pic18F2550.h	1220;"	v
 late	C:\Program Files\SourceBoost\Include\pic18F2550.h	1221;"	v
 lvdcon	C:\Program Files\SourceBoost\Include\pic18F2550.h	1286;"	v
-main	PICUsbJiggler.c	88;"	f
+main	PICUsbJiggler.c	91;"	f
 make_input	pic_pack_lib\pic_utils.h	159;"	d
 make_output	pic_pack_lib\pic_utils.h	158;"	d
 mouse_report_descriptor	pic_pack_lib\usb_config_mouse.c	37;"	v
@@ -1403,7 +1403,7 @@ test_pin_var	pic_pack_lib\pic_utils.h	149;"	d
 tick	pic_pack_lib\pic_tick.h	20;"	v
 tick_calc_diff	pic_pack_lib\pic_tick.c	32;"	f
 tick_get_count	pic_pack_lib\pic_tick.c	18;"	f
-timer_0_callback	PICUsbJiggler.c	73;"	f
+timer_0_callback	PICUsbJiggler.c	76;"	f
 timer_0_start_value	pic_pack_lib\pic_timer.c	19;"	v
 timer_0_start_value	pic_pack_lib\pic_timer.c	22;"	v
 timer_handle_0_isr	pic_pack_lib\pic_timer.h	84;"	f
