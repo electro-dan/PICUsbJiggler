@@ -1,0 +1,43 @@
+[Settings]
+Active Directory=Z:\home\dan\PIC\PICUsbJiggler\
+Target=PIC18F2550
+Active Compiler=BoostC
+Active Config=Debug
+Last Ext=c
+Type=0
+Warnings=1
+Model=0
+Config=1
+[Files]
+Count=19
+File0=PICUsbJiggler.c
+File1=PICUsbJiggler.h
+File2=pic_pack_lib\config.h
+File3=pic_pack_lib\pic_serial.c
+File4=pic_pack_lib\pic_serial.h
+File5=pic_pack_lib\pic_tick.c
+File6=pic_pack_lib\pic_tick.h
+File7=pic_pack_lib\pic_timer.c
+File8=pic_pack_lib\pic_timer.h
+File9=pic_pack_lib\pic_usb.c
+File10=pic_pack_lib\pic_usb.h
+File11=pic_pack_lib\pic_usb_buffer_mgt.c
+File12=pic_pack_lib\pic_usb_buffer_mgt.h
+File13=pic_pack_lib\pic_utils.c
+File14=pic_pack_lib\pic_utils.h
+File15=pic_pack_lib\platform.h
+File16=pic_pack_lib\usb_config_mouse.c
+File17=pic_pack_lib\usb_hid_class.c
+File18=pic_pack_lib\usb_hid_class.h
+[Compiler]
+Extra=-I "pic_pack_lib"
+[Browse]
+Count=1
+[Workspace]
+Brws0=Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib
+[Tools]
+BoostDir=C:\Program Files\SourceBoost\
+Programmer=
+PrefixWithBuildThreadNum=0
+[Debugger]
+DebugFromMain=1

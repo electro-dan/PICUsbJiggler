@@ -1,0 +1,35 @@
+// SourceBoost Linker Function Resource Usage Dump
+
+#GLOBAL:"global",line = 0,ram = 474.2,rom = 0;
+__div_16_16(unsigned short,unsigned short):"C:\Temp\div.c",line = 116,ram = 10.0,rom = 82;
+__rem_16_16(unsigned short,unsigned short):"C:\Temp\div.c",line = 145,ram = 10.0,rom = 82;
+memcpy8(void*,void*,unsigned char):"C:\Temp\string.c",line = 1338,ram = 11.0,rom = 68;
+timer_0_callback(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 74,ram = 0.0,rom = 6;
+initialise(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 49,ram = 0.0,rom = 32;
+interrupt(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 81,ram = 2.0,rom = 76;
+main(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 89,ram = 0.0,rom = 42;
+serial_tx_isr(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 177,ram = 1.0,rom = 58;
+serial_putc(unsigned char):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 137,ram = 2.1,rom = 94;
+serial_print_str(unsigned char*):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 259,ram = 3.0,rom = 42;
+serial_print_int(unsigned short):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 282,ram = 12.0,rom = 148;
+serial_print_int_hex(unsigned char):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 302,ram = 2.0,rom = 64;
+serial_print_spc(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_serial.c",line = 314,ram = 0.0,rom = 12;
+handle_tick(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_tick.c",line = 41,ram = 0.0,rom = 8;
+usb_handle_isr(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 712,ram = 0.0,rom = 38;
+usb_handle_transaction(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 428,ram = 47.0,rom = 1454;
+usb_handle_reset(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 654,ram = 4.0,rom = 106;
+usb_handle_stall(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 704,ram = 10.0,rom = 50;
+usb_send_empty_data_pkt(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 289,ram = 0.0,rom = 48;
+usb_send_data_chunk(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 237,ram = 18.0,rom = 218;
+usb_stall_ep0(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 181,ram = 0.0,rom = 12;
+usb_configure_endpoints(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 46,ram = 12.0,rom = 88;
+usb_send_one_byte(unsigned char):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 303,ram = 1.0,rom = 56;
+usb_prime_ep0_out(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 318,ram = 0.0,rom = 40;
+usb_handle_standard_request(struct _setup_data_packet):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 337,ram = 20.0,rom = 460;
+usb_get_descriptor_callback(unsigned char,unsigned char,unsigned char**,unsigned short*):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\usb_config_mouse.c",line = 159,ram = 36.0,rom = 588;
+usb_handle_class_request_callback(struct _setup_data_packet):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\usb_hid_class.c",line = 36,ram = 24.0,rom = 186;
+usb_handle_class_ctrl_read_callback(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\usb_hid_class.c",line = 30,ram = 0.0,rom = 2;
+usb_handle_class_ctrl_write_callback(unsigned char*,unsigned short):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\usb_hid_class.c",line = 33,ram = 0.0,rom = 2;
+delay_ms(unsigned char):"NoSourceFile",line = 0,ram = 0.0,rom = 104;
+_startup(void):"NoSourceFile",line = 0,ram = 0.0,rom = 636;
+#HEAP_BLOCK: 0, 1304, 744;
