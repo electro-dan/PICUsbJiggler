@@ -17,11 +17,6 @@
 #include "config.h"
 #include "pic_usb_buffer_mgt.h"
 
-#ifdef USB_DEBUG
-	#include "pic_serial.h"
-#endif
-
-
 // globally accessable variables
 
 usb_state_type usb_state = st_POWERED;
@@ -42,9 +37,6 @@ usb_status_type usb_status;
 
 void usb_configure_endpoints() {
 	
-#ifdef USB_DEBUG
-	serial_print_str("Config eps ");
-#endif	
 #ifdef USB_EP1
 	set_bit  (uep1, EPHSHK);	// EP handshaking on
 	#ifdef USB_EP1_OUT_SIZE
@@ -198,9 +190,6 @@ uns8 *buffer;
 	bd = ep_in_bd_location[ep];
 	
 	if (test_bit(bd->stat, UOWN)) {
-	#ifdef USB_DEBUG
-		serial_print_str(" !don't own it! ");
-	#endif
 		return;
 	}
 	
@@ -235,9 +224,6 @@ void usb_send_data_chunk() {
 uns8 count;
 
 	if (test_bit(bd0in.stat, UOWN)) {
-	#ifdef USB_DEBUG
-		serial_print_str(" !don't own it! ");
-	#endif
 		return;
 	}
 
@@ -314,9 +300,6 @@ void usb_send_one_byte(uns8 data) {
 }
 
 void usb_prime_ep0_out() {
-	#ifdef USB_DEBUG
-		serial_putc('P');
-	#endif
 	bd0out.count = USB_EP0_OUT_SIZE;
 	bd0out.addr = USB_EP0_OUT_ADDR;
 	//changed from clear to set
@@ -336,14 +319,8 @@ void usb_handle_standard_request(setup_data_packet sdp) {
 
 	switch (sdp.bRequest) {
 		case req_Get_Descriptor:
-			#ifdef USB_DEBUG
-				serial_print_str(" GD: ");
-			#endif
 			uns8 descriptor_type = sdp.wValue >> 8; // high byte is descriptor
 			uns8 descriptor_num  = sdp.wValue & 0xff; // low byte is particular descriptor
-			#ifdef USB_DEBUG
-				serial_print_int(descriptor_type);
-			#endif
 			usb_get_descriptor_callback(descriptor_type, descriptor_num, &delivery_ptr, &delivery_bytes_to_send);
 			if (delivery_ptr != 0) {	// we've got something
 				control_mode = cm_CTRL_READ_DATA_STAGE;
@@ -355,19 +332,12 @@ void usb_handle_standard_request(setup_data_packet sdp) {
 				clear_bit(bd0in.stat, DTS);	// ready to get toggled
 				usb_send_data_chunk();
 			} else {
-				#ifdef USB_DEBUG
-					serial_print_str(" <stall> ");
-				#endif
 				usb_stall_ep0();
 			}
 		
 			break;
 		case req_Set_Address:
 			usb_address = sdp.wValue & 0xff;
-			#ifdef USB_DEBUG
-				serial_print_str(" SA:");
-				serial_print_int_hex(usb_address);
-			#endif 				
 			usb_status = us_SET_ADDRESS;
 			
 			// Send a status ack - when we confirm that, THEN change address
@@ -375,10 +345,6 @@ void usb_handle_standard_request(setup_data_packet sdp) {
 			control_mode = cm_CTRL_WRITE_SENDING_STATUS;
 			break;
 		case req_Set_Configuration:
-			#ifdef USB_DEBUG
-				serial_print_str(" SC: ");
-			#endif 			
-
 			//sdp.wValue & 0xff; // MORE WORK see p136
 			control_mode = cm_CTRL_WRITE_SENDING_STATUS;
 			usb_send_status_ack();
@@ -393,30 +359,16 @@ void usb_handle_standard_request(setup_data_packet sdp) {
 			#endif	
 			break;
 		case req_Get_Interface:
-				#ifdef USB_DEBUG
-					serial_print_str(" GI ");
-				#endif	
 				control_mode = cm_CTRL_READ_DATA_STAGE;
 				usb_send_one_byte(1);
 		case req_Get_Status:
 				// this is wrong - needs to send two bytes !!
-				#ifdef USB_DEBUG				
-					serial_print_str(" GS ");
-				#endif
-
 				#ifdef USB_SELF_POWERED
 					usb_send_one_byte(1);
 				#else
 					usb_send_one_byte(0);	// bus powered
 				#endif
-				break;	
-		default:
-			#ifdef USB_DEBUG
-				serial_print_str(" ??SR ");		
-				serial_print_int(sdp.bRequest);
-			#endif
-			break;
-			
+				break;			
 	}	
 }	
 
@@ -428,118 +380,43 @@ uns8 end_point, pid;
 	end_point = ustat >> 3;
 	
 	if (test_bit(ustat, DIR)) {
-		#ifdef USB_DEBUG			
-			serial_print_str("\nDI ");
-		#endif			
 		pid = (bd0in.stat >> 2) & 0x0f;	// mask out pid
 
 	} else {
-		pid = (bd0out.stat >> 2) & 0x0f;	// mask out pid
-		#ifdef USB_DEBUG			
-			serial_print_str("\nDO ");
-		#endif
-		#ifdef USB_DEBUG_HIGH
-			serial_print_int(bd0out.count);
-			serial_print_spc();
-		#endif	
-	
+		pid = (bd0out.stat >> 2) & 0x0f;	// mask out pid	
 	}
-	#ifdef USB_DEBUG
-		if (end_point != 0) {
-			serial_putc('E');
-			serial_print_int_hex(end_point);
-			serial_print_spc();
-		}
-	#endif		
 	
 	if (end_point == 0) {
-		#ifdef USB_DEBUG_HIGH
-			serial_print_str(" bytes: ");
-			serial_print_int(bd0out.count);
-		#endif
 		if (pid == pid_SETUP) {
 			memcpy(/*dst*/ (void*)&usb_sdp, /*src*/ (void *)&buffer_0_out, 8);
 			usb_prime_ep0_out();
-			#ifdef USB_DEBUG
-				serial_print_str(" Setup ");
-				serial_print_int_hex(usb_sdp.bmRequestType);
-				serial_putc(' ');
-				if (test_bit(usb_sdp.bmRequestType, DATA_STAGE_DIR)) {
-					serial_print_str(" Data stage=IN ");
-				} else {
-					serial_print_str(" Data stage=OUT/NO ");
-				}
-			#endif
-			//serial_print_str(" len: ");
-			//serial_print_int(usb_sdp.wLength);	
-			// Is it a standard request?
-			//serial_putc('\\');
 			
 			if (!test_bit(usb_sdp.bmRequestType, REQUEST_TYPE1) && // std request
 			    !test_bit(usb_sdp.bmRequestType, REQUEST_TYPE0)) {
-				//serial_print_str(" Std req ");
-				if ((usb_sdp.bmRequestType & 0b00011111) == 0) {
-					//serial_print_str(" 2dev ");
-				} else if ((usb_sdp.bmRequestType & 0b00011111) == 1) {	
-					//serial_print_str(" 2int ");
-				} else if ((usb_sdp.bmRequestType & 0b00011111) == 0b00011) {	
-					//serial_print_str(" 2oth ");
-				}
-				#ifdef USB_DEBUG
-					serial_print_str(" std ");
-				#endif	
 				usb_handle_standard_request(usb_sdp);	
 			} else if (!test_bit(usb_sdp.bmRequestType, REQUEST_TYPE1) && // class request
 					test_bit(usb_sdp.bmRequestType, REQUEST_TYPE0)) {
-					#ifdef USB_DEBUG
-						serial_print_str(" class ");
-					#endif
 				#ifdef USB_CALLBACK_ON_CLASS_CTRL
 					usb_handle_class_request_callback(usb_sdp);
-				#endif	
-			} else {
-				//serial_print_str(" req no ");
-				//serial_print_int(usb_sdp.bRequest);
-				// serial_print_spc();
-				#ifdef USB_DEBUG
-					serial_print_str(" ??req t=");
-					serial_print_int(usb_sdp.bmRequestType);
-					serial_putc(' ');
 				#endif	
 			}
 			clear_bit(ucon, PKTDIS);	// Trap for young players right there - and do it early!
 
 		} else if (pid == pid_IN) {
-			#ifdef USB_DEBUG
-				serial_print_str(" IN ");
-			#endif
 			if (control_mode == cm_CTRL_READ_DATA_STAGE) {
 				// it's ours, so send next chunk
 				usb_send_data_chunk();
 			} else if (control_mode == cm_CTRL_WRITE_SENDING_STATUS) {
-				//serial_print_str("std ");
 				control_mode = cm_IDLE;
 				if (usb_status == us_SET_ADDRESS) {
-					//serial_print_str(" addr to ");
 					usb_state = st_ADDRESS;
 					uaddr = usb_address;
-					//serial_print_int(uaddr);
-					//serial_putc('!');
 					usb_status = us_IDLE;
 				}
-				#ifdef USB_DEBUG
-					serial_print_str(" ----\n");
-				#endif	
 			} else if (control_mode == cm_CTRL_READ_AWAITING_STATUS) {
 				// Must have been last IN of the read, so still waiting for status
-				#ifdef USB_DEBUG
-					//serial_print_str(" last read, waiting status");
-				#endif	
 				nop(); // boostc bug
 			} else if (control_mode == cm_CTRL_READ_DATA_STAGE_CLASS) {
-				#ifdef USB_DEBUG
-					serial_print_str(" ctrl read data stage class - more to come? ");
-				#endif	
 				// Must be more to come
 				#ifdef USB_CALLBACK_ON_CLASS_CTRL
 					usb_handle_class_ctrl_read_callback();
@@ -547,23 +424,10 @@ uns8 end_point, pid;
 					nop(); // otherwise boostc bug
 				#endif	
 			} else {
-				#ifdef USB_DEBUG
-					serial_print_str(" ?? cm=");
-					serial_print_int((uns8)control_mode);
-					serial_print_spc();
-				#else
-					nop(); // boostc bug
-				#endif	
-					
+				nop(); // boostc bug
 			}
 		} else if (pid == pid_ACK) {
-			#ifdef USB_DEBUG
-				serial_print_str("****A\n");
-			#endif
 			if (control_mode == cm_CTRL_READ_DATA_STAGE) {	
-				#ifdef USB_DEBUG
-					serial_print_str(" &2 ");
-				#endif
 				usb_send_data_chunk();
 			} else if (control_mode == cm_CTRL_READ_DATA_STAGE_CLASS) {
 				#ifdef USB_CALLBACK_ON_CLASS_CTRL
@@ -572,19 +436,12 @@ uns8 end_point, pid;
 					nop(); // boostc bug
 				#endif	
 			} else if (control_mode == cm_CTRL_WRITE_SENDING_STATUS) {
-				#ifdef USB_DEBUG
-					serial_print_str(" st sent ");
-				#endif
 				control_mode = cm_IDLE;
 			}	
 	
 		} else if (pid == pid_OUT) {
 			// We've done an out
-			//serial_print_str(" OUT ");
 			if (control_mode == cm_CTRL_READ_AWAITING_STATUS) {
-				#ifdef USB_DEBUG
-					serial_print_str(" ----\n");
-				#endif
 				control_mode = cm_IDLE;
 			} else if (control_mode == cm_CTRL_WRITE_DATA_STAGE_CLASS) {
 				#ifdef USB_CALLBACK_ON_CLASS_CTRL
@@ -595,22 +452,10 @@ uns8 end_point, pid;
 					nop(); // boostc bug
 				#endif	
 			} else if (control_mode == cm_CTRL_READ_DATA_STAGE) {
-				//serial_print_str(" Status early ");
 				control_mode = cm_IDLE;
-			} else {
-			
-				#ifdef USB_DEBUG
-					serial_print_str("??unk pid_OUT ");
-					serial_print_int((uns8)control_mode);
-				#endif	
 			}
 			usb_prime_ep0_out();
 				
-		} else {
-			#ifdef USB_DEBUG
-				serial_print_str(" UKPID = ");
-				serial_print_int(pid);
-			#endif	
 		}
 
 	} else {	// Not endpoint 0
@@ -693,16 +538,10 @@ void usb_handle_reset() {
 	
 	clear_bit(bd0in.stat, UOWN);	// uC owns the buffer
 
-	#ifdef USB_DEBUG
-		serial_print_str("\nR ");
-		serial_print_int_hex(uir);
-	#endif
 }
 	
 void usb_handle_stall() {
-	#ifdef USB_DEBUG
-		serial_print_str(" U:Stall ");
-	#endif
+
 }
 
 

@@ -14,7 +14,6 @@
 
 #include "pic_utils.h"
 #include "pic_usb.h"
-#include "pic_serial.h"
 
 
 device_descriptor my_device_descriptor = {
@@ -159,18 +158,14 @@ void usb_get_descriptor_callback(uns8 descriptor_type, uns8 descriptor_num,
 	descriptor_ptr = (uns8 *) 0;	// this means we didn't find it
 	switch (descriptor_type) {
 		case dt_DEVICE:
-			serial_print_str(" Device ");
 			descriptor_ptr = (uns8 *)&my_device_descriptor;
 			descriptor_size = sizeof(my_device_descriptor);
 			break;
 		case dt_CONFIGURATION:
-			serial_print_str(" Config ");
 			descriptor_ptr = (uns8 *) &complete_mouse_configuration;
 			descriptor_size = sizeof(complete_mouse_configuration);
 			break;
 		case dt_STRING:
-			serial_print_str(" String: ");
-			serial_print_int(descriptor_num);
 			switch (descriptor_num) {
 				case 00: 
 					descriptor_size = sizeof(string_00);
@@ -188,19 +183,12 @@ void usb_get_descriptor_callback(uns8 descriptor_type, uns8 descriptor_num,
 			}		
 			break;
 		case dt_DEVICE_QUALIFIER:
-			serial_print_str(" Device Qual (unhandled) ");
 			// we don't handle this, send a stall
 			break;
 		case dt_HID_REPORT:
-			serial_print_str(" HID Report ");
 			descriptor_size = sizeof(mouse_report_descriptor);
 			descriptor_ptr = (uns8 *) &mouse_report_descriptor;
-			break;
-		default:
-			serial_print_str("?? ");
-			serial_print_int(descriptor_type);
-			serial_print_spc();
-			
+			break;			
 	}
 	*rtn_descriptor_ptr = descriptor_ptr;
 	*rtn_descriptor_size = descriptor_size;		

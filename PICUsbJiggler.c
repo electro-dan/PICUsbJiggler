@@ -7,7 +7,6 @@ Requires http://embeddedadventures.blogspot.com/2009/01/picpack-20-released.html
 
 // Pic Pack includes
 #include "pic_pack_lib/pic_utils.h"
-#include "pic_pack_lib/pic_serial.h"
 #include "pic_pack_lib/pic_usb.h"
 #include "pic_pack_lib/pic_tick.h"
 #include "pic_pack_lib/pic_timer.h"
@@ -48,7 +47,7 @@ void initialise() {
     // IO ports setup
     trisa = 0x00; // all ouptuts
     porta = 0x00; // set to off
-    trisb = 0x01; // RB0 input
+    trisb = 0x04; // RB2 input
     portb = 0x00; // set to off
     trisc = 0x00; // all ouptuts
     portc = 0x00; // set to off
@@ -106,20 +105,19 @@ void main() {
 			if (check_count == 5) {
 				check_count = 0;
 				if (usb_get_state() == st_CONFIGURED) {
-					buffer[0] = 0;
-					buffer[1] = 0 - left_count;	
-					buffer[2] = 0;
-					if (buffer[0] | buffer[1] | buffer[2])
-						usb_send_data(1, (uns8 *)&buffer, 3, /*first*/ 0); // ep 1
+                    if (isJiggling) {
+                        // Emit random movement
+                        buffer[0] = 0;
+                        buffer[1] = 0 - left_count;	
+                        buffer[2] = 0;
+                        if (buffer[0] | buffer[1] | buffer[2])
+                            usb_send_data(1, (uns8 *)&buffer, 3, /*first*/ 0); // ep 1
+                    }
 				}
 				left_count = 0;
 				check_count = 0;
 			}	
 		}
-        if (isJiggling) {
-			// Emit random movement
-			
-        }
         // Check for button press
         if(BUTTON) {
 			delay_ms(100);

@@ -58,8 +58,6 @@ BOR	C:\Program Files\SourceBoost\Include\pic18F2550.h	855;"	d
 BRG16	C:\Program Files\SourceBoost\Include\pic18F2550.h	715;"	d
 BRG16	C:\Program Files\SourceBoost\Include\pic18F2550.h	726;"	d
 BRGH	C:\Program Files\SourceBoost\Include\pic18F2550.h	650;"	d
-BRGH_HIGH_SPEED	pic_pack_lib\pic_serial.h	292;"	d
-BRGH_LOW_SPEED	pic_pack_lib\pic_serial.h	293;"	d
 BSR	C:\Program Files\SourceBoost\Include\pic18F2550.h	140;"	d
 BSTALL	pic_pack_lib\pic_usb.h	166;"	d
 BTOEE	C:\Program Files\SourceBoost\Include\pic18F2550.h	223;"	d
@@ -102,7 +100,6 @@ CDC_ACM_functional_descriptor	pic_pack_lib\pic_usb.h	342;"	t
 CDC_call_mgt_functional_descriptor	pic_pack_lib\pic_usb.h	358;"	t
 CDC_header_functional_descriptor	pic_pack_lib\pic_usb.h	335;"	t
 CDC_union_functional_descriptor	pic_pack_lib\pic_usb.h	350;"	t
-CENTER_PIN	pic_pack_lib\config.h	25;"	d
 CFGS	C:\Program Files\SourceBoost\Include\pic18F2550.h	633;"	d
 CHS0	C:\Program Files\SourceBoost\Include\pic18F2550.h	771;"	d
 CHS1	C:\Program Files\SourceBoost\Include\pic18F2550.h	772;"	d
@@ -150,7 +147,6 @@ DFN8EE	C:\Program Files\SourceBoost\Include\pic18F2550.h	222;"	d
 DFN8EF	C:\Program Files\SourceBoost\Include\pic18F2550.h	214;"	d
 DIR	C:\Program Files\SourceBoost\Include\pic18F2550.h	228;"	d
 DONE	C:\Program Files\SourceBoost\Include\pic18F2550.h	775;"	d
-DOWN_PIN	pic_pack_lib\config.h	24;"	d
 DTASK_HANDLE	C:\Program Files\SourceBoost\Include\novo.h	76;"	t
 DTS	pic_pack_lib\pic_usb.h	162;"	d
 DTSEN	pic_pack_lib\pic_usb.h	165;"	d
@@ -368,7 +364,6 @@ IRVST	C:\Program Files\SourceBoost\Include\pic18F2550.h	868;"	d
 IRVST	C:\Program Files\SourceBoost\Include\pic18F2550.h	888;"	d
 IVRST	C:\Program Files\SourceBoost\Include\pic18F2550.h	879;"	d
 IVRST	C:\Program Files\SourceBoost\Include\pic18F2550.h	899;"	d
-JOY_PORT	pic_pack_lib\config.h	22;"	d
 KEN	pic_pack_lib\pic_usb.h	163;"	d
 LATA	C:\Program Files\SourceBoost\Include\pic18F2550.h	59;"	d
 LATA0	C:\Program Files\SourceBoost\Include\pic18F2550.h	442;"	d
@@ -395,7 +390,6 @@ LATC6	C:\Program Files\SourceBoost\Include\pic18F2550.h	464;"	d
 LATC7	C:\Program Files\SourceBoost\Include\pic18F2550.h	465;"	d
 LATE	C:\Program Files\SourceBoost\Include\pic18F2550.h	62;"	d
 LED	PICUsbJiggler.h	4;"	d
-LEFT_PIN	pic_pack_lib\config.h	26;"	d
 LOBYTE	C:\Program Files\SourceBoost\Include\boostc.h	39;"	d
 LVDCON	C:\Program Files\SourceBoost\Include\pic18F2550.h	127;"	d
 LVDEN	C:\Program Files\SourceBoost\Include\pic18F2550.h	878;"	d
@@ -486,8 +480,8 @@ PIE2	C:\Program Files\SourceBoost\Include\pic18F2550.h	74;"	d
 PIR1	C:\Program Files\SourceBoost\Include\pic18F2550.h	72;"	d
 PIR2	C:\Program Files\SourceBoost\Include\pic18F2550.h	75;"	d
 PKTDIS	C:\Program Files\SourceBoost\Include\pic18F2550.h	238;"	d
-PLATFORM_CLOCK	pic_pack_lib\config.h	18;"	d
-PLATFORM_TYPE	pic_pack_lib\config.h	17;"	d
+PLATFORM_CLOCK	pic_pack_lib\config.h	10;"	d
+PLATFORM_TYPE	pic_pack_lib\config.h	9;"	d
 PLUSW0	C:\Program Files\SourceBoost\Include\pic18F2550.h	151;"	d
 PLUSW1	C:\Program Files\SourceBoost\Include\pic18F2550.h	143;"	d
 PLUSW2	C:\Program Files\SourceBoost\Include\pic18F2550.h	135;"	d
@@ -608,7 +602,6 @@ REQUEST_TYPE0	pic_pack_lib\pic_usb.h	151;"	d
 REQUEST_TYPE1	pic_pack_lib\pic_usb.h	150;"	d
 RESUME	C:\Program Files\SourceBoost\Include\pic18F2550.h	236;"	d
 RI	C:\Program Files\SourceBoost\Include\pic18F2550.h	859;"	d
-RIGHT_PIN	pic_pack_lib\config.h	27;"	d
 RSEN	C:\Program Files\SourceBoost\Include\pic18F2550.h	781;"	d
 RUN_QUEUE_HEAD	C:\Program Files\SourceBoost\Include\novo.h	82;"	d
 RX	C:\Program Files\SourceBoost\Include\pic18F2550.h	428;"	d
@@ -630,8 +623,6 @@ SDO	C:\Program Files\SourceBoost\Include\pic18F2550.h	436;"	d
 SE0	C:\Program Files\SourceBoost\Include\pic18F2550.h	239;"	d
 SEN	C:\Program Files\SourceBoost\Include\pic18F2550.h	780;"	d
 SENDB	C:\Program Files\SourceBoost\Include\pic18F2550.h	651;"	d
-SERIAL_RX_BUFFER_SIZE	pic_pack_lib\config.h	11;"	d
-SERIAL_TX_BUFFER_SIZE	pic_pack_lib\config.h	10;"	d
 SFE_TDN_V1	pic_pack_lib\platform.h	15;"	d
 SLEEP_QUEUE_HEAD	C:\Program Files\SourceBoost\Include\novo.h	83;"	d
 SMP	C:\Program Files\SourceBoost\Include\pic18F2550.h	807;"	d
@@ -639,41 +630,6 @@ SOFIE	C:\Program Files\SourceBoost\Include\pic18F2550.h	208;"	d
 SOFIF	C:\Program Files\SourceBoost\Include\pic18F2550.h	199;"	d
 SPBRG	C:\Program Files\SourceBoost\Include\pic18F2550.h	85;"	d
 SPBRGH	C:\Program Files\SourceBoost\Include\pic18F2550.h	86;"	d
-SPBRG_115200	pic_pack_lib\pic_serial.h	233;"	d
-SPBRG_115200	pic_pack_lib\pic_serial.h	241;"	d
-SPBRG_115200	pic_pack_lib\pic_serial.h	249;"	d
-SPBRG_115200	pic_pack_lib\pic_serial.h	257;"	d
-SPBRG_115200	pic_pack_lib\pic_serial.h	265;"	d
-SPBRG_115200	pic_pack_lib\pic_serial.h	273;"	d
-SPBRG_115200	pic_pack_lib\pic_serial.h	281;"	d
-SPBRG_19200	pic_pack_lib\pic_serial.h	230;"	d
-SPBRG_19200	pic_pack_lib\pic_serial.h	238;"	d
-SPBRG_19200	pic_pack_lib\pic_serial.h	246;"	d
-SPBRG_19200	pic_pack_lib\pic_serial.h	254;"	d
-SPBRG_19200	pic_pack_lib\pic_serial.h	262;"	d
-SPBRG_19200	pic_pack_lib\pic_serial.h	270;"	d
-SPBRG_19200	pic_pack_lib\pic_serial.h	278;"	d
-SPBRG_38400	pic_pack_lib\pic_serial.h	231;"	d
-SPBRG_38400	pic_pack_lib\pic_serial.h	239;"	d
-SPBRG_38400	pic_pack_lib\pic_serial.h	247;"	d
-SPBRG_38400	pic_pack_lib\pic_serial.h	255;"	d
-SPBRG_38400	pic_pack_lib\pic_serial.h	263;"	d
-SPBRG_38400	pic_pack_lib\pic_serial.h	271;"	d
-SPBRG_38400	pic_pack_lib\pic_serial.h	279;"	d
-SPBRG_57600	pic_pack_lib\pic_serial.h	232;"	d
-SPBRG_57600	pic_pack_lib\pic_serial.h	240;"	d
-SPBRG_57600	pic_pack_lib\pic_serial.h	248;"	d
-SPBRG_57600	pic_pack_lib\pic_serial.h	256;"	d
-SPBRG_57600	pic_pack_lib\pic_serial.h	264;"	d
-SPBRG_57600	pic_pack_lib\pic_serial.h	272;"	d
-SPBRG_57600	pic_pack_lib\pic_serial.h	280;"	d
-SPBRG_9600	pic_pack_lib\pic_serial.h	229;"	d
-SPBRG_9600	pic_pack_lib\pic_serial.h	237;"	d
-SPBRG_9600	pic_pack_lib\pic_serial.h	245;"	d
-SPBRG_9600	pic_pack_lib\pic_serial.h	253;"	d
-SPBRG_9600	pic_pack_lib\pic_serial.h	261;"	d
-SPBRG_9600	pic_pack_lib\pic_serial.h	269;"	d
-SPBRG_9600	pic_pack_lib\pic_serial.h	277;"	d
 SPEN	C:\Program Files\SourceBoost\Include\pic18F2550.h	644;"	d
 SREN	C:\Program Files\SourceBoost\Include\pic18F2550.h	642;"	d
 SS	C:\Program Files\SourceBoost\Include\pic18F2550.h	393;"	d
@@ -853,12 +809,6 @@ TRISC6	C:\Program Files\SourceBoost\Include\pic18F2550.h	551;"	d
 TRISC7	C:\Program Files\SourceBoost\Include\pic18F2550.h	540;"	d
 TRISC7	C:\Program Files\SourceBoost\Include\pic18F2550.h	552;"	d
 TRISE	C:\Program Files\SourceBoost\Include\pic18F2550.h	69;"	d
-TRIS_SET	pic_pack_lib\pic_serial.c	59;"	d	file:
-TRIS_SET	pic_pack_lib\pic_serial.c	64;"	d	file:
-TRIS_SET	pic_pack_lib\pic_serial.c	69;"	d	file:
-TRIS_SET	pic_pack_lib\pic_serial.c	74;"	d	file:
-TRIS_SET	pic_pack_lib\pic_serial.c	79;"	d	file:
-TRIS_SET	pic_pack_lib\pic_serial.c	84;"	d	file:
 TRMT	C:\Program Files\SourceBoost\Include\pic18F2550.h	649;"	d
 TRNIE	C:\Program Files\SourceBoost\Include\pic18F2550.h	205;"	d
 TRNIF	C:\Program Files\SourceBoost\Include\pic18F2550.h	196;"	d
@@ -916,32 +866,30 @@ UIR	C:\Program Files\SourceBoost\Include\pic18F2550.h	31;"	d
 UOEMON	C:\Program Files\SourceBoost\Include\pic18F2550.h	255;"	d
 UOWN	pic_pack_lib\pic_usb.h	161;"	d
 UPUEN	C:\Program Files\SourceBoost\Include\pic18F2550.h	254;"	d
-UP_PIN	pic_pack_lib\config.h	23;"	d
 URSTIE	C:\Program Files\SourceBoost\Include\pic18F2550.h	202;"	d
 URSTIF	C:\Program Files\SourceBoost\Include\pic18F2550.h	193;"	d
 USBEN	C:\Program Files\SourceBoost\Include\pic18F2550.h	237;"	d
 USBIE	C:\Program Files\SourceBoost\Include\pic18F2550.h	600;"	d
 USBIF	C:\Program Files\SourceBoost\Include\pic18F2550.h	611;"	d
 USBIP	C:\Program Files\SourceBoost\Include\pic18F2550.h	622;"	d
-USB_BUS_POWERED	pic_pack_lib\config.h	31;"	d
-USB_CALLBACK_ON_CLASS_CTRL	pic_pack_lib\config.h	51;"	d
-USB_DEBUG	pic_pack_lib\config.h	64;"	d
+USB_BUS_POWERED	pic_pack_lib\config.h	15;"	d
+USB_CALLBACK_ON_CLASS_CTRL	pic_pack_lib\config.h	35;"	d
 USB_DEBUG	pic_pack_lib\pic_usb.h	634;"	d
-USB_EP0_IN_ADDR	pic_pack_lib\config.h	36;"	d
-USB_EP0_IN_SIZE	pic_pack_lib\config.h	35;"	d
-USB_EP0_OUT_ADDR	pic_pack_lib\config.h	34;"	d
-USB_EP0_OUT_SIZE	pic_pack_lib\config.h	33;"	d
+USB_EP0_IN_ADDR	pic_pack_lib\config.h	20;"	d
+USB_EP0_IN_SIZE	pic_pack_lib\config.h	19;"	d
+USB_EP0_OUT_ADDR	pic_pack_lib\config.h	18;"	d
+USB_EP0_OUT_SIZE	pic_pack_lib\config.h	17;"	d
 USB_EP1	pic_pack_lib\pic_usb.h	600;"	d
 USB_EP1	pic_pack_lib\pic_usb.h	604;"	d
-USB_EP1_IN_ADDR	pic_pack_lib\config.h	39;"	d
-USB_EP1_IN_SIZE	pic_pack_lib\config.h	38;"	d
+USB_EP1_IN_ADDR	pic_pack_lib\config.h	23;"	d
+USB_EP1_IN_SIZE	pic_pack_lib\config.h	22;"	d
 USB_EP2	pic_pack_lib\pic_usb.h	608;"	d
 USB_EP2	pic_pack_lib\pic_usb.h	612;"	d
 USB_EP3	pic_pack_lib\pic_usb.h	616;"	d
 USB_EP3	pic_pack_lib\pic_usb.h	620;"	d
 USB_EP4	pic_pack_lib\pic_usb.h	624;"	d
 USB_EP4	pic_pack_lib\pic_usb.h	628;"	d
-USB_HIGHEST_EP	pic_pack_lib\config.h	29;"	d
+USB_HIGHEST_EP	pic_pack_lib\config.h	13;"	d
 USTAT	C:\Program Files\SourceBoost\Include\pic18F2550.h	35;"	d
 UTEYE	C:\Program Files\SourceBoost\Include\pic18F2550.h	256;"	d
 UTRDIS	C:\Program Files\SourceBoost\Include\pic18F2550.h	253;"	d
@@ -1111,7 +1059,6 @@ _XINST_OFF_4L	C:\Program Files\SourceBoost\Include\pic18F2550.h	1106;"	d
 _XINST_ON_4L	C:\Program Files\SourceBoost\Include\pic18F2550.h	1107;"	d
 __PIC_USB_H	pic_pack_lib\pic_usb.h	105;"	d
 __config_h	pic_pack_lib\config.h	2;"	d
-__pic_serial_h	pic_pack_lib\pic_serial.h	52;"	d
 __pic_tick_h	pic_pack_lib\pic_tick.h	15;"	d
 __pic_ubs_buffer_mgt_h	pic_pack_lib\pic_usb_buffer_mgt.h	16;"	d
 __pic_utils_h	pic_pack_lib\pic_utils.h	16;"	d
@@ -1150,7 +1097,6 @@ bd6in	pic_pack_lib\pic_usb_buffer_mgt.c	30;"	v
 bd6out	pic_pack_lib\pic_usb_buffer_mgt.c	29;"	v
 bd7in	pic_pack_lib\pic_usb_buffer_mgt.c	32;"	v
 bd7out	pic_pack_lib\pic_usb_buffer_mgt.c	31;"	v
-bin2Hex	pic_pack_lib\pic_serial.c	44;"	f
 boostbloader	pic_pack_lib\pic_utils.h	223;"	d
 boostbloader	pic_pack_lib\pic_utils.h	236;"	d
 bsr	C:\Program Files\SourceBoost\Include\pic18F2550.h	1299;"	v
@@ -1162,7 +1108,7 @@ buffer_2_in	pic_pack_lib\pic_usb_buffer_mgt.c	44;"	v
 buffer_2_out	pic_pack_lib\pic_usb_buffer_mgt.c	47;"	v
 buffer_3_in	pic_pack_lib\pic_usb_buffer_mgt.c	50;"	v
 buffer_3_out	pic_pack_lib\pic_usb_buffer_mgt.c	53;"	v
-buffer_byte	pic_pack_lib\pic_usb.c	300;"	v
+buffer_byte	pic_pack_lib\pic_usb.c	286;"	v
 buffer_descriptor	pic_pack_lib\pic_usb.h	133;"	t
 ccp1as	C:\Program Files\SourceBoost\Include\pic18F2550.h	1251;"	v
 ccp1con	C:\Program Files\SourceBoost\Include\pic18F2550.h	1261;"	v
@@ -1188,23 +1134,23 @@ cm_CTRL_WRITE_DATA_STAGE_CLASS	pic_pack_lib\pic_usb.h	187;"	e	enum:_control_mode
 cm_CTRL_WRITE_SENDING_STATUS	pic_pack_lib\pic_usb.h	195;"	e	enum:_control_mode_type
 cm_IDLE	pic_pack_lib\pic_usb.h	183;"	e	enum:_control_mode_type
 cmcon	C:\Program Files\SourceBoost\Include\pic18F2550.h	1249;"	v
-complete_mouse_configuration	pic_pack_lib\usb_config_mouse.c	72;"	v
+complete_mouse_configuration	pic_pack_lib\usb_config_mouse.c	71;"	v
 configuration_descriptor	pic_pack_lib\pic_usb.h	293;"	t
-control_mode	pic_pack_lib\pic_usb.c	32;"	v
+control_mode	pic_pack_lib\pic_usb.c	27;"	v
 control_mode_type	pic_pack_lib\pic_usb.h	196;"	t
 cvrcon	C:\Program Files\SourceBoost\Include\pic18F2550.h	1250;"	v
 ddra	C:\Program Files\SourceBoost\Include\pic18F2550.h	1222;"	v
 ddrb	C:\Program Files\SourceBoost\Include\pic18F2550.h	1224;"	v
 ddrc	C:\Program Files\SourceBoost\Include\pic18F2550.h	1226;"	v
-delivery_bd	pic_pack_lib\pic_usb.c	39;"	v
-delivery_buffer	pic_pack_lib\pic_usb.c	38;"	v
-delivery_buffer_size	pic_pack_lib\pic_usb.c	37;"	v
-delivery_bytes_max_send	pic_pack_lib\pic_usb.c	34;"	v
-delivery_bytes_sent	pic_pack_lib\pic_usb.c	35;"	v
-delivery_bytes_to_send	pic_pack_lib\pic_usb.c	33;"	v
-delivery_ptr	pic_pack_lib\pic_usb.c	36;"	v
+delivery_bd	pic_pack_lib\pic_usb.c	34;"	v
+delivery_buffer	pic_pack_lib\pic_usb.c	33;"	v
+delivery_buffer_size	pic_pack_lib\pic_usb.c	32;"	v
+delivery_bytes_max_send	pic_pack_lib\pic_usb.c	29;"	v
+delivery_bytes_sent	pic_pack_lib\pic_usb.c	30;"	v
+delivery_bytes_to_send	pic_pack_lib\pic_usb.c	28;"	v
+delivery_ptr	pic_pack_lib\pic_usb.c	31;"	v
 device_descriptor	pic_pack_lib\pic_usb.h	279;"	t
-do_task	PICUsbJiggler.c	35;"	v
+do_task	PICUsbJiggler.c	34;"	v
 dt_CONFIGURATION	pic_pack_lib\pic_usb.h	248;"	d
 dt_CS_INTERFACE	pic_pack_lib\pic_usb.h	261;"	d
 dt_DEBUG	pic_pack_lib\pic_usb.h	256;"	d
@@ -1247,7 +1193,7 @@ hlvdcon	C:\Program Files\SourceBoost\Include\pic18F2550.h	1285;"	v
 indf0	C:\Program Files\SourceBoost\Include\pic18F2550.h	1314;"	v
 indf1	C:\Program Files\SourceBoost\Include\pic18F2550.h	1306;"	v
 indf2	C:\Program Files\SourceBoost\Include\pic18F2550.h	1298;"	v
-initialise	PICUsbJiggler.c	47;"	f
+initialise	PICUsbJiggler.c	46;"	f
 int16	pic_pack_lib\pic_utils.h	46;"	d
 int32	pic_pack_lib\pic_utils.h	48;"	d
 int8	pic_pack_lib\pic_utils.h	43;"	d
@@ -1257,7 +1203,7 @@ intcon	C:\Program Files\SourceBoost\Include\pic18F2550.h	1317;"	v
 intcon2	C:\Program Files\SourceBoost\Include\pic18F2550.h	1316;"	v
 intcon3	C:\Program Files\SourceBoost\Include\pic18F2550.h	1315;"	v
 interface_descriptor	pic_pack_lib\pic_usb.h	306;"	t
-interrupt	PICUsbJiggler.c	83;"	f
+interrupt	PICUsbJiggler.c	82;"	f
 ipr1	C:\Program Files\SourceBoost\Include\pic18F2550.h	1232;"	v
 ipr2	C:\Program Files\SourceBoost\Include\pic18F2550.h	1235;"	v
 isJiggling	PICUsbJiggler.h	7;"	v
@@ -1267,11 +1213,11 @@ latb	C:\Program Files\SourceBoost\Include\pic18F2550.h	1219;"	v
 latc	C:\Program Files\SourceBoost\Include\pic18F2550.h	1220;"	v
 late	C:\Program Files\SourceBoost\Include\pic18F2550.h	1221;"	v
 lvdcon	C:\Program Files\SourceBoost\Include\pic18F2550.h	1286;"	v
-main	PICUsbJiggler.c	91;"	f
+main	PICUsbJiggler.c	90;"	f
 make_input	pic_pack_lib\pic_utils.h	159;"	d
 make_output	pic_pack_lib\pic_utils.h	158;"	d
-mouse_report_descriptor	pic_pack_lib\usb_config_mouse.c	37;"	v
-my_device_descriptor	pic_pack_lib\usb_config_mouse.c	20;"	v
+mouse_report_descriptor	pic_pack_lib\usb_config_mouse.c	36;"	v
+my_device_descriptor	pic_pack_lib\usb_config_mouse.c	19;"	v
 nop	C:\Program Files\SourceBoost\Include\boostc.h	59;"	f
 osccon	C:\Program Files\SourceBoost\Include\pic18F2550.h	1287;"	v
 osctune	C:\Program Files\SourceBoost\Include\pic18F2550.h	1229;"	v
@@ -1323,7 +1269,7 @@ prodl	C:\Program Files\SourceBoost\Include\pic18F2550.h	1319;"	v
 rcon	C:\Program Files\SourceBoost\Include\pic18F2550.h	1283;"	v
 rcreg	C:\Program Files\SourceBoost\Include\pic18F2550.h	1243;"	v
 rcsta	C:\Program Files\SourceBoost\Include\pic18F2550.h	1240;"	v
-receive	PICUsbJiggler.c	38;"	v
+receive	PICUsbJiggler.c	37;"	v
 req_Clear_Feature	pic_pack_lib\pic_usb.h	234;"	d
 req_GET_IDLE	pic_pack_lib\usb_hid_class.h	5;"	d
 req_GET_PROTOCOL	pic_pack_lib\usb_hid_class.h	6;"	d
@@ -1343,29 +1289,7 @@ req_Set_Interface	pic_pack_lib\pic_usb.h	242;"	d
 req_Synch_Frame	pic_pack_lib\pic_usb.h	243;"	d
 reset	C:\Program Files\SourceBoost\Include\boostc.h	77;"	f
 reset	C:\Program Files\SourceBoost\Include\boostc.h	85;"	f
-rx_buffer	pic_pack_lib\pic_serial.c	30;"	v
-rx_end	pic_pack_lib\pic_serial.c	34;"	v
-rx_framing_error	pic_pack_lib\pic_serial.c	39;"	v
-rx_hard_overflow	pic_pack_lib\pic_serial.c	38;"	v
-rx_soft_overflow	pic_pack_lib\pic_serial.c	37;"	v
-rx_start	pic_pack_lib\pic_serial.c	32;"	v
-send_to	PICUsbJiggler.c	41;"	v
-serial_getc	pic_pack_lib\pic_serial.c	233;"	f
-serial_handle_rx_isr	pic_pack_lib\pic_serial.h	63;"	d
-serial_handle_tx_isr	pic_pack_lib\pic_serial.h	60;"	d
-serial_print_int	pic_pack_lib\pic_serial.c	279;"	f
-serial_print_int_hex	pic_pack_lib\pic_serial.c	300;"	f
-serial_print_int_hex_16bit	pic_pack_lib\pic_serial.c	307;"	f
-serial_print_nl	pic_pack_lib\pic_serial.c	318;"	f
-serial_print_spc	pic_pack_lib\pic_serial.c	313;"	f
-serial_print_str	pic_pack_lib\pic_serial.c	255;"	f
-serial_print_str	pic_pack_lib\pic_serial.c	267;"	f
-serial_putc	pic_pack_lib\pic_serial.c	129;"	f
-serial_rx_avail	pic_pack_lib\pic_serial.c	324;"	f
-serial_rx_isr	pic_pack_lib\pic_serial.c	193;"	f
-serial_setup	pic_pack_lib\pic_serial.c	54;"	f
-serial_tx_empty	pic_pack_lib\pic_serial.c	325;"	f
-serial_tx_isr	pic_pack_lib\pic_serial.c	173;"	f
+send_to	PICUsbJiggler.c	40;"	v
 set_bit	C:\Program Files\SourceBoost\Include\boostc.h	23;"	d
 set_pin	pic_pack_lib\pic_utils.h	123;"	d
 set_pin_var	pic_pack_lib\pic_utils.c	25;"	f
@@ -1385,9 +1309,9 @@ st_POWERED	pic_pack_lib\pic_usb.h	113;"	e	enum:_usb_state_type
 start_crit_sec	pic_pack_lib\pic_utils.h	175;"	d
 status	C:\Program Files\SourceBoost\Include\pic18F2550.h	1291;"	v
 stkptr	C:\Program Files\SourceBoost\Include\pic18F2550.h	1330;"	v
-string_00	pic_pack_lib\usb_config_mouse.c	112;"	v
-string_01	pic_pack_lib\usb_config_mouse.c	119;"	v
-string_02	pic_pack_lib\usb_config_mouse.c	137;"	v
+string_00	pic_pack_lib\usb_config_mouse.c	111;"	v
+string_01	pic_pack_lib\usb_config_mouse.c	118;"	v
+string_02	pic_pack_lib\usb_config_mouse.c	136;"	v
 t0con	C:\Program Files\SourceBoost\Include\pic18F2550.h	1288;"	v
 t1con	C:\Program Files\SourceBoost\Include\pic18F2550.h	1280;"	v
 t2con	C:\Program Files\SourceBoost\Include\pic18F2550.h	1277;"	v
@@ -1403,7 +1327,7 @@ test_pin_var	pic_pack_lib\pic_utils.h	149;"	d
 tick	pic_pack_lib\pic_tick.h	20;"	v
 tick_calc_diff	pic_pack_lib\pic_tick.c	32;"	f
 tick_get_count	pic_pack_lib\pic_tick.c	18;"	f
-timer_0_callback	PICUsbJiggler.c	76;"	f
+timer_0_callback	PICUsbJiggler.c	75;"	f
 timer_0_start_value	pic_pack_lib\pic_timer.c	19;"	v
 timer_0_start_value	pic_pack_lib\pic_timer.c	22;"	v
 timer_handle_0_isr	pic_pack_lib\pic_timer.h	84;"	f
@@ -1445,10 +1369,7 @@ turn_global_ints_off	pic_pack_lib\pic_utils.h	165;"	d
 turn_global_ints_on	pic_pack_lib\pic_utils.h	164;"	d
 turn_peripheral_ints_off	pic_pack_lib\pic_utils.h	162;"	d
 turn_peripheral_ints_on	pic_pack_lib\pic_utils.h	161;"	d
-turn_usb_ints_on	pic_pack_lib\pic_usb.c	738;"	f
-tx_buffer	pic_pack_lib\pic_serial.c	23;"	v
-tx_end	pic_pack_lib\pic_serial.c	27;"	v
-tx_start	pic_pack_lib\pic_serial.c	25;"	v
+turn_usb_ints_on	pic_pack_lib\pic_usb.c	577;"	f
 txreg	C:\Program Files\SourceBoost\Include\pic18F2550.h	1242;"	v
 txsta	C:\Program Files\SourceBoost\Include\pic18F2550.h	1241;"	v
 uaddr	C:\Program Files\SourceBoost\Include\pic18F2550.h	1196;"	v
@@ -1482,32 +1403,32 @@ uns32	pic_pack_lib\pic_utils.h	47;"	d
 uns8	pic_pack_lib\pic_utils.h	44;"	d
 us_IDLE	pic_pack_lib\pic_usb.h	203;"	e	enum:_usb_status_type
 us_SET_ADDRESS	pic_pack_lib\pic_usb.h	204;"	e	enum:_usb_status_type
-usb_address	pic_pack_lib\pic_usb.c	31;"	v
-usb_configure_endpoints	pic_pack_lib\pic_usb.c	43;"	f
-usb_enable_module	pic_pack_lib\pic_usb.c	807;"	f
-usb_get_descriptor_callback	pic_pack_lib\usb_config_mouse.c	153;"	f
-usb_get_state	pic_pack_lib\pic_usb.c	813;"	f
-usb_handle_class_ctrl_read_callback	pic_pack_lib\usb_hid_class.c	29;"	f
-usb_handle_class_ctrl_write_callback	pic_pack_lib\usb_hid_class.c	32;"	f
-usb_handle_class_request_callback	pic_pack_lib\usb_hid_class.c	35;"	f
-usb_handle_isr	pic_pack_lib\pic_usb.c	710;"	f
-usb_handle_reset	pic_pack_lib\pic_usb.c	653;"	f
-usb_handle_stall	pic_pack_lib\pic_usb.c	702;"	f
-usb_handle_standard_request	pic_pack_lib\pic_usb.c	335;"	f
-usb_handle_transaction	pic_pack_lib\pic_usb.c	424;"	f
+usb_address	pic_pack_lib\pic_usb.c	26;"	v
+usb_configure_endpoints	pic_pack_lib\pic_usb.c	38;"	f
+usb_enable_module	pic_pack_lib\pic_usb.c	646;"	f
+usb_get_descriptor_callback	pic_pack_lib\usb_config_mouse.c	152;"	f
+usb_get_state	pic_pack_lib\pic_usb.c	652;"	f
+usb_handle_class_ctrl_read_callback	pic_pack_lib\usb_hid_class.c	28;"	f
+usb_handle_class_ctrl_write_callback	pic_pack_lib\usb_hid_class.c	31;"	f
+usb_handle_class_request_callback	pic_pack_lib\usb_hid_class.c	34;"	f
+usb_handle_isr	pic_pack_lib\pic_usb.c	549;"	f
+usb_handle_reset	pic_pack_lib\pic_usb.c	498;"	f
+usb_handle_stall	pic_pack_lib\pic_usb.c	543;"	f
+usb_handle_standard_request	pic_pack_lib\pic_usb.c	318;"	f
+usb_handle_transaction	pic_pack_lib\pic_usb.c	376;"	f
 usb_hid_class_h	pic_pack_lib\usb_hid_class.h	2;"	d
-usb_prime_ep0_out	pic_pack_lib\pic_usb.c	316;"	f
-usb_sdp	pic_pack_lib\pic_usb.c	29;"	v
-usb_send_data	pic_pack_lib\pic_usb.c	188;"	f
-usb_send_data_chunk	pic_pack_lib\pic_usb.c	233;"	f
-usb_send_empty_data_pkt	pic_pack_lib\pic_usb.c	288;"	f
-usb_send_one_byte	pic_pack_lib\pic_usb.c	302;"	f
+usb_prime_ep0_out	pic_pack_lib\pic_usb.c	302;"	f
+usb_sdp	pic_pack_lib\pic_usb.c	24;"	v
+usb_send_data	pic_pack_lib\pic_usb.c	180;"	f
+usb_send_data_chunk	pic_pack_lib\pic_usb.c	222;"	f
+usb_send_empty_data_pkt	pic_pack_lib\pic_usb.c	274;"	f
+usb_send_one_byte	pic_pack_lib\pic_usb.c	288;"	f
 usb_send_status_ack	pic_pack_lib\pic_usb.h	367;"	d
-usb_setup	pic_pack_lib\pic_usb.c	749;"	f
-usb_stall_ep0	pic_pack_lib\pic_usb.c	180;"	f
-usb_state	pic_pack_lib\pic_usb.c	27;"	v
+usb_setup	pic_pack_lib\pic_usb.c	588;"	f
+usb_stall_ep0	pic_pack_lib\pic_usb.c	172;"	f
+usb_state	pic_pack_lib\pic_usb.c	22;"	v
 usb_state_type	pic_pack_lib\pic_usb.h	120;"	t
-usb_status	pic_pack_lib\pic_usb.c	41;"	v
+usb_status	pic_pack_lib\pic_usb.c	36;"	v
 usb_status_type	pic_pack_lib\pic_usb.h	205;"	t
 ustat	C:\Program Files\SourceBoost\Include\pic18F2550.h	1194;"	v
 wdtcon	C:\Program Files\SourceBoost\Include\pic18F2550.h	1284;"	v

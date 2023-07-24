@@ -3,28 +3,12 @@
 #include "platform.h"
 #include "system.h"
 
-// - - - - - - - - - - - - - - - - - - - - 
-// pic_serial defines
-// - - - - - - - - - - - - - - - - - - - - 
-//#define SERIAL_DISCARD_ON_TX_FULL_DURING_INT
-#define SERIAL_TX_BUFFER_SIZE 254
-#define SERIAL_RX_BUFFER_SIZE 4
-//#define SERIAL_DEBUG_ON
-
 // - - - - - - - - - - - - - - -
 // General platform definitions
 // - - - - - - - - - - - - - - -
 #define PLATFORM_TYPE TECH_TOYS_PIC18F2550
 #define PLATFORM_CLOCK 24000000
 
-
-//
-#define JOY_PORT	PORTB
-#define UP_PIN		7
-#define DOWN_PIN	5
-#define CENTER_PIN	2
-#define LEFT_PIN	6
-#define RIGHT_PIN	4
 
 #define USB_HIGHEST_EP 1
 // #define USB_SELF_POWERED
@@ -61,7 +45,7 @@
 //void usb_ep_data_in_callback(uns8 end_point, uns16 byte_count);
 
 // Debug - find out what's going on
-#define USB_DEBUG
+//#define USB_DEBUG
 // Heaps of debug, too much for bedtime reading
 //#define USB_DEBUG_HIGH
 
