@@ -16,36 +16,20 @@ Address  Length   Unique Name      Name
 00000000:00000008 _resetvector     _resetvector  
 00000008:00000004 _interruptVector _interruptVector  
 0000000C:00000068 delay_ms_00000   delay_ms(unsigned char)  
-00000074:00000094 usb_send_d_0002E usb_send_data_chunk(void)  
-00000108:0000000C usb_stall__00011 usb_stall_ep0(void)  
-00000114:00000038 usb_send_o_00030 usb_send_one_byte(unsigned char)  
-0000014C:00000030 usb_send_e_00010 usb_send_empty_data_pkt(void)  
-0000017C:00000128 usb_get_de_00016 usb_get_descriptor_callback(unsigned char,unsigned char,unsigned char**,unsigned short*)  
-000002A4:0000001C usb_config_0002F usb_configure_endpoints(void)  
-000002C0:0000001E usb_prime__00031 usb_prime_ep0_out(void)  
-000002DE:000000DA usb_handle_00032 usb_handle_standard_request(struct _setup_data_packet)  
-000003B8:00000002 usb_handle_00015 usb_handle_class_ctrl_write_callback(unsigned char*,unsigned short)  
-000003BA:00000002 usb_handle_00014 usb_handle_class_ctrl_read_callback(void)  
-000003BC:00000034 usb_handle_00013 usb_handle_class_request_callback(struct _setup_data_packet)  
-000003F0:0000005A memcpy8_00000    memcpy8(void*,void*,unsigned char)  
-0000044A:00000002 usb_handle_0002D usb_handle_stall(void)  
-0000044C:00000046 usb_handle_0002C usb_handle_reset(void)  
-00000492:00000214 usb_handle_0002B usb_handle_transaction(void)  
-000006A6:00000008 handle_tic_00023 handle_tick(void)  
-000006AE:00000026 usb_handle_0000E usb_handle_isr(void)  
-000006D4:00000006 timer_0_ca_00029 timer_0_callback(void)  
-000006DA:0000000A turn_usb_i_00020 turn_usb_ints_on(void)  
-000006E4:0000000E timer_star_00027 timer_start_0(void)  
-000006F2:0000002C timer_setu_00024 timer_setup_0(bit,unsigned char,unsigned short)  
-0000071E:000000B6 usb_send_d_0000F usb_send_data(unsigned char,unsigned char*,unsigned char,bit)  
-000007D4:00000008 usb_get_st_00012 usb_get_state(void)  
-000007DC:00000028 tick_get_c_00021 tick_get_count(void)  
-00000804:00000042 tick_calc__00022 tick_calc_diff(unsigned short,unsigned short)  
-00000846:00000038 initialise_00000 initialise(void)  
-0000087E:000000A8 main             main(void)  
-00000926:00000274 _startup_00000   _startup(void)  
-00000B9A:0000004C interrupt        interrupt(void)  
-00000BE6:0000741A *Unused Block 
+00000074:00000036 USBReset_00000   USBReset(void)  
+000000AA:0000000C USBActivit_0000A USBActivity(void)  
+000000B6:00000082 CopyDescri_0000B CopyDescriptorToEP0(void)  
+00000138:00000004 USBStall_00000   USBStall(void)  
+0000013C:0000000E USBSleep_00000   USBSleep(void)  
+0000014A:00000A9E Process_Re_0000D Process_Req(void)  
+00000BE8:0000005A Count_Erro_0000C Count_Error(void)  
+00000C42:0000001A ServiceUSB_00000 ServiceUSB(void)  
+00000C5C:00000088 PutEP1_00000     PutEP1(unsigned char,signed char*)  
+00000CE4:0000004A InitUSB_00000    InitUSB(void)  
+00000D2E:00000136 main             main(void)  
+00000E64:0000030A _startup_00000   _startup(void)  
+0000116E:00000074 interrupt        interrupt(void)  
+000011E2:00006E1E *Unused Block 
 
 Register usage
 ==============
@@ -53,102 +37,102 @@ Register usage
 Address  Bit Lengh Bit Mask   Unique Name                      Name
 -------  --------- --------   -----------                      ----
 00000001:00000020             Int1Context                      Int1Context
-00000005:00000190             gbl_mouse_report_descriptor      mouse_report_descriptor
-00000037:00000110             gbl_complete_mouse_configuration complete_mouse_configuration
-00000059:00000028             gbl_port_shadow                  port_shadow
-0000005E:00000010             gbl_19_tick                      tick
-00000060:000000C0             gbl_string_01                    string_01
-00000078:000000A0             gbl_string_02                    string_02
-0000008C:00000090             gbl_my_device_descriptor         my_device_descriptor
-0000009E:00000040             gbl_usb_sdp                      usb_sdp
-000000A6:00000020             gbl_ep_in_bd_location            ep_in_bd_location
-000000AA:00000020             gbl_ep_out_bd_location           ep_out_bd_location
-000000AE:00000020             gbl_ep_in_buffer_location        ep_in_buffer_location
-000000B2:00000020             gbl_ep_out_buffer_location       ep_out_buffer_location
-000000B6:00000020             gbl_ep_in_buffer_size            ep_in_buffer_size
-000000BA:00000020             gbl_ep_out_buffer_size           ep_out_buffer_size
-000000BE:00000020             gbl_string_00                    string_00
-000000C2:00000010             gbl_20_tick                      tick
-000000C4:00000010             gbl_timer_0_start_value          timer_0_start_value
-000000C6:00000010             gbl_delivery_bytes_to_send       delivery_bytes_to_send
-000000C8:00000010             gbl_delivery_bytes_max_send      delivery_bytes_max_send
-000000CA:00000010             gbl_delivery_bytes_sent          delivery_bytes_sent
-000000CC:00000010             gbl_delivery_ptr                 delivery_ptr
-000000CE:00000010             gbl_delivery_buffer              delivery_buffer
-000000D0:00000010             gbl_delivery_bd                  delivery_bd
-000000D2:00000001  0b00000010 gbl_receive                      receive
-000000D3:00000008             gbl_do_task                      do_task
-000000D4:00000008             gbl_send_to                      send_to
-000000D5:00000008             gbl_usb_state                    usb_state
-000000D6:00000008             gbl_usb_address                  usb_address
-000000D7:00000008             gbl_control_mode                 control_mode
-000000D8:00000008             gbl_delivery_buffer_size         delivery_buffer_size
-000000D9:00000008             gbl_usb_status                   usb_status
-000000DA:00000008             gbl_buffer_byte                  buffer_byte
-000000DB:00000008             CompGblVar99                    
-000000DC:00000008             CompGblVar100                   
-000000DD:00000008             CompGblVar101                   
-000000DE:00000010             main_1_tick_marker               tick_marker
-000000E0:00000010             main_1_test_tick                 test_tick
-000000E2:00000008             main_1_left_count                left_count
-000000E3:00000008             main_1_check_count               check_count
-000000E4:00000018             main_1_buffer                    buffer
-000000E7:00000008             delay_ms_00000_arg_del           del
-000000E8:00000008             usb_send_d_0000F_arg_ep          ep
-000000E9:00000010             usb_send_d_0000F_arg_data        data
-000000EA:00000010             CompTempVarRet735                $ret
-000000EB:00000008             usb_send_d_0000F_arg_send_count  send_count
-000000EC:00000001  0b00000001 usb_send_d_0000F_arg_first       first
-000000ED:00000008             usb_send_d_0000F_1_count         count
-000000EE:00000010             usb_send_d_0000F_1_bd            bd
-000000EF:00000008             CompTempVar744                  
-000000F0:00000010             usb_send_d_0000F_1_buffer        buffer
-000000F2:00000008             CompTempVar783                  
-000000F3:00000008             CompTempVar782                  
-000000F4:00000008             usb_handle_0002B_1_end_point     end_point
-000000F5:00000008             usb_handle_0002B_1_pid           pid
-000000F6:00000010             usb_handle_00015_arg_data        data
-000000F7:00000008             CompTempVar759                  
-000000F8:00000010             usb_handle_00015_arg_count       count
-000000F9:00000010             CompTempVar772                  
-000000FA:00000008             usb_handle_00032_1_descrip_00034 descriptor_num
-000000FB:00000008             usb_get_de_00016_arg_descr_00017 descriptor_type
-000000FC:00000008             usb_get_de_00016_arg_descr_00018 descriptor_num
-000000FD:00000010             usb_get_de_00016_arg_rtn_d_00019 rtn_descriptor_ptr
-000000FE:00000010             memcpy8_00000_1_dst2             dst2
-000000FF:00000008             CompTempVar838                  
-00000100:00000040             usb_handle_00013_arg_sdp         sdp
-00000102:00000008             CompTempVar493                  
-00000108:00000010             usb_get_de_00016_arg_rtn_d_0001A rtn_descriptor_size
-0000010A:00000010             usb_get_de_00016_1_descrip_00039 descriptor_ptr
-0000010C:00000010             usb_get_de_00016_1_descrip_0003A descriptor_size
-00000400:00000020             gbl_bd0out                       bd0out
-00000404:00000020             gbl_bd0in                        bd0in
-00000408:00000020             gbl_bd1out                       bd1out
-0000040C:00000020             gbl_bd1in                        bd1in
-00000410:00000020             gbl_bd2out                       bd2out
-00000414:00000020             gbl_bd2in                        bd2in
-00000418:00000020             gbl_bd3out                       bd3out
-0000041C:00000020             gbl_bd3in                        bd3in
-00000420:00000020             gbl_bd4out                       bd4out
-00000424:00000020             gbl_bd4in                        bd4in
-00000428:00000020             gbl_bd5out                       bd5out
-0000042C:00000020             gbl_bd5in                        bd5in
-00000430:00000020             gbl_bd6out                       bd6out
-00000434:00000020             gbl_bd6in                        bd6in
-00000438:00000020             gbl_bd7out                       bd7out
-0000043C:00000020             gbl_bd7in                        bd7in
-00000500:00000040             gbl_buffer_0_out                 buffer_0_out
-00000508:00000040             gbl_buffer_0_in                  buffer_0_in
-00000510:00000040             gbl_buffer_1_in                  buffer_1_in
+00000005:000001C0             gbl_String2                      String2
+0000003D:00000110             gbl_ConfigDescriptor             ConfigDescriptor
+0000005F:00000001  0b00000010 gbl_buttonOld                    buttonOld
+00000060:00000190             gbl_ReportDescriptor1            ReportDescriptor1
+00000092:000000A0             gbl_String1                      String1
+000000A6:00000090             gbl_DeviceDescriptor             DeviceDescriptor
+000000B8:00000048             gbl_HIDDescriptor                HIDDescriptor
+000000C1:00000040             gbl_BufferCopy                   BufferCopy
+000000C9:00000020             gbl_BDTCopy                      BDTCopy
+000000CD:00000020             gbl_String0                      String0
+000000D1:00000018             gbl_USB_Interface                USB_Interface
+000000D4:00000010             gbl_USB_PID_ERR                  USB_PID_ERR
+000000D6:00000010             gbl_USB_CRC5_ERR                 USB_CRC5_ERR
+000000D8:00000010             gbl_USB_CRC16_ERR                USB_CRC16_ERR
+000000DA:00000010             gbl_USB_DFN8_ERR                 USB_DFN8_ERR
+000000DC:00000010             gbl_USB_BTO_ERR                  USB_BTO_ERR
+000000DE:00000010             gbl_USB_WRT_ERR                  USB_WRT_ERR
+000000E0:00000010             gbl_USB_OWN_ERR                  USB_OWN_ERR
+000000E2:00000010             gbl_USB_BTS_ERR                  USB_BTS_ERR
+000000E4:00000010             gbl_EP0_start                    EP0_start
+000000E6:00000010             gbl_EP0_end                      EP0_end
+000000E8:00000010             gbl_BDT                          BDT
+000000EA:00000010             gbl_Buffer                       Buffer
+000000EC:00000010             gbl_ReportDescrSize              ReportDescrSize
+000000EE:00000008             gbl_USB_IsIdle                   USB_IsIdle
+000000EF:00000008             gbl_USB_status_device            USB_status_device
+000000F0:00000008             gbl_USB_Curr_Config              USB_Curr_Config
+000000F1:00000008             gbl_USB_address_pending          USB_address_pending
+000000F2:00000008             gbl_USB_dev_req                  USB_dev_req
+000000F3:00000008             gbl_USB_USTAT                    USB_USTAT
+000000F4:00000008             gbl_ACTIVE_BUF                   ACTIVE_BUF
+000000F5:00000008             gbl_USB_protocol                 USB_protocol
+000000F6:00000008             gbl_USWSTAT                      USWSTAT
+000000F7:00000008             gbl_EP0_maxLength                EP0_maxLength
+000000F8:00000008             main_1_i                         i
+000000F9:00000010             main_1_j                         j
+000000FB:00000018             main_1_buffer                    buffer
+000000FE:00000008             delay_ms_00000_arg_del           del
+000000FF:00000008             PutEP1_00000_1_i                 i
+00000100:00000060             main_1_tablex                    tablex
+0000010C:00000060             main_1_tabley                    tabley
+00000118:00000028             main_1_led                       led
+0000011D:00000010             Process_Re_0000D_1_UEPArray      UEPArray
+0000011F:00000008             Process_Re_0000D_1_Descrip_0000E DescriptorType
+00000120:00000008             Process_Re_0000D_1_Endpoint      Endpoint
+00000121:00000008             Process_Re_0000D_1_Interface     Interface
+00000122:00000008             Process_Re_0000D_1_DescriptorID  DescriptorID
+00000123:00000008             Process_Re_0000D_1_StringID      StringID
+00000124:00000008             CompTempVar587                  
+00000125:00000008             CompTempVar588                  
+00000126:00000008             CompTempVar589                  
+00000127:00000008             CompTempVar600                  
+00000128:00000008             CompTempVar601                  
+00000129:00000008             CompTempVar726                  
+0000012A:00000008             CompTempVar721                  
+0000012B:00000010             CompTempVar722                  
+0000012C:00000008             CompTempVar648                  
+0000012D:00000008             CompTempVar723                  
+0000012E:00000008             CompTempVar650                  
+0000012F:00000008             CompTempVar673                  
+00000130:00000008             CompTempVar674                  
+00000131:00000008             CopyDescri_0000B_1_bufindex      bufindex
+00000132:00000008             CompTempVar586                  
+00000134:00000008             CompTempVar583                  
+00000400:00000008             gbl_bd0statoe                    bd0statoe
+00000401:00000008             gbl_bd0cntoe                     bd0cntoe
+00000402:00000008             gbl_bd0adrloe                    bd0adrloe
+00000403:00000008             gbl_bd0adrhoe                    bd0adrhoe
+00000404:00000008             gbl_bd0statie                    bd0statie
+00000405:00000008             gbl_bd0cntie                     bd0cntie
+00000406:00000008             gbl_bd0adrlie                    bd0adrlie
+00000407:00000008             gbl_bd0adrhie                    bd0adrhie
+00000408:00000008             gbl_bd1statoe                    bd1statoe
+00000409:00000008             gbl_bd1cntoe                     bd1cntoe
+0000040A:00000008             gbl_bd1adrloe                    bd1adrloe
+0000040B:00000008             gbl_bd1adrhoe                    bd1adrhoe
+0000040C:00000008             gbl_bd1statie                    bd1statie
+0000040D:00000008             gbl_bd1cntie                     bd1cntie
+0000040E:00000008             gbl_bd1adrlie                    bd1adrlie
+0000040F:00000008             gbl_bd1adrhie                    bd1adrhie
+00000410:00000008             gbl_bd2statoe                    bd2statoe
+00000411:00000008             gbl_bd2cntoe                     bd2cntoe
+00000412:00000008             gbl_bd2adrloe                    bd2adrloe
+00000413:00000008             gbl_bd2adrhoe                    bd2adrhoe
+00000414:00000008             gbl_bd2statie                    bd2statie
+00000415:00000008             gbl_bd2cntie                     bd2cntie
+00000416:00000008             gbl_bd2adrlie                    bd2adrlie
+00000417:00000008             gbl_bd2adrhie                    bd2adrhie
 00000F66:00000008             gbl_ufrml                        ufrml
 00000F67:00000008             gbl_ufrmh                        ufrmh
-00000F68:00000008             gbl_uir                          uir
-00000F69:00000008             gbl_uie                          uie
-00000F6A:00000008             gbl_ueir                         ueir
-00000F6B:00000008             gbl_ueie                         ueie
+00000F68:00000001  0b00001000 gbl_bTOK_DONE                    bTOK_DONE
+00000F69:00000001  0b00000001 gbl_bUSBRST_E                    bUSBRST_E
+00000F6A:00000001  0b10000000 gbl_bBTS_ERR                     bBTS_ERR
+00000F6B:00000001  0b10000000 gbl_bBTS_ERR_E                   bBTS_ERR_E
 00000F6C:00000008             gbl_ustat                        ustat
-00000F6D:00000008             gbl_ucon                         ucon
+00000F6D:00000001  0b00010000 gbl_bPKT_DIS                     bPKT_DIS
 00000F6E:00000008             gbl_uaddr                        uaddr
 00000F6F:00000008             gbl_ucfg                         ucfg
 00000F70:00000008             gbl_uep0                         uep0
@@ -167,7 +151,7 @@ Address  Bit Lengh Bit Mask   Unique Name                      Name
 00000F7D:00000008             gbl_uep13                        uep13
 00000F7E:00000008             gbl_uep14                        uep14
 00000F7F:00000008             gbl_uep15                        uep15
-00000F80:00000028             gbl_port_array                   port_array
+00000F80:00000008             gbl_porta                        porta
 00000F81:00000008             gbl_portb                        portb
 00000F82:00000008             gbl_portc                        portc
 00000F84:00000008             gbl_porte                        porte
@@ -175,7 +159,7 @@ Address  Bit Lengh Bit Mask   Unique Name                      Name
 00000F8A:00000008             gbl_latb                         latb
 00000F8B:00000008             gbl_latc                         latc
 00000F8D:00000008             gbl_late                         late
-00000F92:00000028             gbl_tris_array                   tris_array
+00000F92:00000008             gbl_trisa                        trisa
 00000F93:00000008             gbl_trisb                        trisb
 00000F94:00000008             gbl_trisc                        trisc
 00000F96:00000008             gbl_trise                        trise
@@ -183,8 +167,8 @@ Address  Bit Lengh Bit Mask   Unique Name                      Name
 00000F9D:00000008             gbl_pie1                         pie1
 00000F9E:00000008             gbl_pir1                         pir1
 00000F9F:00000008             gbl_ipr1                         ipr1
-00000FA0:00000008             gbl_pie2                         pie2
-00000FA1:00000008             gbl_pir2                         pir2
+00000FA0:00000001  0b00100000 gbl_bUSBIE                       bUSBIE
+00000FA1:00000001  0b00100000 gbl_bUSBIF                       bUSBIF
 00000FA2:00000008             gbl_ipr2                         ipr2
 00000FA6:00000008             gbl_eecon1                       eecon1
 00000FA7:00000008             gbl_eecon2                       eecon2
@@ -259,7 +243,7 @@ Address  Bit Lengh Bit Mask   Unique Name                      Name
 00000FEF:00000008             gbl_indf0                        indf0
 00000FF0:00000008             gbl_intcon3                      intcon3
 00000FF1:00000008             gbl_intcon2                      intcon2
-00000FF2:00000008             gbl_intcon                       intcon
+00000FF2:00000001  0b00000100 gbl_bTMR0IF                      bTMR0IF
 00000FF3:00000008             gbl_prodl                        prodl
 00000FF4:00000008             gbl_prodh                        prodh
 00000FF5:00000008             gbl_tablat                       tablat
@@ -277,6 +261,6 @@ Address  Bit Lengh Bit Mask   Unique Name                      Name
 
 Memory Usage Report
 ===================
-RAM available:2048 bytes, used:358 bytes (17.5%), free:1690 bytes (82.5%), 
-Heap size:754 bytes, Heap max single alloc:127 bytes
-ROM available:32768 bytes, used:3046 bytes (9.3%), free:29722 bytes (90.7%)
+RAM available:2048 bytes, used:333 bytes (16.3%), free:1715 bytes (83.7%), 
+Heap size:1000 bytes, Heap max single alloc:127 bytes
+ROM available:32768 bytes, used:4578 bytes (14.0%), free:28190 bytes (86.0%)
