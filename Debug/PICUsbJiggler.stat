@@ -1,16 +1,18 @@
 // SourceBoost Linker Function Resource Usage Dump
 
-#GLOBAL:"global",line = 0,ram = 220.2,rom = 0;
+#GLOBAL:"global",line = 0,ram = 220.3,rom = 0;
 memcpy8(void*,void*,unsigned char):"C:\Temp\string.c",line = 1338,ram = 11.0,rom = 90;
-timer_0_callback(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 76,ram = 0.0,rom = 6;
-initialise(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 48,ram = 0.0,rom = 56;
-interrupt(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 83,ram = 2.0,rom = 76;
-main(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 91,ram = 10.0,rom = 168;
+timer_0_callback(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 79,ram = 0.0,rom = 6;
+initialise(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 48,ram = 0.0,rom = 62;
+interrupt(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 86,ram = 2.0,rom = 76;
+main(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 94,ram = 10.0,rom = 188;
 tick_get_count(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_tick.c",line = 23,ram = 4.1,rom = 40;
 tick_calc_diff(unsigned short,unsigned short):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_tick.c",line = 33,ram = 9.0,rom = 66;
 handle_tick(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_tick.c",line = 41,ram = 0.0,rom = 8;
 timer_setup_0(bit,unsigned char,unsigned short):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_timer.c",line = 28,ram = 0.0,rom = 44;
 timer_start_0(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_timer.c",line = 67,ram = 0.0,rom = 14;
+usb_setup(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 590,ram = 0.0,rom = 56;
+usb_enable_module(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 647,ram = 0.0,rom = 12;
 usb_handle_isr(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 551,ram = 0.0,rom = 38;
 usb_handle_transaction(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 380,ram = 7.0,rom = 532;
 usb_handle_reset(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 499,ram = 0.0,rom = 70;
@@ -30,5 +32,5 @@ usb_handle_class_request_callback(struct _setup_data_packet):"Z:\home\dan\PIC\PI
 usb_handle_class_ctrl_read_callback(void):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\usb_hid_class.c",line = 29,ram = 0.0,rom = 2;
 usb_handle_class_ctrl_write_callback(unsigned char*,unsigned short):"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\usb_hid_class.c",line = 32,ram = 0.0,rom = 2;
 delay_ms(unsigned char):"NoSourceFile",line = 0,ram = 0.0,rom = 104;
-_startup(void):"NoSourceFile",line = 0,ram = 0.0,rom = 628;
+_startup(void):"NoSourceFile",line = 0,ram = 0.0,rom = 630;
 #HEAP_BLOCK: 0, 270, 754;

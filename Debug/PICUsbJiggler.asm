@@ -164,11 +164,12 @@ gbl_tosl                         EQU	0x00000FFD ; bytes:1
 gbl_tosh                         EQU	0x00000FFE ; bytes:1
 gbl_tosu                         EQU	0x00000FFF ; bytes:1
 gbl_isJiggling                   EQU	0x000000D2 ; bit:0
+gbl_buttonOld                    EQU	0x000000D2 ; bit:1
 gbl_port_array                   EQU	0x00000F80 ; bytes:5
 gbl_tris_array                   EQU	0x00000F92 ; bytes:5
 gbl_19_tick                      EQU	0x0000005E ; bytes:2
 gbl_do_task                      EQU	0x000000D3 ; bytes:1
-gbl_receive                      EQU	0x000000D2 ; bit:1
+gbl_receive                      EQU	0x000000D2 ; bit:2
 gbl_send_to                      EQU	0x000000D4 ; bytes:1
 interrupt_6_start_value          EQU	0x000000F4 ; bytes:2
 main_1_tick_marker               EQU	0x000000DE ; bytes:2
@@ -1289,6 +1290,50 @@ timer_0_ca_00029
 ; } timer_0_callback function end
 
 	ORG 0x000006DA
+usb_setup_00000
+; { usb_setup ; function begin
+	MOVLB 0x00
+	CLRF gbl_usb_state, 1
+	BCF gbl_ucfg,3
+	BSF gbl_ucfg,2
+	BSF gbl_ucfg,4
+	BCF gbl_ucfg,1
+	BCF gbl_ucfg,0
+	BSF gbl_uep0,4
+	BSF gbl_uep0,2
+	BSF gbl_uep0,1
+	BCF gbl_uep0,3
+	MOVLW HIGH(gbl_bd0out+D'0')
+	MOVWF gbl_ep_out_bd_location+D'1', 1
+	MOVLW LOW(gbl_bd0out+D'0')
+	MOVWF gbl_ep_out_bd_location, 1
+	MOVLW HIGH(gbl_bd1out+D'0')
+	MOVWF gbl_ep_out_bd_location+D'3', 1
+	MOVLW LOW(gbl_bd1out+D'0')
+	MOVWF gbl_ep_out_bd_location+D'2', 1
+	MOVLW HIGH(gbl_bd0in+D'0')
+	MOVWF gbl_ep_in_bd_location+D'1', 1
+	MOVLW LOW(gbl_bd0in+D'0')
+	MOVWF gbl_ep_in_bd_location, 1
+	MOVLW HIGH(gbl_bd1in+D'0')
+	MOVWF gbl_ep_in_bd_location+D'3', 1
+	MOVLW LOW(gbl_bd1in+D'0')
+	MOVWF gbl_ep_in_bd_location+D'2', 1
+	RETURN
+; } usb_setup function end
+
+	ORG 0x00000712
+usb_enable_0000D
+; { usb_enable_module ; function begin
+	CLRF gbl_uir
+	BSF gbl_ucon,3
+	MOVLW 0x01
+	MOVLB 0x00
+	MOVWF gbl_usb_state, 1
+	RETURN
+; } usb_enable_module function end
+
+	ORG 0x0000071E
 turn_usb_i_00020
 ; { turn_usb_ints_on ; function begin
 	BSF gbl_uie,5
@@ -1298,7 +1343,7 @@ turn_usb_i_00020
 	RETURN
 ; } turn_usb_ints_on function end
 
-	ORG 0x000006E4
+	ORG 0x00000728
 timer_star_00027
 ; { timer_start_0 ; function begin
 	MOVLB 0x00
@@ -1310,7 +1355,7 @@ timer_star_00027
 	RETURN
 ; } timer_start_0 function end
 
-	ORG 0x000006F2
+	ORG 0x00000736
 timer_setu_00024
 ; { timer_setup_0 ; function begin
 	BCF gbl_t0con,7
@@ -1341,7 +1386,7 @@ label62
 	RETURN
 ; } timer_setup_0 function end
 
-	ORG 0x0000071E
+	ORG 0x00000762
 usb_send_d_0000F
 ; { usb_send_data ; function begin
 	LFSR 0x00,  gbl_ep_in_buffer_location
@@ -1438,7 +1483,7 @@ label65
 	RETURN
 ; } usb_send_data function end
 
-	ORG 0x000007D4
+	ORG 0x00000818
 usb_get_st_00012
 ; { usb_get_state ; function begin
 	MOVLB 0x00
@@ -1447,7 +1492,7 @@ usb_get_st_00012
 	RETURN
 ; } usb_get_state function end
 
-	ORG 0x000007DC
+	ORG 0x00000820
 tick_get_c_00021
 ; { tick_get_count ; function begin
 	MOVLB 0x00
@@ -1473,7 +1518,7 @@ label66
 	RETURN
 ; } tick_get_count function end
 
-	ORG 0x00000804
+	ORG 0x00000848
 tick_calc__00022
 ; { tick_calc_diff ; function begin
 	MOVF tick_calc__00022_arg_a, W, 1
@@ -1512,7 +1557,7 @@ label67
 	RETURN
 ; } tick_calc_diff function end
 
-	ORG 0x00000846
+	ORG 0x0000088A
 initialise_00000
 ; { initialise ; function begin
 	CLRF gbl_trisa
@@ -1527,7 +1572,7 @@ initialise_00000
 	MOVWF gbl_adcon1
 	BSF gbl_ucon,3
 	BCF gbl_intcon2,7
-	MOVLB 0x00
+	CALL usb_setup_00000
 	BCF timer_setu_00024_arg_mode_8_bit,0, 1
 	SETF timer_setu_00024_arg_presc_00025, 1
 	MOVLW 0x8A
@@ -1538,11 +1583,12 @@ initialise_00000
 	CALL turn_usb_i_00020
 	BSF gbl_intcon,6
 	BSF gbl_intcon,7
+	CALL usb_enable_0000D
 	CALL timer_star_00027
 	RETURN
 ; } initialise function end
 
-	ORG 0x0000087E
+	ORG 0x000008C8
 main
 ; { main ; function begin
 	CALL initialise_00000
@@ -1612,32 +1658,44 @@ label70
 	CLRF main_1_left_count, 1
 	CLRF main_1_check_count, 1
 label71
-	BTFSS gbl_portb,2
-	BRA	label68
+	MOVLW 0x00
+	BTFSC gbl_portb,2
+	XORLW 0x01
+	BTFSC gbl_buttonOld,1, 1
+	XORLW 0x01
+	ANDLW 0xFF
+	BZ	label73
+	BTFSC gbl_portb,2
+	BRA	label73
 	MOVLW 0x64
 	MOVWF delay_ms_00000_arg_del, 1
 	CALL delay_ms_00000
-	BTFSS gbl_portb,2
-	BRA	label68
-	BTFSS gbl_isJiggling,0, 1
+	BTFSC gbl_portb,2
+	BRA	label73
+	BTFSC gbl_isJiggling,0, 1
 	BRA	label72
 	BSF gbl_isJiggling,0, 1
 	BSF gbl_portb,1
-	BRA	label68
+	BRA	label73
 label72
 	BCF gbl_isJiggling,0, 1
 	BCF gbl_portb,1
+label73
+	BCF gbl_buttonOld,1, 1
+	BTFSC gbl_portb,2
+	BSF gbl_buttonOld,1, 1
 	BRA	label68
 ; } main function end
 
-	ORG 0x00000926
+	ORG 0x00000984
 _startup
 	MOVLB 0x00
 	BCF gbl_isJiggling,0, 1
+	BSF gbl_buttonOld,1, 1
 	CLRF gbl_19_tick
 	CLRF gbl_19_tick+D'1'
 	CLRF gbl_do_task, 1
-	BCF gbl_receive,1, 1
+	BCF gbl_receive,2, 1
 	CLRF gbl_send_to, 1
 	CLRF gbl_20_tick, 1
 	CLRF gbl_20_tick+D'1', 1
@@ -1945,7 +2003,7 @@ _startup
 	MOVWF gbl_string_02+D'18', 1
 	CLRF gbl_string_02+D'19', 1
 	GOTO	main
-	ORG 0x00000B9A
+	ORG 0x00000BFA
 interrupt
 ; { interrupt ; function begin
 	MOVFF FSR0H,  Int1Context
@@ -1954,7 +2012,7 @@ interrupt
 	MOVFF PRODL,  Int1Context+D'3'
 	CALL usb_handle_0000E
 	BTFSS gbl_intcon,2
-	BRA	label74
+	BRA	label75
 	MOVLB 0x00
 	CLRF interrupt_6_start_value+D'1', 1
 	MOVF gbl_timer_0_start_value, W, 1
@@ -1971,7 +2029,7 @@ interrupt
 	MOVWF gbl_tmr0l
 	BCF gbl_intcon,2
 	CALL timer_0_ca_00029
-label74
+label75
 	MOVFF Int1Context+D'3',  PRODL
 	MOVFF Int1Context+D'2',  PRODH
 	MOVFF Int1Context+D'1',  FSR0L

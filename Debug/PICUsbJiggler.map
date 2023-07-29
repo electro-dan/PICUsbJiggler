@@ -34,18 +34,20 @@ Address  Length   Unique Name      Name
 000006A6:00000008 handle_tic_00023 handle_tick(void)  
 000006AE:00000026 usb_handle_0000E usb_handle_isr(void)  
 000006D4:00000006 timer_0_ca_00029 timer_0_callback(void)  
-000006DA:0000000A turn_usb_i_00020 turn_usb_ints_on(void)  
-000006E4:0000000E timer_star_00027 timer_start_0(void)  
-000006F2:0000002C timer_setu_00024 timer_setup_0(bit,unsigned char,unsigned short)  
-0000071E:000000B6 usb_send_d_0000F usb_send_data(unsigned char,unsigned char*,unsigned char,bit)  
-000007D4:00000008 usb_get_st_00012 usb_get_state(void)  
-000007DC:00000028 tick_get_c_00021 tick_get_count(void)  
-00000804:00000042 tick_calc__00022 tick_calc_diff(unsigned short,unsigned short)  
-00000846:00000038 initialise_00000 initialise(void)  
-0000087E:000000A8 main             main(void)  
-00000926:00000274 _startup_00000   _startup(void)  
-00000B9A:0000004C interrupt        interrupt(void)  
-00000BE6:0000741A *Unused Block 
+000006DA:00000038 usb_setup_00000  usb_setup(void)  
+00000712:0000000C usb_enable_0000D usb_enable_module(void)  
+0000071E:0000000A turn_usb_i_00020 turn_usb_ints_on(void)  
+00000728:0000000E timer_star_00027 timer_start_0(void)  
+00000736:0000002C timer_setu_00024 timer_setup_0(bit,unsigned char,unsigned short)  
+00000762:000000B6 usb_send_d_0000F usb_send_data(unsigned char,unsigned char*,unsigned char,bit)  
+00000818:00000008 usb_get_st_00012 usb_get_state(void)  
+00000820:00000028 tick_get_c_00021 tick_get_count(void)  
+00000848:00000042 tick_calc__00022 tick_calc_diff(unsigned short,unsigned short)  
+0000088A:0000003E initialise_00000 initialise(void)  
+000008C8:000000BC main             main(void)  
+00000984:00000276 _startup_00000   _startup(void)  
+00000BFA:0000004C interrupt        interrupt(void)  
+00000C46:000073BA *Unused Block 
 
 Register usage
 ==============
@@ -76,7 +78,7 @@ Address  Bit Lengh Bit Mask   Unique Name                      Name
 000000CC:00000010             gbl_delivery_ptr                 delivery_ptr
 000000CE:00000010             gbl_delivery_buffer              delivery_buffer
 000000D0:00000010             gbl_delivery_bd                  delivery_bd
-000000D2:00000001  0b00000010 gbl_receive                      receive
+000000D2:00000001  0b00000100 gbl_receive                      receive
 000000D3:00000008             gbl_do_task                      do_task
 000000D4:00000008             gbl_send_to                      send_to
 000000D5:00000008             gbl_usb_state                    usb_state
@@ -279,4 +281,4 @@ Memory Usage Report
 ===================
 RAM available:2048 bytes, used:358 bytes (17.5%), free:1690 bytes (82.5%), 
 Heap size:754 bytes, Heap max single alloc:127 bytes
-ROM available:32768 bytes, used:3046 bytes (9.3%), free:29722 bytes (90.7%)
+ROM available:32768 bytes, used:3142 bytes (9.6%), free:29626 bytes (90.4%)

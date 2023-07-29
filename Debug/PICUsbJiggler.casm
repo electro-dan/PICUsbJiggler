@@ -12,8 +12,11 @@
 #define BUTTON (portb.2) // Button (switch) pin
 
 bit isJiggling = 0; // When 0, device does nothing
-0926  0100      	MOVLB 0x00
-0928  91D2      	BCF gbl_isJiggling,0, 1
+0984  0100      	MOVLB 0x00
+0986  91D2      	BCF gbl_isJiggling,0, 1
+
+bit buttonOld = 1;
+0988  83D2      	BSF gbl_buttonOld,1, 1
 
 
 #endif //_PICUSBJIGGLER_H_
@@ -38,8 +41,8 @@ bit isJiggling = 0; // When 0, device does nothing
 
 /** Global tick counter */
 static uns16 tick = 0;
-092A  6A5E      	CLRF gbl_19_tick
-092C  6A5F      	CLRF gbl_19_tick+D'1'
+098A  6A5E      	CLRF gbl_19_tick
+098C  6A5F      	CLRF gbl_19_tick+D'1'
 
 
 /**
@@ -113,17 +116,17 @@ Requires http://embeddedadventures.blogspot.com/2009/01/picpack-20-released.html
 
 // See if we need to do a task
 uns8 do_task = 0;
-092E  6BD3      	CLRF gbl_do_task, 1
+098E  6BD3      	CLRF gbl_do_task, 1
 
 
 // Flag if we received something
 bit receive = 0;
-0930  93D2      	BCF gbl_receive,1, 1
+0990  95D2      	BCF gbl_receive,2, 1
 
 
 // Dummy variable to show we can set it 
 uns8 send_to = 0;
-0932  6BD4      	CLRF gbl_send_to, 1
+0992  6BD4      	CLRF gbl_send_to, 1
 
 
 /******************************************************
@@ -134,70 +137,76 @@ void initialise() {
 
     // IO ports setup
     trisa = 0x00; // all ouptuts
-0846  6A92      	CLRF gbl_trisa
+088A  6A92      	CLRF gbl_trisa
 
     porta = 0x00; // set to off
-0848  6A80      	CLRF gbl_porta
+088C  6A80      	CLRF gbl_porta
 
     trisb = 0x04; // RB2 input
-084A  0E04      	MOVLW 0x04
-084C  6E93      	MOVWF gbl_trisb
+088E  0E04      	MOVLW 0x04
+0890  6E93      	MOVWF gbl_trisb
 
     portb = 0x00; // set to off
-084E  6A81      	CLRF gbl_portb
+0892  6A81      	CLRF gbl_portb
 
     trisc = 0x00; // all ouptuts
-0850  6A94      	CLRF gbl_trisc
+0894  6A94      	CLRF gbl_trisc
 
     portc = 0x00; // set to off
-0852  6A82      	CLRF gbl_portc
+0896  6A82      	CLRF gbl_portc
 
 
     // ADC setup
     adcon0 = 0x00; //  ADC off
-0854  6AC2      	CLRF gbl_adcon0
+0898  6AC2      	CLRF gbl_adcon0
 
     adcon1 = 0x0F; // All digital I/O
-0856  0E0F      	MOVLW 0x0F
-0858  6EC1      	MOVWF gbl_adcon1
+089A  0E0F      	MOVLW 0x0F
+089C  6EC1      	MOVWF gbl_adcon1
 
     
     // USB setup
     ucon.USBEN = 1; // USB on
-085A  866D      	BSF gbl_ucon,3
+089E  866D      	BSF gbl_ucon,3
 
 
     intcon2.RBPU = 0; // Port B pull-ups enabled
-085C  9EF1      	BCF gbl_intcon2,7
+08A0  9EF1      	BCF gbl_intcon2,7
 
+
+	usb_setup();
+08A2  EC6DF003  	CALL usb_setup_00000
 
     
     timer_setup_0(TIMER_16BIT_MODE, TIMER_PRESCALER_OFF, 59530); // close enough to 1ms at 24Mhz
-085E  0100      	MOVLB 0x00
-0860  91E7      	BCF timer_setu_00024_arg_mode_8_bit,0, 1
-0862  69E8      	SETF timer_setu_00024_arg_presc_00025, 1
-0864  0E8A      	MOVLW 0x8A
-0866  6FE9      	MOVWF timer_setu_00024_arg_timer_00026, 1
-0868  0EE8      	MOVLW 0xE8
-086A  6FEA      	MOVWF timer_setu_00024_arg_timer_00026+D'1', 1
-086C  EC79F003  	CALL timer_setu_00024
+08A6  91E7      	BCF timer_setu_00024_arg_mode_8_bit,0, 1
+08A8  69E8      	SETF timer_setu_00024_arg_presc_00025, 1
+08AA  0E8A      	MOVLW 0x8A
+08AC  6FE9      	MOVWF timer_setu_00024_arg_timer_00026, 1
+08AE  0EE8      	MOVLW 0xE8
+08B0  6FEA      	MOVWF timer_setu_00024_arg_timer_00026+D'1', 1
+08B2  EC9BF003  	CALL timer_setu_00024
 
 
 	turn_usb_ints_on();
-0870  EC6DF003  	CALL turn_usb_i_00020
+08B6  EC8FF003  	CALL turn_usb_i_00020
 
     intcon.PEIE = 1; // Enables all unmasked peripheral interrupts
-0874  8CF2      	BSF gbl_intcon,6
+08BA  8CF2      	BSF gbl_intcon,6
 
     intcon.GIE = 1;
-0876  8EF2      	BSF gbl_intcon,7
+08BC  8EF2      	BSF gbl_intcon,7
+
+    
+    usb_enable_module();
+08BE  EC89F003  	CALL usb_enable_0000D
 
     
     timer_start_0();
-0878  EC72F003  	CALL timer_star_00027
+08C2  EC94F003  	CALL timer_star_00027
 
 }
-087C  0012      	RETURN
+08C6  0012      	RETURN
 
 
 // Interrupt routine - - - - - - - - - -
@@ -216,39 +225,39 @@ void timer_0_callback() {
 void interrupt(void) {
 
 	usb_handle_isr();
-0B9A  CFEAF001  	MOVFF FSR0H,  Int1Context
-0B9E  CFE9F002  	MOVFF FSR0L,  Int1Context+D'1'
-0BA2  CFF4F003  	MOVFF PRODH,  Int1Context+D'2'
-0BA6  CFF3F004  	MOVFF PRODL,  Int1Context+D'3'
-0BAA  EC57F003  	CALL usb_handle_0000E
+0BFA  CFEAF001  	MOVFF FSR0H,  Int1Context
+0BFE  CFE9F002  	MOVFF FSR0L,  Int1Context+D'1'
+0C02  CFF4F003  	MOVFF PRODH,  Int1Context+D'2'
+0C06  CFF3F004  	MOVFF PRODL,  Int1Context+D'3'
+0C0A  EC57F003  	CALL usb_handle_0000E
 
 	timer_handle_0_isr();
-0BAE  A4F2      	BTFSS gbl_intcon,2
-0BB0  D011      	BRA	label74
-0BB2  0100      	MOVLB 0x00
-0BB4  6BF5      	CLRF interrupt_6_start_value+D'1', 1
-0BB6  51C4      	MOVF gbl_timer_0_start_value, W, 1
-0BB8  24D6      	ADDWF gbl_tmr0l, W
-0BBA  6FF4      	MOVWF interrupt_6_start_value, 1
-0BBC  51C5      	MOVF gbl_timer_0_start_value+D'1', W, 1
-0BBE  23F5      	ADDWFC interrupt_6_start_value+D'1', F, 1
-0BC0  2BF4      	INCF interrupt_6_start_value, F, 1
-0BC2  B4D8      	BTFSC STATUS,Z
-0BC4  2BF5      	INCF interrupt_6_start_value+D'1', F, 1
-0BC6  51F5      	MOVF interrupt_6_start_value+D'1', W, 1
-0BC8  6ED7      	MOVWF gbl_tmr0h
-0BCA  51F4      	MOVF interrupt_6_start_value, W, 1
-0BCC  6ED6      	MOVWF gbl_tmr0l
-0BCE  94F2      	BCF gbl_intcon,2
-0BD0  EC6AF003  	CALL timer_0_ca_00029
-0BD4            label74
+0C0E  A4F2      	BTFSS gbl_intcon,2
+0C10  D011      	BRA	label75
+0C12  0100      	MOVLB 0x00
+0C14  6BF5      	CLRF interrupt_6_start_value+D'1', 1
+0C16  51C4      	MOVF gbl_timer_0_start_value, W, 1
+0C18  24D6      	ADDWF gbl_tmr0l, W
+0C1A  6FF4      	MOVWF interrupt_6_start_value, 1
+0C1C  51C5      	MOVF gbl_timer_0_start_value+D'1', W, 1
+0C1E  23F5      	ADDWFC interrupt_6_start_value+D'1', F, 1
+0C20  2BF4      	INCF interrupt_6_start_value, F, 1
+0C22  B4D8      	BTFSC STATUS,Z
+0C24  2BF5      	INCF interrupt_6_start_value+D'1', F, 1
+0C26  51F5      	MOVF interrupt_6_start_value+D'1', W, 1
+0C28  6ED7      	MOVWF gbl_tmr0h
+0C2A  51F4      	MOVF interrupt_6_start_value, W, 1
+0C2C  6ED6      	MOVWF gbl_tmr0l
+0C2E  94F2      	BCF gbl_intcon,2
+0C30  EC6AF003  	CALL timer_0_ca_00029
+0C34            label75
 
 }
-0BD4  C004FFF3  	MOVFF Int1Context+D'3',  PRODL
-0BD8  C003FFF4  	MOVFF Int1Context+D'2',  PRODH
-0BDC  C002FFE9  	MOVFF Int1Context+D'1',  FSR0L
-0BE0  C001FFEA  	MOVFF Int1Context,  FSR0H
-0BE4  0011      	RETFIE 1
+0C34  C004FFF3  	MOVFF Int1Context+D'3',  PRODL
+0C38  C003FFF4  	MOVFF Int1Context+D'2',  PRODH
+0C3C  C002FFE9  	MOVFF Int1Context+D'1',  FSR0L
+0C40  C001FFEA  	MOVFF Int1Context,  FSR0H
+0C44  0011      	RETFIE 1
 
 
 //-----------------------------------------------------------------------------
@@ -257,161 +266,177 @@ void interrupt(void) {
 void main() {
 
     initialise();
-087E  EC23F004  	CALL initialise_00000
+08C8  EC45F004  	CALL initialise_00000
 
     
     uns16 tick_marker = 0;
-0882  6BDE      	CLRF main_1_tick_marker, 1
-0884  6BDF      	CLRF main_1_tick_marker+D'1', 1
+08CC  6BDE      	CLRF main_1_tick_marker, 1
+08CE  6BDF      	CLRF main_1_tick_marker+D'1', 1
 
 	uns16 test_tick;
 	uns8 left_count = 0;
-0886  6BE2      	CLRF main_1_left_count, 1
+08D0  6BE2      	CLRF main_1_left_count, 1
 
 	uns8 check_count = 0;
-0888  6BE3      	CLRF main_1_check_count, 1
+08D2  6BE3      	CLRF main_1_check_count, 1
 
 	signed char buffer[3];
     
     while (1) {
-088A            label68
-0924  D7B2      	BRA	label68
+08D4            label68
+0982  D7A8      	BRA	label68
 
 		test_tick = tick_get_count();	// find out what we're up to
-088A  ECEEF003  	CALL tick_get_c_00021
-088E  51EA      	MOVF CompTempVarRet735, W, 1
-0890  6FE0      	MOVWF main_1_test_tick, 1
-0892  51EB      	MOVF CompTempVarRet735+D'1', W, 1
-0894  6FE1      	MOVWF main_1_test_tick+D'1', 1
+08D4  EC10F004  	CALL tick_get_c_00021
+08D8  51EA      	MOVF CompTempVarRet735, W, 1
+08DA  6FE0      	MOVWF main_1_test_tick, 1
+08DC  51EB      	MOVF CompTempVarRet735+D'1', W, 1
+08DE  6FE1      	MOVWF main_1_test_tick+D'1', 1
 
 		if (tick_calc_diff(tick_marker, test_tick) > 3) {	// every 3 ms
-0896  51DE      	MOVF main_1_tick_marker, W, 1
-0898  6FE7      	MOVWF tick_calc__00022_arg_a, 1
-089A  51DF      	MOVF main_1_tick_marker+D'1', W, 1
-089C  6FE8      	MOVWF tick_calc__00022_arg_a+D'1', 1
-089E  51E0      	MOVF main_1_test_tick, W, 1
-08A0  6FE9      	MOVWF tick_calc__00022_arg_b, 1
-08A2  51E1      	MOVF main_1_test_tick+D'1', W, 1
-08A4  6FEA      	MOVWF tick_calc__00022_arg_b+D'1', 1
-08A6  EC02F004  	CALL tick_calc__00022
-08AA  0E03      	MOVLW 0x03
-08AC  65EB      	CPFSGT CompTempVarRet736, 1
-08AE  67EC      	TSTFSZ CompTempVarRet736+D'1', 1
-08B0  D001      	BRA	label69
-08B2  D029      	BRA	label71
-08B4            label69
+08E0  51DE      	MOVF main_1_tick_marker, W, 1
+08E2  6FE7      	MOVWF tick_calc__00022_arg_a, 1
+08E4  51DF      	MOVF main_1_tick_marker+D'1', W, 1
+08E6  6FE8      	MOVWF tick_calc__00022_arg_a+D'1', 1
+08E8  51E0      	MOVF main_1_test_tick, W, 1
+08EA  6FE9      	MOVWF tick_calc__00022_arg_b, 1
+08EC  51E1      	MOVF main_1_test_tick+D'1', W, 1
+08EE  6FEA      	MOVWF tick_calc__00022_arg_b+D'1', 1
+08F0  EC24F004  	CALL tick_calc__00022
+08F4  0E03      	MOVLW 0x03
+08F6  65EB      	CPFSGT CompTempVarRet736, 1
+08F8  67EC      	TSTFSZ CompTempVarRet736+D'1', 1
+08FA  D001      	BRA	label69
+08FC  D029      	BRA	label71
+08FE            label69
 
 			tick_marker = test_tick;
-08B4  51E0      	MOVF main_1_test_tick, W, 1
-08B6  6FDE      	MOVWF main_1_tick_marker, 1
-08B8  51E1      	MOVF main_1_test_tick+D'1', W, 1
-08BA  6FDF      	MOVWF main_1_tick_marker+D'1', 1
+08FE  51E0      	MOVF main_1_test_tick, W, 1
+0900  6FDE      	MOVWF main_1_tick_marker, 1
+0902  51E1      	MOVF main_1_test_tick+D'1', W, 1
+0904  6FDF      	MOVWF main_1_tick_marker+D'1', 1
 
 			left_count++;
-08BC  2BE2      	INCF main_1_left_count, F, 1
+0906  2BE2      	INCF main_1_left_count, F, 1
 
 			check_count++;
-08BE  2BE3      	INCF main_1_check_count, F, 1
+0908  2BE3      	INCF main_1_check_count, F, 1
 
 			if (check_count == 5) {
-08C0  0E05      	MOVLW 0x05
-08C2  63E3      	CPFSEQ main_1_check_count, 1
-08C4  D020      	BRA	label71
-0906            label71
+090A  0E05      	MOVLW 0x05
+090C  63E3      	CPFSEQ main_1_check_count, 1
+090E  D020      	BRA	label71
+0950            label71
 
 				check_count = 0;
-08C6  6BE3      	CLRF main_1_check_count, 1
+0910  6BE3      	CLRF main_1_check_count, 1
 
 				if (usb_get_state() == st_CONFIGURED) {
-08C8  ECEAF003  	CALL usb_get_st_00012
-08CC  0E03      	MOVLW 0x03
-08CE  63E7      	CPFSEQ CompTempVarRet791, 1
-08D0  D018      	BRA	label70
+0912  EC0CF004  	CALL usb_get_st_00012
+0916  0E03      	MOVLW 0x03
+0918  63E7      	CPFSEQ CompTempVarRet791, 1
+091A  D018      	BRA	label70
 
                     if (isJiggling) {
-08D2  A1D2      	BTFSS gbl_isJiggling,0, 1
-08D4  D016      	BRA	label70
+091C  A1D2      	BTFSS gbl_isJiggling,0, 1
+091E  D016      	BRA	label70
 
                         // Emit random movement
                         buffer[0] = 0;
-08D6  6BE4      	CLRF main_1_buffer, 1
+0920  6BE4      	CLRF main_1_buffer, 1
 
                         buffer[1] = 0 - left_count;	
-08D8  51E2      	MOVF main_1_left_count, W, 1
-08DA  0800      	SUBLW 0x00
-08DC  6FE5      	MOVWF main_1_buffer+D'1', 1
+0922  51E2      	MOVF main_1_left_count, W, 1
+0924  0800      	SUBLW 0x00
+0926  6FE5      	MOVWF main_1_buffer+D'1', 1
 
                         buffer[2] = 0;
-08DE  6BE6      	CLRF main_1_buffer+D'2', 1
+0928  6BE6      	CLRF main_1_buffer+D'2', 1
 
                         if (buffer[0] | buffer[1] | buffer[2])
-08E0  51E5      	MOVF main_1_buffer+D'1', W, 1
-08E2  11E4      	IORWF main_1_buffer, W, 1
-08E4  6FE7      	MOVWF CompTempVar730, 1
-08E6  51E6      	MOVF main_1_buffer+D'2', W, 1
-08E8  11E7      	IORWF CompTempVar730, W, 1
-08EA  E00B      	BZ	label70
-0902            label70
+092A  51E5      	MOVF main_1_buffer+D'1', W, 1
+092C  11E4      	IORWF main_1_buffer, W, 1
+092E  6FE7      	MOVWF CompTempVar730, 1
+0930  51E6      	MOVF main_1_buffer+D'2', W, 1
+0932  11E7      	IORWF CompTempVar730, W, 1
+0934  E00B      	BZ	label70
+094C            label70
 
                             usb_send_data(1, (uns8 *)&buffer, 3, /*first*/ 0); // ep 1
-08EC  0E01      	MOVLW 0x01
-08EE  6FE8      	MOVWF usb_send_d_0000F_arg_ep, 1
-08F0  0E00      	MOVLW HIGH(main_1_buffer+D'0')
-08F2  6FEA      	MOVWF usb_send_d_0000F_arg_data+D'1', 1
-08F4  0EE4      	MOVLW LOW(main_1_buffer+D'0')
-08F6  6FE9      	MOVWF usb_send_d_0000F_arg_data, 1
-08F8  0E03      	MOVLW 0x03
-08FA  6FEB      	MOVWF usb_send_d_0000F_arg_send_count, 1
-08FC  91EC      	BCF usb_send_d_0000F_arg_first,0, 1
-08FE  EC8FF003  	CALL usb_send_d_0000F
+0936  0E01      	MOVLW 0x01
+0938  6FE8      	MOVWF usb_send_d_0000F_arg_ep, 1
+093A  0E00      	MOVLW HIGH(main_1_buffer+D'0')
+093C  6FEA      	MOVWF usb_send_d_0000F_arg_data+D'1', 1
+093E  0EE4      	MOVLW LOW(main_1_buffer+D'0')
+0940  6FE9      	MOVWF usb_send_d_0000F_arg_data, 1
+0942  0E03      	MOVLW 0x03
+0944  6FEB      	MOVWF usb_send_d_0000F_arg_send_count, 1
+0946  91EC      	BCF usb_send_d_0000F_arg_first,0, 1
+0948  ECB1F003  	CALL usb_send_d_0000F
 
                     }
 				}
 				left_count = 0;
-0902  6BE2      	CLRF main_1_left_count, 1
+094C  6BE2      	CLRF main_1_left_count, 1
 
 				check_count = 0;
-0904  6BE3      	CLRF main_1_check_count, 1
+094E  6BE3      	CLRF main_1_check_count, 1
 
 			}	
 		}
         // Check for button press
-        if(BUTTON) {
-0906  A481      	BTFSS gbl_portb,2
-0908  D7C0      	BRA	label68
+        if(buttonOld != BUTTON) {
+0950  0E00      	MOVLW 0x00
+0952  B481      	BTFSC gbl_portb,2
+0954  0A01      	XORLW 0x01
+0956  B3D2      	BTFSC gbl_buttonOld,1, 1
+0958  0A01      	XORLW 0x01
+095A  0BFF      	ANDLW 0xFF
+095C  E00F      	BZ	label73
 
-			delay_ms(100);
-090A  0E64      	MOVLW 0x64
-090C  6FE7      	MOVWF delay_ms_00000_arg_del, 1
-090E  EC06F000  	CALL delay_ms_00000
+			if(!BUTTON) {
+095E  B481      	BTFSC gbl_portb,2
+0960  D00D      	BRA	label73
 
-			if(BUTTON) {
-0912  A481      	BTFSS gbl_portb,2
-0914  D7BA      	BRA	label68
+				delay_ms(100);
+0962  0E64      	MOVLW 0x64
+0964  6FE7      	MOVWF delay_ms_00000_arg_del, 1
+0966  EC06F000  	CALL delay_ms_00000
 
-				if (isJiggling) {
-0916  A1D2      	BTFSS gbl_isJiggling,0, 1
-0918  D003      	BRA	label72
-0920            label72
+				if(!BUTTON) {
+096A  B481      	BTFSC gbl_portb,2
+096C  D007      	BRA	label73
 
-					isJiggling = 1;
-091A  81D2      	BSF gbl_isJiggling,0, 1
+					if (!isJiggling) {
+096E  B1D2      	BTFSC gbl_isJiggling,0, 1
+0970  D003      	BRA	label72
+0978            label72
 
-					LED = 1;
-091C  8281      	BSF gbl_portb,1
+						isJiggling = 1;
+0972  81D2      	BSF gbl_isJiggling,0, 1
 
-				} else {
-091E  D7B5      	BRA	label68
+						LED = 1;
+0974  8281      	BSF gbl_portb,1
 
-					isJiggling = 0;
-0920  91D2      	BCF gbl_isJiggling,0, 1
+					} else {
+0976  D002      	BRA	label73
+097C            label73
 
-					LED = 0;
-0922  9281      	BCF gbl_portb,1
+						isJiggling = 0;
+0978  91D2      	BCF gbl_isJiggling,0, 1
 
+						LED = 0;
+097A  9281      	BCF gbl_portb,1
+
+					}
 				}
 			}
         }
+        buttonOld = BUTTON;
+097C  93D2      	BCF gbl_buttonOld,1, 1
+097E  B481      	BTFSC gbl_portb,2
+0980  83D2      	BSF gbl_buttonOld,1, 1
+
     }
 } 
 
@@ -436,8 +461,8 @@ void main() {
 
 /** Global tick counter */
 static uns16 tick = 0;
-0934  6BC2      	CLRF gbl_20_tick, 1
-0936  6BC3      	CLRF gbl_20_tick+D'1', 1
+0994  6BC2      	CLRF gbl_20_tick, 1
+0996  6BC3      	CLRF gbl_20_tick+D'1', 1
 
 
 /**
@@ -501,86 +526,86 @@ bit my_store_gie;
 uns16 result;
 
 	my_store_gie = intcon.GIE;	// save global interrupt       
-07DC  0100      	MOVLB 0x00
-07DE  91E7      	BCF tick_get_c_00021_1_my_store_gie,0, 1
-07E0  BEF2      	BTFSC gbl_intcon,7
-07E2  81E7      	BSF tick_get_c_00021_1_my_store_gie,0, 1
-07E4            label66
+0820  0100      	MOVLB 0x00
+0822  91E7      	BCF tick_get_c_00021_1_my_store_gie,0, 1
+0824  BEF2      	BTFSC gbl_intcon,7
+0826  81E7      	BSF tick_get_c_00021_1_my_store_gie,0, 1
+0828            label66
 
 	kill_interrupts();	// turn them off
-07E4  9EF2      	BCF gbl_intcon,7
-07E6  BEF2      	BTFSC gbl_intcon,7
-07E8  D7FD      	BRA	label66
+0828  9EF2      	BCF gbl_intcon,7
+082A  BEF2      	BTFSC gbl_intcon,7
+082C  D7FD      	BRA	label66
 
 
 	result = tick;	// Grab a copy
-07EA  51C2      	MOVF gbl_20_tick, W, 1
-07EC  6FE8      	MOVWF tick_get_c_00021_1_result, 1
-07EE  51C3      	MOVF gbl_20_tick+D'1', W, 1
-07F0  6FE9      	MOVWF tick_get_c_00021_1_result+D'1', 1
+082E  51C2      	MOVF gbl_20_tick, W, 1
+0830  6FE8      	MOVWF tick_get_c_00021_1_result, 1
+0832  51C3      	MOVF gbl_20_tick+D'1', W, 1
+0834  6FE9      	MOVWF tick_get_c_00021_1_result+D'1', 1
 
 			
 	intcon.GIE = my_store_gie;	// interrupts back to normal
-07F2  B1E7      	BTFSC tick_get_c_00021_1_my_store_gie,0, 1
-07F4  8EF2      	BSF gbl_intcon,7
-07F6  A1E7      	BTFSS tick_get_c_00021_1_my_store_gie,0, 1
-07F8  9EF2      	BCF gbl_intcon,7
+0836  B1E7      	BTFSC tick_get_c_00021_1_my_store_gie,0, 1
+0838  8EF2      	BSF gbl_intcon,7
+083A  A1E7      	BTFSS tick_get_c_00021_1_my_store_gie,0, 1
+083C  9EF2      	BCF gbl_intcon,7
 
 	return result;	// return the result
-07FA  51E8      	MOVF tick_get_c_00021_1_result, W, 1
-07FC  6FEA      	MOVWF CompTempVarRet735, 1
-07FE  51E9      	MOVF tick_get_c_00021_1_result+D'1', W, 1
-0800  6FEB      	MOVWF CompTempVarRet735+D'1', 1
+083E  51E8      	MOVF tick_get_c_00021_1_result, W, 1
+0840  6FEA      	MOVWF CompTempVarRet735, 1
+0842  51E9      	MOVF tick_get_c_00021_1_result+D'1', W, 1
+0844  6FEB      	MOVWF CompTempVarRet735+D'1', 1
 
 }	
-0802  0012      	RETURN
+0846  0012      	RETURN
 
 	
 uns16 tick_calc_diff(uns16 a, uns16 b) {
 
 	if (a <= b) {	// simple case
-0804  51E7      	MOVF tick_calc__00022_arg_a, W, 1
-0806  5DE9      	SUBWF tick_calc__00022_arg_b, W, 1
-0808  51E8      	MOVF tick_calc__00022_arg_a+D'1', W, 1
-080A  63EA      	CPFSEQ tick_calc__00022_arg_b+D'1', 1
-080C  5DEA      	SUBWF tick_calc__00022_arg_b+D'1', W, 1
-080E  E307      	BNC	label67
-081E            label67
+0848  51E7      	MOVF tick_calc__00022_arg_a, W, 1
+084A  5DE9      	SUBWF tick_calc__00022_arg_b, W, 1
+084C  51E8      	MOVF tick_calc__00022_arg_a+D'1', W, 1
+084E  63EA      	CPFSEQ tick_calc__00022_arg_b+D'1', 1
+0850  5DEA      	SUBWF tick_calc__00022_arg_b+D'1', W, 1
+0852  E307      	BNC	label67
+0862            label67
 
 		return b-a;
-0810  51E7      	MOVF tick_calc__00022_arg_a, W, 1
-0812  5DE9      	SUBWF tick_calc__00022_arg_b, W, 1
-0814  6FEB      	MOVWF CompTempVarRet736, 1
-0816  51E8      	MOVF tick_calc__00022_arg_a+D'1', W, 1
-0818  59EA      	SUBWFB tick_calc__00022_arg_b+D'1', W, 1
-081A  6FEC      	MOVWF CompTempVarRet736+D'1', 1
+0854  51E7      	MOVF tick_calc__00022_arg_a, W, 1
+0856  5DE9      	SUBWF tick_calc__00022_arg_b, W, 1
+0858  6FEB      	MOVWF CompTempVarRet736, 1
+085A  51E8      	MOVF tick_calc__00022_arg_a+D'1', W, 1
+085C  59EA      	SUBWFB tick_calc__00022_arg_b+D'1', W, 1
+085E  6FEC      	MOVWF CompTempVarRet736+D'1', 1
 
 	} else {
 		return 65535 - a + b + 1;	// more complex case
-081E  51E7      	MOVF tick_calc__00022_arg_a, W, 1
-0820  08FF      	SUBLW 0xFF
-0822  6FEE      	MOVWF CompTempVar743, 1
-0824  0EFF      	MOVLW 0xFF
-0826  55E8      	SUBFWB tick_calc__00022_arg_a+D'1', W, 1
-0828  6FED      	MOVWF CompTempVar740, 1
-082A  51E9      	MOVF tick_calc__00022_arg_b, W, 1
-082C  27EE      	ADDWF CompTempVar743, F, 1
-082E  51EA      	MOVF tick_calc__00022_arg_b+D'1', W, 1
-0830  6FEF      	MOVWF CompTempVar744, 1
-0832  51ED      	MOVF CompTempVar740, W, 1
-0834  23EF      	ADDWFC CompTempVar744, F, 1
-0836  2BEE      	INCF CompTempVar743, F, 1
-0838  B4D8      	BTFSC STATUS,Z
-083A  2BEF      	INCF CompTempVar744, F, 1
-083C  51EE      	MOVF CompTempVar743, W, 1
-083E  6FEB      	MOVWF CompTempVarRet736, 1
-0840  51EF      	MOVF CompTempVar744, W, 1
-0842  6FEC      	MOVWF CompTempVarRet736+D'1', 1
+0862  51E7      	MOVF tick_calc__00022_arg_a, W, 1
+0864  08FF      	SUBLW 0xFF
+0866  6FEE      	MOVWF CompTempVar743, 1
+0868  0EFF      	MOVLW 0xFF
+086A  55E8      	SUBFWB tick_calc__00022_arg_a+D'1', W, 1
+086C  6FED      	MOVWF CompTempVar740, 1
+086E  51E9      	MOVF tick_calc__00022_arg_b, W, 1
+0870  27EE      	ADDWF CompTempVar743, F, 1
+0872  51EA      	MOVF tick_calc__00022_arg_b+D'1', W, 1
+0874  6FEF      	MOVWF CompTempVar744, 1
+0876  51ED      	MOVF CompTempVar740, W, 1
+0878  23EF      	ADDWFC CompTempVar744, F, 1
+087A  2BEE      	INCF CompTempVar743, F, 1
+087C  B4D8      	BTFSC STATUS,Z
+087E  2BEF      	INCF CompTempVar744, F, 1
+0880  51EE      	MOVF CompTempVar743, W, 1
+0882  6FEB      	MOVWF CompTempVarRet736, 1
+0884  51EF      	MOVF CompTempVar744, W, 1
+0886  6FEC      	MOVWF CompTempVarRet736+D'1', 1
 
 	}
 }
-081C  0012      	RETURN
-0844  0012      	RETURN
+0860  0012      	RETURN
+0888  0012      	RETURN
 
 
 void handle_tick() {
@@ -615,8 +640,8 @@ void handle_tick() {
 
 #ifdef _PIC18
 	uns16 timer_0_start_value = 0;
-0938  6BC4      	CLRF gbl_timer_0_start_value, 1
-093A  6BC5      	CLRF gbl_timer_0_start_value+D'1', 1
+0998  6BC4      	CLRF gbl_timer_0_start_value, 1
+099A  6BC5      	CLRF gbl_timer_0_start_value+D'1', 1
 
 #endif
 #ifdef _PIC16
@@ -628,63 +653,63 @@ void timer_setup_0(bit mode_8_bit, uns8 prescaler_setting, uns16 timer_start_val
 
 
 	clear_bit(t0con, TMR0ON);	// turn off timer if it was on so we can get it set up
-06F2  9ED5      	BCF gbl_t0con,7
+0736  9ED5      	BCF gbl_t0con,7
 
 	if (mode_8_bit) {
-06F4  A1E7      	BTFSS timer_setu_00024_arg_mode_8_bit,0, 1
-06F6  D002      	BRA	label59
-06FC            label59
+0738  A1E7      	BTFSS timer_setu_00024_arg_mode_8_bit,0, 1
+073A  D002      	BRA	label59
+0740            label59
 
 		set_bit(t0con, T08BIT); 	// enable 8 bit mode 
-06F8  8CD5      	BSF gbl_t0con,6
+073C  8CD5      	BSF gbl_t0con,6
 
 	} else {
-06FA  D001      	BRA	label60
-06FE            label60
+073E  D001      	BRA	label60
+0742            label60
 
 		clear_bit(t0con, T08BIT);
-06FC  9CD5      	BCF gbl_t0con,6
+0740  9CD5      	BCF gbl_t0con,6
 
 	}	
 	clear_bit(t0con, T0CS);	// Internal instruction cycle clock
-06FE  9AD5      	BCF gbl_t0con,5
+0742  9AD5      	BCF gbl_t0con,5
 
 	// T0SE -- don't care
 	if (prescaler_setting == TIMER_PRESCALER_OFF) {
-0700  29E8      	INCF timer_setu_00024_arg_presc_00025, W, 1
-0702  E102      	BNZ	label61
-0708            label61
+0744  29E8      	INCF timer_setu_00024_arg_presc_00025, W, 1
+0746  E102      	BNZ	label61
+074C            label61
 
 		set_bit(t0con, PSA);
-0704  86D5      	BSF gbl_t0con,3
+0748  86D5      	BSF gbl_t0con,3
 
 	} else {
-0706  D005      	BRA	label62
-0712            label62
+074A  D005      	BRA	label62
+0756            label62
 
 		clear_bit(t0con, PSA);
-0708  96D5      	BCF gbl_t0con,3
+074C  96D5      	BCF gbl_t0con,3
 
 		t0con &= 0b11111000;
-070A  0EF8      	MOVLW 0xF8
-070C  16D5      	ANDWF gbl_t0con, F
+074E  0EF8      	MOVLW 0xF8
+0750  16D5      	ANDWF gbl_t0con, F
 
 		t0con |= prescaler_setting;
-070E  51E8      	MOVF timer_setu_00024_arg_presc_00025, W, 1
-0710  12D5      	IORWF gbl_t0con, F
+0752  51E8      	MOVF timer_setu_00024_arg_presc_00025, W, 1
+0754  12D5      	IORWF gbl_t0con, F
 
 	}
 	timer_0_start_value = timer_start_value;
-0712  51E9      	MOVF timer_setu_00024_arg_timer_00026, W, 1
-0714  6FC4      	MOVWF gbl_timer_0_start_value, 1
-0716  51EA      	MOVF timer_setu_00024_arg_timer_00026+D'1', W, 1
-0718  6FC5      	MOVWF gbl_timer_0_start_value+D'1', 1
+0756  51E9      	MOVF timer_setu_00024_arg_timer_00026, W, 1
+0758  6FC4      	MOVWF gbl_timer_0_start_value, 1
+075A  51EA      	MOVF timer_setu_00024_arg_timer_00026+D'1', W, 1
+075C  6FC5      	MOVWF gbl_timer_0_start_value+D'1', 1
 
 	set_bit(intcon, TMR0IE); 	// Turn on timer 0 interrupts
-071A  8AF2      	BSF gbl_intcon,5
+075E  8AF2      	BSF gbl_intcon,5
 
 }		
-071C  0012      	RETURN
+0760  0012      	RETURN
 
 #endif
 
@@ -709,19 +734,19 @@ void timer_setup_0(bit mode_8_bit, uns8 prescaler_setting, uns16 timer_start_val
 void timer_start_0() {
 
 	tmr0h = timer_0_start_value >> 8;
-06E4  0100      	MOVLB 0x00
-06E6  51C5      	MOVF gbl_timer_0_start_value+D'1', W, 1
-06E8  6ED7      	MOVWF gbl_tmr0h
+0728  0100      	MOVLB 0x00
+072A  51C5      	MOVF gbl_timer_0_start_value+D'1', W, 1
+072C  6ED7      	MOVWF gbl_tmr0h
 
 	tmr0l = timer_0_start_value & 0xff;
-06EA  51C4      	MOVF gbl_timer_0_start_value, W, 1
-06EC  6ED6      	MOVWF gbl_tmr0l
+072E  51C4      	MOVF gbl_timer_0_start_value, W, 1
+0730  6ED6      	MOVWF gbl_tmr0l
 
 	set_bit(t0con, TMR0ON);
-06EE  8ED5      	BSF gbl_t0con,7
+0732  8ED5      	BSF gbl_t0con,7
 
 }
-06F0  0012      	RETURN
+0734  0012      	RETURN
 
 #endif
 
@@ -767,7 +792,7 @@ void timer_stop_0() {
 // globally accessable variables
 
 usb_state_type usb_state = st_POWERED;
-093C  6BD5      	CLRF gbl_usb_state, 1
+099C  6BD5      	CLRF gbl_usb_state, 1
 
 
 setup_data_packet usb_sdp;
@@ -976,147 +1001,147 @@ uns8 *buffer;
 	
 	// need to grab buffer descriptor
 	buffer = ep_in_buffer_location[ep];
-071E  EE00F0AE  	LFSR 0x00,  gbl_ep_in_buffer_location
-0722  50E9      	MOVF FSR0L, W
-0724  51E8      	MOVF usb_send_d_0000F_arg_ep, W, 1
-0726  6FF2      	MOVWF CompTempVar775, 1
-0728  90D8      	BCF STATUS,C
-072A  35F2      	RLCF CompTempVar775, W, 1
-072C  26E9      	ADDWF FSR0L, F
-072E  50EE      	MOVF POSTINC0, W
-0730  6FF0      	MOVWF usb_send_d_0000F_1_buffer, 1
-0732  50EF      	MOVF INDF0, W
-0734  6FF1      	MOVWF usb_send_d_0000F_1_buffer+D'1', 1
+0762  EE00F0AE  	LFSR 0x00,  gbl_ep_in_buffer_location
+0766  50E9      	MOVF FSR0L, W
+0768  51E8      	MOVF usb_send_d_0000F_arg_ep, W, 1
+076A  6FF2      	MOVWF CompTempVar775, 1
+076C  90D8      	BCF STATUS,C
+076E  35F2      	RLCF CompTempVar775, W, 1
+0770  26E9      	ADDWF FSR0L, F
+0772  50EE      	MOVF POSTINC0, W
+0774  6FF0      	MOVWF usb_send_d_0000F_1_buffer, 1
+0776  50EF      	MOVF INDF0, W
+0778  6FF1      	MOVWF usb_send_d_0000F_1_buffer+D'1', 1
 
 	
 	bd = ep_in_bd_location[ep];
-0736  EE00F0A6  	LFSR 0x00,  gbl_ep_in_bd_location
-073A  50E9      	MOVF FSR0L, W
-073C  51E8      	MOVF usb_send_d_0000F_arg_ep, W, 1
-073E  6FF2      	MOVWF CompTempVar778, 1
-0740  90D8      	BCF STATUS,C
-0742  35F2      	RLCF CompTempVar778, W, 1
-0744  26E9      	ADDWF FSR0L, F
-0746  50EE      	MOVF POSTINC0, W
-0748  6FEE      	MOVWF usb_send_d_0000F_1_bd, 1
-074A  50EF      	MOVF INDF0, W
-074C  6FEF      	MOVWF usb_send_d_0000F_1_bd+D'1', 1
+077A  EE00F0A6  	LFSR 0x00,  gbl_ep_in_bd_location
+077E  50E9      	MOVF FSR0L, W
+0780  51E8      	MOVF usb_send_d_0000F_arg_ep, W, 1
+0782  6FF2      	MOVWF CompTempVar778, 1
+0784  90D8      	BCF STATUS,C
+0786  35F2      	RLCF CompTempVar778, W, 1
+0788  26E9      	ADDWF FSR0L, F
+078A  50EE      	MOVF POSTINC0, W
+078C  6FEE      	MOVWF usb_send_d_0000F_1_bd, 1
+078E  50EF      	MOVF INDF0, W
+0790  6FEF      	MOVWF usb_send_d_0000F_1_bd+D'1', 1
 
 	
 	if (test_bit(bd->stat, UOWN)) {
-074E  51EF      	MOVF usb_send_d_0000F_1_bd+D'1', W, 1
-0750  6EEA      	MOVWF FSR0H
-0752  51EE      	MOVF usb_send_d_0000F_1_bd, W, 1
-0754  6EE9      	MOVWF FSR0L
-0756  BEEF      	BTFSC INDF0,7
+0792  51EF      	MOVF usb_send_d_0000F_1_bd+D'1', W, 1
+0794  6EEA      	MOVWF FSR0H
+0796  51EE      	MOVF usb_send_d_0000F_1_bd, W, 1
+0798  6EE9      	MOVWF FSR0L
+079A  BEEF      	BTFSC INDF0,7
 
 		return;
 	}
 	
 	count = 0;	
-075A  6BED      	CLRF usb_send_d_0000F_1_count, 1
+079E  6BED      	CLRF usb_send_d_0000F_1_count, 1
 
 	while ((count < send_count)) {
-075C            label63
-075C  51EB      	MOVF usb_send_d_0000F_arg_send_count, W, 1
-075E  61ED      	CPFSLT usb_send_d_0000F_1_count, 1
-0760  D013      	BRA	label64
-0786  D7EA      	BRA	label63
-0788            label64
+07A0            label63
+07A0  51EB      	MOVF usb_send_d_0000F_arg_send_count, W, 1
+07A2  61ED      	CPFSLT usb_send_d_0000F_1_count, 1
+07A4  D013      	BRA	label64
+07CA  D7EA      	BRA	label63
+07CC            label64
 
 	    buffer[count] = data[count];
-0762  51EA      	MOVF usb_send_d_0000F_arg_data+D'1', W, 1
-0764  6EEA      	MOVWF FSR0H
-0766  51E9      	MOVF usb_send_d_0000F_arg_data, W, 1
-0768  6EE9      	MOVWF FSR0L
-076A  51ED      	MOVF usb_send_d_0000F_1_count, W, 1
-076C  6FF2      	MOVWF CompTempVar781, 1
-076E  51F2      	MOVF CompTempVar781, W, 1
-0770  26E9      	ADDWF FSR0L, F
-0772  50EF      	MOVF INDF0, W
-0774  6FF3      	MOVWF CompTempVar782, 1
-0776  51F1      	MOVF usb_send_d_0000F_1_buffer+D'1', W, 1
-0778  6EEA      	MOVWF FSR0H
-077A  51F0      	MOVF usb_send_d_0000F_1_buffer, W, 1
-077C  25ED      	ADDWF usb_send_d_0000F_1_count, W, 1
-077E  6EE9      	MOVWF FSR0L
-0780  51F3      	MOVF CompTempVar782, W, 1
-0782  6EEF      	MOVWF INDF0
+07A6  51EA      	MOVF usb_send_d_0000F_arg_data+D'1', W, 1
+07A8  6EEA      	MOVWF FSR0H
+07AA  51E9      	MOVF usb_send_d_0000F_arg_data, W, 1
+07AC  6EE9      	MOVWF FSR0L
+07AE  51ED      	MOVF usb_send_d_0000F_1_count, W, 1
+07B0  6FF2      	MOVWF CompTempVar781, 1
+07B2  51F2      	MOVF CompTempVar781, W, 1
+07B4  26E9      	ADDWF FSR0L, F
+07B6  50EF      	MOVF INDF0, W
+07B8  6FF3      	MOVWF CompTempVar782, 1
+07BA  51F1      	MOVF usb_send_d_0000F_1_buffer+D'1', W, 1
+07BC  6EEA      	MOVWF FSR0H
+07BE  51F0      	MOVF usb_send_d_0000F_1_buffer, W, 1
+07C0  25ED      	ADDWF usb_send_d_0000F_1_count, W, 1
+07C2  6EE9      	MOVWF FSR0L
+07C4  51F3      	MOVF CompTempVar782, W, 1
+07C6  6EEF      	MOVWF INDF0
 
 	    count++;
-0784  2BED      	INCF usb_send_d_0000F_1_count, F, 1
+07C8  2BED      	INCF usb_send_d_0000F_1_count, F, 1
 
 	}       	
 	
 
 	bd->count = count;
-0788  51EF      	MOVF usb_send_d_0000F_1_bd+D'1', W, 1
-078A  6EEA      	MOVWF FSR0H
-078C  29EE      	INCF usb_send_d_0000F_1_bd, W, 1
-078E  6EE9      	MOVWF FSR0L
-0790  51ED      	MOVF usb_send_d_0000F_1_count, W, 1
-0792  6EEF      	MOVWF INDF0
+07CC  51EF      	MOVF usb_send_d_0000F_1_bd+D'1', W, 1
+07CE  6EEA      	MOVWF FSR0H
+07D0  29EE      	INCF usb_send_d_0000F_1_bd, W, 1
+07D2  6EE9      	MOVWF FSR0L
+07D4  51ED      	MOVF usb_send_d_0000F_1_count, W, 1
+07D6  6EEF      	MOVWF INDF0
 
 	bd->addr = (uns16)buffer;
-0794  06E9      	DECF FSR0L, F
-0796  0E02      	MOVLW 0x02
-0798  26E9      	ADDWF FSR0L, F
-079A  2AE9      	INCF FSR0L, F
-079C  51F0      	MOVF usb_send_d_0000F_1_buffer, W, 1
-079E  6FF2      	MOVWF CompTempVar783, 1
-07A0  51F1      	MOVF usb_send_d_0000F_1_buffer+D'1', W, 1
-07A2  6EEF      	MOVWF INDF0
-07A4  06E9      	DECF FSR0L, F
-07A6  51F2      	MOVF CompTempVar783, W, 1
-07A8  6EEF      	MOVWF INDF0
+07D8  06E9      	DECF FSR0L, F
+07DA  0E02      	MOVLW 0x02
+07DC  26E9      	ADDWF FSR0L, F
+07DE  2AE9      	INCF FSR0L, F
+07E0  51F0      	MOVF usb_send_d_0000F_1_buffer, W, 1
+07E2  6FF2      	MOVWF CompTempVar783, 1
+07E4  51F1      	MOVF usb_send_d_0000F_1_buffer+D'1', W, 1
+07E6  6EEF      	MOVWF INDF0
+07E8  06E9      	DECF FSR0L, F
+07EA  51F2      	MOVF CompTempVar783, W, 1
+07EC  6EEF      	MOVWF INDF0
 
 	if (first) {
-07AA  A1EC      	BTFSS usb_send_d_0000F_arg_first,0, 1
-07AC  D005      	BRA	label65
-07B8            label65
+07EE  A1EC      	BTFSS usb_send_d_0000F_arg_first,0, 1
+07F0  D005      	BRA	label65
+07FC            label65
 
 		clear_bit(bd->stat, DTS);	// So when it flips, will end up set 
-07AE  51EF      	MOVF usb_send_d_0000F_1_bd+D'1', W, 1
-07B0  6EEA      	MOVWF FSR0H
-07B2  51EE      	MOVF usb_send_d_0000F_1_bd, W, 1
-07B4  6EE9      	MOVWF FSR0L
-07B6  9CEF      	BCF INDF0,6
+07F2  51EF      	MOVF usb_send_d_0000F_1_bd+D'1', W, 1
+07F4  6EEA      	MOVWF FSR0H
+07F6  51EE      	MOVF usb_send_d_0000F_1_bd, W, 1
+07F8  6EE9      	MOVWF FSR0L
+07FA  9CEF      	BCF INDF0,6
 
 	}
 
 	toggle_bit(bd->stat, DTS);	// flip the DTS bit
-07B8  51EF      	MOVF usb_send_d_0000F_1_bd+D'1', W, 1
-07BA  6EEA      	MOVWF FSR0H
-07BC  51EE      	MOVF usb_send_d_0000F_1_bd, W, 1
-07BE  6EE9      	MOVWF FSR0L
-07C0  0E40      	MOVLW 0x40
-07C2  1AEF      	XORWF INDF0, F
+07FC  51EF      	MOVF usb_send_d_0000F_1_bd+D'1', W, 1
+07FE  6EEA      	MOVWF FSR0H
+0800  51EE      	MOVF usb_send_d_0000F_1_bd, W, 1
+0802  6EE9      	MOVWF FSR0L
+0804  0E40      	MOVLW 0x40
+0806  1AEF      	XORWF INDF0, F
 
 	clear_bit(bd->stat, KEN);	// clear the keep bit
-07C4  9AEF      	BCF INDF0,5
+0808  9AEF      	BCF INDF0,5
 
 	clear_bit(bd->stat, INCDIS);	// clear the increment disable
-07C6  98EF      	BCF INDF0,4
+080A  98EF      	BCF INDF0,4
 
 	set_bit  (bd->stat, DTSEN);
-07C8  86EF      	BSF INDF0,3
+080C  86EF      	BSF INDF0,3
 
 	clear_bit(bd->stat, BSTALL);	// clear stall bit
-07CA  94EF      	BCF INDF0,2
+080E  94EF      	BCF INDF0,2
 
 	clear_bit(bd->stat, BC9);
-07CC  92EF      	BCF INDF0,1
+0810  92EF      	BCF INDF0,1
 
 	clear_bit(bd->stat, BC8);
-07CE  90EF      	BCF INDF0,0
+0812  90EF      	BCF INDF0,0
 
 
 	set_bit  (bd->stat, UOWN);	// SIE owns the buffer
-07D0  8EEF      	BSF INDF0,7
+0814  8EEF      	BSF INDF0,7
 
 }	
-0758  0012      	RETURN
-07D2  0012      	RETURN
+079C  0012      	RETURN
+0816  0012      	RETURN
 
 
 
@@ -2258,35 +2283,49 @@ void turn_usb_ints_on() {
 
 	
 	set_bit(uie,  STALLIE);	// interrupt on stall
-06DA  8A69      	BSF gbl_uie,5
+071E  8A69      	BSF gbl_uie,5
 
 	set_bit(uie,  TRNIE);	//   on transaction complete
-06DC  8669      	BSF gbl_uie,3
+0720  8669      	BSF gbl_uie,3
 
 	set_bit(uie,  URSTIE);	//   on reset 
-06DE  8069      	BSF gbl_uie,0
+0722  8069      	BSF gbl_uie,0
 
 	set_bit(pie2, USBIE);	// general USB interrupts
-06E0  8AA0      	BSF gbl_pie2,5
+0724  8AA0      	BSF gbl_pie2,5
 
 	#ifdef USB_CALLBACK_ON_SOF 
 		set_bit(uie, SOFIE);
 	#endif	
 }
-06E2  0012      	RETURN
+0726  0012      	RETURN
 
 
 void usb_setup() {
 
+
 	usb_state = st_POWERED;
+06DA  0100      	MOVLB 0x00
+06DC  6BD5      	CLRF gbl_usb_state, 1
+
 	
 	// init hardware
 	clear_bit(ucfg, UTRDIS);	// enable internal tranceiver
+06DE  966F      	BCF gbl_ucfg,3
+
 	set_bit  (ucfg, FSEN);	// clear for low speed, set for high speed
+06E0  846F      	BSF gbl_ucfg,2
+
 	set_bit  (ucfg, UPUEN);	// enable on-chip pull-ups
+06E2  886F      	BSF gbl_ucfg,4
+
 
 	clear_bit(ucfg, PPB1);	// disable double buffering for now
+06E4  926F      	BCF gbl_ucfg,1
+
 	clear_bit(ucfg, PPB0);	
+06E6  906F      	BCF gbl_ucfg,0
+
 
 	// if using ping pong buffers, need to do this:
 	// set_bit(ucon, PPBRST);	// reset ping pong buffers to even
@@ -2295,16 +2334,34 @@ void usb_setup() {
 	// init endpoint 0
 		
 	set_bit(uep0,   EPHSHK);	// EP0 handshaking on
+06E8  8870      	BSF gbl_uep0,4
+
 	set_bit(uep0,   EPOUTEN);	// EP0 OUT enable 
+06EA  8470      	BSF gbl_uep0,2
+
 	set_bit(uep0,   EPINEN); 	// EP0 IN enable 
+06EC  8270      	BSF gbl_uep0,1
+
 	clear_bit(uep0, EPCONDIS);	// EP0 control transfers on (and IN and OUT)
+06EE  9670      	BCF gbl_uep0,3
+
 	
 	// init interrupts
 	// Config buffer descriptor table
 
 	ep_out_bd_location[0] = &bd0out;
+06F0  0E04      	MOVLW HIGH(gbl_bd0out+D'0')
+06F2  6FAB      	MOVWF gbl_ep_out_bd_location+D'1', 1
+06F4  0E00      	MOVLW LOW(gbl_bd0out+D'0')
+06F6  6FAA      	MOVWF gbl_ep_out_bd_location, 1
+
 	#if USB_HIGHEST_EP >= 1
 		ep_out_bd_location[1] = &bd1out;
+06F8  0E04      	MOVLW HIGH(gbl_bd1out+D'0')
+06FA  6FAD      	MOVWF gbl_ep_out_bd_location+D'3', 1
+06FC  0E08      	MOVLW LOW(gbl_bd1out+D'0')
+06FE  6FAC      	MOVWF gbl_ep_out_bd_location+D'2', 1
+
 	#endif
 	#if USB_HIGHEST_EP >= 2
 		ep_out_bd_location[2] = &bd2out;
@@ -2317,8 +2374,18 @@ void usb_setup() {
 	#endif
 	
 	ep_in_bd_location[0] = &bd0in;
+0700  0E04      	MOVLW HIGH(gbl_bd0in+D'0')
+0702  6FA7      	MOVWF gbl_ep_in_bd_location+D'1', 1
+0704  0E04      	MOVLW LOW(gbl_bd0in+D'0')
+0706  6FA6      	MOVWF gbl_ep_in_bd_location, 1
+
 	#if USB_HIGHEST_EP >= 1
 		ep_in_bd_location[1] = &bd1in;
+0708  0E04      	MOVLW HIGH(gbl_bd1in+D'0')
+070A  6FA9      	MOVWF gbl_ep_in_bd_location+D'3', 1
+070C  0E0C      	MOVLW LOW(gbl_bd1in+D'0')
+070E  6FA8      	MOVWF gbl_ep_in_bd_location+D'2', 1
+
 	#endif
 	#if USB_HIGHEST_EP >= 2
 		ep_in_bd_location[2] = &bd2in;
@@ -2332,23 +2399,36 @@ void usb_setup() {
 
 
 }
+0710  0012      	RETURN
+
 	
 // enable usb module
 void usb_enable_module() {
+
 	uir = 0;
+0712  6A68      	CLRF gbl_uir
+
 	set_bit(ucon, USBEN);	// enable USB serial interface engine (SIE)
+0714  866D      	BSF gbl_ucon,3
+
 	usb_state = st_DEFAULT;
+0716  0E01      	MOVLW 0x01
+0718  0100      	MOVLB 0x00
+071A  6FD5      	MOVWF gbl_usb_state, 1
+
 }
+071C  0012      	RETURN
+
 
 usb_state_type usb_get_state() {
 
 	return usb_state;
-07D4  0100      	MOVLB 0x00
-07D6  51D5      	MOVF gbl_usb_state, W, 1
-07D8  6FE7      	MOVWF CompTempVarRet791, 1
+0818  0100      	MOVLB 0x00
+081A  51D5      	MOVF gbl_usb_state, W, 1
+081C  6FE7      	MOVWF CompTempVarRet791, 1
 
 }	
-07DA  0012      	RETURN
+081E  0012      	RETURN
 
 }	
 /*! \file pic_usb_buffer_mgt.c
@@ -2413,23 +2493,23 @@ uns8 * ep_in_buffer_location[USB_HIGHEST_EP + 1] = {
 	// we always have EP0
 	
 	&buffer_0_in,	// ep 0 in buffer location
-093E  0E05      	MOVLW HIGH(gbl_buffer_0_in+D'0')
-0940  6FDB      	MOVWF CompGblVar99, 1
-0942  0E08      	MOVLW LOW(gbl_buffer_0_in+D'0')
-0944  6FAE      	MOVWF gbl_ep_in_buffer_location, 1
-0946  51DB      	MOVF CompGblVar99, W, 1
-0948  6FAF      	MOVWF gbl_ep_in_buffer_location+D'1', 1
+099E  0E05      	MOVLW HIGH(gbl_buffer_0_in+D'0')
+09A0  6FDB      	MOVWF CompGblVar99, 1
+09A2  0E08      	MOVLW LOW(gbl_buffer_0_in+D'0')
+09A4  6FAE      	MOVWF gbl_ep_in_buffer_location, 1
+09A6  51DB      	MOVF CompGblVar99, W, 1
+09A8  6FAF      	MOVWF gbl_ep_in_buffer_location+D'1', 1
 
 	
 	#if USB_HIGHEST_EP >= 1
 		#ifdef USB_EP1_IN_SIZE
 			&buffer_1_in,	// ep 1 in buffer location
-094A  0E05      	MOVLW HIGH(gbl_buffer_1_in+D'0')
-094C  6FDC      	MOVWF CompGblVar100, 1
-094E  0E10      	MOVLW LOW(gbl_buffer_1_in+D'0')
-0950  6FB0      	MOVWF gbl_ep_in_buffer_location+D'2', 1
-0952  51DC      	MOVF CompGblVar100, W, 1
-0954  6FB1      	MOVWF gbl_ep_in_buffer_location+D'3', 1
+09AA  0E05      	MOVLW HIGH(gbl_buffer_1_in+D'0')
+09AC  6FDC      	MOVWF CompGblVar100, 1
+09AE  0E10      	MOVLW LOW(gbl_buffer_1_in+D'0')
+09B0  6FB0      	MOVWF gbl_ep_in_buffer_location+D'2', 1
+09B2  51DC      	MOVF CompGblVar100, W, 1
+09B4  6FB1      	MOVWF gbl_ep_in_buffer_location+D'3', 1
 
 		#else
 			0,
@@ -2465,12 +2545,12 @@ uns8 * ep_out_buffer_location[USB_HIGHEST_EP + 1] = {
 	// we always have EP0
 	
 	&buffer_0_out,	// ep 0 in buffer location
-0956  0E05      	MOVLW HIGH(gbl_buffer_0_out+D'0')
-0958  6FDD      	MOVWF CompGblVar101, 1
-095A  0E00      	MOVLW LOW(gbl_buffer_0_out+D'0')
-095C  6FB2      	MOVWF gbl_ep_out_buffer_location, 1
-095E  51DD      	MOVF CompGblVar101, W, 1
-0960  6FB3      	MOVWF gbl_ep_out_buffer_location+D'1', 1
+09B6  0E05      	MOVLW HIGH(gbl_buffer_0_out+D'0')
+09B8  6FDD      	MOVWF CompGblVar101, 1
+09BA  0E00      	MOVLW LOW(gbl_buffer_0_out+D'0')
+09BC  6FB2      	MOVWF gbl_ep_out_buffer_location, 1
+09BE  51DD      	MOVF CompGblVar101, W, 1
+09C0  6FB3      	MOVWF gbl_ep_out_buffer_location+D'1', 1
 
 	
 	#if USB_HIGHEST_EP >= 1
@@ -2478,8 +2558,8 @@ uns8 * ep_out_buffer_location[USB_HIGHEST_EP + 1] = {
 			&buffer_1_out,	// ep 1 in buffer location
 		#else
 			0,
-0962  6BB4      	CLRF gbl_ep_out_buffer_location+D'2', 1
-0964  6BB5      	CLRF gbl_ep_out_buffer_location+D'3', 1
+09C2  6BB4      	CLRF gbl_ep_out_buffer_location+D'2', 1
+09C4  6BB5      	CLRF gbl_ep_out_buffer_location+D'3', 1
 
 		#endif
 	#endif
@@ -2512,17 +2592,17 @@ uns8 * ep_out_buffer_location[USB_HIGHEST_EP + 1] = {
 
 uns16 ep_in_buffer_size[USB_HIGHEST_EP + 1] = {
 	USB_EP0_IN_SIZE,
-0966  0E08      	MOVLW 0x08
-0968  6FB6      	MOVWF gbl_ep_in_buffer_size, 1
-096A  6BB7      	CLRF gbl_ep_in_buffer_size+D'1', 1
+09C6  0E08      	MOVLW 0x08
+09C8  6FB6      	MOVWF gbl_ep_in_buffer_size, 1
+09CA  6BB7      	CLRF gbl_ep_in_buffer_size+D'1', 1
 
 	
 	#if USB_HIGHEST_EP >= 1
 		#ifdef USB_EP1_IN_SIZE
 			USB_EP1_IN_SIZE,
-096C  0E08      	MOVLW 0x08
-096E  6FB8      	MOVWF gbl_ep_in_buffer_size+D'2', 1
-0970  6BB9      	CLRF gbl_ep_in_buffer_size+D'3', 1
+09CC  0E08      	MOVLW 0x08
+09CE  6FB8      	MOVWF gbl_ep_in_buffer_size+D'2', 1
+09D0  6BB9      	CLRF gbl_ep_in_buffer_size+D'3', 1
 
 		#else
 			0,
@@ -2558,9 +2638,9 @@ uns16 ep_in_buffer_size[USB_HIGHEST_EP + 1] = {
 
 uns16 ep_out_buffer_size[USB_HIGHEST_EP + 1] = {
 	USB_EP0_OUT_SIZE,
-0972  0E08      	MOVLW 0x08
-0974  6FBA      	MOVWF gbl_ep_out_buffer_size, 1
-0976  6BBB      	CLRF gbl_ep_out_buffer_size+D'1', 1
+09D2  0E08      	MOVLW 0x08
+09D4  6FBA      	MOVWF gbl_ep_out_buffer_size, 1
+09D6  6BBB      	CLRF gbl_ep_out_buffer_size+D'1', 1
 
 	
 	#if USB_HIGHEST_EP >= 1
@@ -2568,8 +2648,8 @@ uns16 ep_out_buffer_size[USB_HIGHEST_EP + 1] = {
 			USB_EP1_OUT_SIZE,
 		#else
 			0,
-0978  6BBC      	CLRF gbl_ep_out_buffer_size+D'2', 1
-097A  6BBD      	CLRF gbl_ep_out_buffer_size+D'3', 1
+09D8  6BBC      	CLRF gbl_ep_out_buffer_size+D'2', 1
+09DA  6BBD      	CLRF gbl_ep_out_buffer_size+D'3', 1
 
 		#endif
 	#endif		
@@ -2620,11 +2700,11 @@ uns8 port_shadow[NUMBER_PORTS] = {0, 0, 0, 0};
 
 #if NUMBER_PORTS == 5
 uns8 port_shadow[NUMBER_PORTS] = {0, 0, 0, 0, 0};
-097C  6A59      	CLRF gbl_port_shadow
-097E  6A5A      	CLRF gbl_port_shadow+D'1'
-0980  6A5B      	CLRF gbl_port_shadow+D'2'
-0982  6A5C      	CLRF gbl_port_shadow+D'3'
-0984  6A5D      	CLRF gbl_port_shadow+D'4'
+09DC  6A59      	CLRF gbl_port_shadow
+09DE  6A5A      	CLRF gbl_port_shadow+D'1'
+09E0  6A5B      	CLRF gbl_port_shadow+D'2'
+09E2  6A5C      	CLRF gbl_port_shadow+D'3'
+09E4  6A5D      	CLRF gbl_port_shadow+D'4'
 
 #endif
 
@@ -2680,215 +2760,215 @@ void change_pin_var(uns8 port, uns8 pin, bit value) {
 
 device_descriptor my_device_descriptor = {
 	sizeof(my_device_descriptor), 	// 18 bytes long
-0986  0E12      	MOVLW 0x12
-0988  6F8C      	MOVWF gbl_my_device_descriptor, 1
+09E6  0E12      	MOVLW 0x12
+09E8  6F8C      	MOVWF gbl_my_device_descriptor, 1
 
 	dt_DEVICE, 	// DEVICE 01h
-098A  0E01      	MOVLW 0x01
-098C  6F8D      	MOVWF gbl_my_device_descriptor+D'1', 1
+09EA  0E01      	MOVLW 0x01
+09EC  6F8D      	MOVWF gbl_my_device_descriptor+D'1', 1
 
 	0x0110,	// usb version 1.10
-098E  0E10      	MOVLW 0x10
-0990  6F8E      	MOVWF gbl_my_device_descriptor+D'2', 1
-0992  0E01      	MOVLW 0x01
-0994  6F8F      	MOVWF gbl_my_device_descriptor+D'3', 1
+09EE  0E10      	MOVLW 0x10
+09F0  6F8E      	MOVWF gbl_my_device_descriptor+D'2', 1
+09F2  0E01      	MOVLW 0x01
+09F4  6F8F      	MOVWF gbl_my_device_descriptor+D'3', 1
 
 	0,		// class
-0996  6B90      	CLRF gbl_my_device_descriptor+D'4', 1
+09F6  6B90      	CLRF gbl_my_device_descriptor+D'4', 1
 
 	0,		// subclass
-0998  6B91      	CLRF gbl_my_device_descriptor+D'5', 1
+09F8  6B91      	CLRF gbl_my_device_descriptor+D'5', 1
 
 	0,		// protocol
-099A  6B92      	CLRF gbl_my_device_descriptor+D'6', 1
+09FA  6B92      	CLRF gbl_my_device_descriptor+D'6', 1
 
 	8,		// max packet size for end point 0
-099C  0E08      	MOVLW 0x08
-099E  6F93      	MOVWF gbl_my_device_descriptor+D'7', 1
+09FC  0E08      	MOVLW 0x08
+09FE  6F93      	MOVWF gbl_my_device_descriptor+D'7', 1
 
 	0x04d8,	// Microchip's vendor
-09A0  0ED8      	MOVLW 0xD8
-09A2  6F94      	MOVWF gbl_my_device_descriptor+D'8', 1
-09A4  0E04      	MOVLW 0x04
-09A6  6F95      	MOVWF gbl_my_device_descriptor+D'9', 1
+0A00  0ED8      	MOVLW 0xD8
+0A02  6F94      	MOVWF gbl_my_device_descriptor+D'8', 1
+0A04  0E04      	MOVLW 0x04
+0A06  6F95      	MOVWF gbl_my_device_descriptor+D'9', 1
 
 	0x000C,	// Microchip's product 
-09A8  0E0C      	MOVLW 0x0C
-09AA  6F96      	MOVWF gbl_my_device_descriptor+D'10', 1
-09AC  6B97      	CLRF gbl_my_device_descriptor+D'11', 1
+0A08  0E0C      	MOVLW 0x0C
+0A0A  6F96      	MOVWF gbl_my_device_descriptor+D'10', 1
+0A0C  6B97      	CLRF gbl_my_device_descriptor+D'11', 1
 
 	0x0200, // version 2.0 of the product
-09AE  6B98      	CLRF gbl_my_device_descriptor+D'12', 1
-09B0  0E02      	MOVLW 0x02
-09B2  6F99      	MOVWF gbl_my_device_descriptor+D'13', 1
+0A0E  6B98      	CLRF gbl_my_device_descriptor+D'12', 1
+0A10  0E02      	MOVLW 0x02
+0A12  6F99      	MOVWF gbl_my_device_descriptor+D'13', 1
 
 	1,		// string 1 for manufacturer
-09B4  0E01      	MOVLW 0x01
-09B6  6F9A      	MOVWF gbl_my_device_descriptor+D'14', 1
+0A14  0E01      	MOVLW 0x01
+0A16  6F9A      	MOVWF gbl_my_device_descriptor+D'14', 1
 
 	2,		// string 2 for product
-09B8  0E02      	MOVLW 0x02
-09BA  6F9B      	MOVWF gbl_my_device_descriptor+D'15', 1
+0A18  0E02      	MOVLW 0x02
+0A1A  6F9B      	MOVWF gbl_my_device_descriptor+D'15', 1
 
 	0,		// string 3 for serial number
-09BC  6B9C      	CLRF gbl_my_device_descriptor+D'16', 1
+0A1C  6B9C      	CLRF gbl_my_device_descriptor+D'16', 1
 
 	1		// number of configurations
-09BE  0E01      	MOVLW 0x01
-09C0  6F9D      	MOVWF gbl_my_device_descriptor+D'17', 1
+0A1E  0E01      	MOVLW 0x01
+0A20  6F9D      	MOVWF gbl_my_device_descriptor+D'17', 1
 
 };
 
 const char mouse_report_descriptor[] = {
    0x05, 0x01,                    //  USAGE_PAGE (Generic Desktop)
-09C2  0E05      	MOVLW 0x05
-09C4  6E05      	MOVWF gbl_mouse_report_descriptor
-09C6  0E01      	MOVLW 0x01
-09C8  6E06      	MOVWF gbl_mouse_report_descriptor+D'1'
+0A22  0E05      	MOVLW 0x05
+0A24  6E05      	MOVWF gbl_mouse_report_descriptor
+0A26  0E01      	MOVLW 0x01
+0A28  6E06      	MOVWF gbl_mouse_report_descriptor+D'1'
 
    0x09, 0x02,                    //  USAGE (Mouse)
-09CA  0E09      	MOVLW 0x09
-09CC  6E07      	MOVWF gbl_mouse_report_descriptor+D'2'
-09CE  0E02      	MOVLW 0x02
-09D0  6E08      	MOVWF gbl_mouse_report_descriptor+D'3'
+0A2A  0E09      	MOVLW 0x09
+0A2C  6E07      	MOVWF gbl_mouse_report_descriptor+D'2'
+0A2E  0E02      	MOVLW 0x02
+0A30  6E08      	MOVWF gbl_mouse_report_descriptor+D'3'
 
    0xa1, 0x01,                    //  COLLECTION (Application)
-09D2  0EA1      	MOVLW 0xA1
-09D4  6E09      	MOVWF gbl_mouse_report_descriptor+D'4'
-09D6  0E01      	MOVLW 0x01
-09D8  6E0A      	MOVWF gbl_mouse_report_descriptor+D'5'
+0A32  0EA1      	MOVLW 0xA1
+0A34  6E09      	MOVWF gbl_mouse_report_descriptor+D'4'
+0A36  0E01      	MOVLW 0x01
+0A38  6E0A      	MOVWF gbl_mouse_report_descriptor+D'5'
 
    0x09, 0x01,                    //  USAGE (Pointer)
-09DA  0E09      	MOVLW 0x09
-09DC  6E0B      	MOVWF gbl_mouse_report_descriptor+D'6'
-09DE  0E01      	MOVLW 0x01
-09E0  6E0C      	MOVWF gbl_mouse_report_descriptor+D'7'
+0A3A  0E09      	MOVLW 0x09
+0A3C  6E0B      	MOVWF gbl_mouse_report_descriptor+D'6'
+0A3E  0E01      	MOVLW 0x01
+0A40  6E0C      	MOVWF gbl_mouse_report_descriptor+D'7'
 
    0xa1, 0x00,                    //  COLLECTION (Physical)
-09E2  0EA1      	MOVLW 0xA1
-09E4  6E0D      	MOVWF gbl_mouse_report_descriptor+D'8'
-09E6  6A0E      	CLRF gbl_mouse_report_descriptor+D'9'
+0A42  0EA1      	MOVLW 0xA1
+0A44  6E0D      	MOVWF gbl_mouse_report_descriptor+D'8'
+0A46  6A0E      	CLRF gbl_mouse_report_descriptor+D'9'
 
    0x05, 0x09,                    //  USAGE_PAGE (Button)
-09E8  0E05      	MOVLW 0x05
-09EA  6E0F      	MOVWF gbl_mouse_report_descriptor+D'10'
-09EC  0E09      	MOVLW 0x09
-09EE  6E10      	MOVWF gbl_mouse_report_descriptor+D'11'
+0A48  0E05      	MOVLW 0x05
+0A4A  6E0F      	MOVWF gbl_mouse_report_descriptor+D'10'
+0A4C  0E09      	MOVLW 0x09
+0A4E  6E10      	MOVWF gbl_mouse_report_descriptor+D'11'
 
    0x19, 0x01,                    //  USAGE_MINIMUM (Button 1)
-09F0  0E19      	MOVLW 0x19
-09F2  6E11      	MOVWF gbl_mouse_report_descriptor+D'12'
-09F4  0E01      	MOVLW 0x01
-09F6  6E12      	MOVWF gbl_mouse_report_descriptor+D'13'
+0A50  0E19      	MOVLW 0x19
+0A52  6E11      	MOVWF gbl_mouse_report_descriptor+D'12'
+0A54  0E01      	MOVLW 0x01
+0A56  6E12      	MOVWF gbl_mouse_report_descriptor+D'13'
 
    0x29, 0x03,                    //  USAGE_MAXIMUM (Button 3)
-09F8  0E29      	MOVLW 0x29
-09FA  6E13      	MOVWF gbl_mouse_report_descriptor+D'14'
-09FC  0E03      	MOVLW 0x03
-09FE  6E14      	MOVWF gbl_mouse_report_descriptor+D'15'
+0A58  0E29      	MOVLW 0x29
+0A5A  6E13      	MOVWF gbl_mouse_report_descriptor+D'14'
+0A5C  0E03      	MOVLW 0x03
+0A5E  6E14      	MOVWF gbl_mouse_report_descriptor+D'15'
 
    0x15, 0x00,                    //  LOGICAL_MINIMUM (0)
-0A00  0E15      	MOVLW 0x15
-0A02  6E15      	MOVWF gbl_mouse_report_descriptor+D'16'
-0A04  6A16      	CLRF gbl_mouse_report_descriptor+D'17'
+0A60  0E15      	MOVLW 0x15
+0A62  6E15      	MOVWF gbl_mouse_report_descriptor+D'16'
+0A64  6A16      	CLRF gbl_mouse_report_descriptor+D'17'
 
    0x25, 0x01,                    //  LOGICAL_MAXIMUM (1)
-0A06  0E25      	MOVLW 0x25
-0A08  6E17      	MOVWF gbl_mouse_report_descriptor+D'18'
-0A0A  0E01      	MOVLW 0x01
-0A0C  6E18      	MOVWF gbl_mouse_report_descriptor+D'19'
+0A66  0E25      	MOVLW 0x25
+0A68  6E17      	MOVWF gbl_mouse_report_descriptor+D'18'
+0A6A  0E01      	MOVLW 0x01
+0A6C  6E18      	MOVWF gbl_mouse_report_descriptor+D'19'
 
    0x95, 0x03,                    //  REPORT_COUNT (3)
-0A0E  0E95      	MOVLW 0x95
-0A10  6E19      	MOVWF gbl_mouse_report_descriptor+D'20'
-0A12  0E03      	MOVLW 0x03
-0A14  6E1A      	MOVWF gbl_mouse_report_descriptor+D'21'
+0A6E  0E95      	MOVLW 0x95
+0A70  6E19      	MOVWF gbl_mouse_report_descriptor+D'20'
+0A72  0E03      	MOVLW 0x03
+0A74  6E1A      	MOVWF gbl_mouse_report_descriptor+D'21'
 
    0x75, 0x01,                    //  REPORT_SIZE (1)
-0A16  0E75      	MOVLW 0x75
-0A18  6E1B      	MOVWF gbl_mouse_report_descriptor+D'22'
-0A1A  0E01      	MOVLW 0x01
-0A1C  6E1C      	MOVWF gbl_mouse_report_descriptor+D'23'
+0A76  0E75      	MOVLW 0x75
+0A78  6E1B      	MOVWF gbl_mouse_report_descriptor+D'22'
+0A7A  0E01      	MOVLW 0x01
+0A7C  6E1C      	MOVWF gbl_mouse_report_descriptor+D'23'
 
    0x81, 0x02,                    //  INPUT (Data,Var,Abs)
-0A1E  0E81      	MOVLW 0x81
-0A20  6E1D      	MOVWF gbl_mouse_report_descriptor+D'24'
-0A22  0E02      	MOVLW 0x02
-0A24  6E1E      	MOVWF gbl_mouse_report_descriptor+D'25'
+0A7E  0E81      	MOVLW 0x81
+0A80  6E1D      	MOVWF gbl_mouse_report_descriptor+D'24'
+0A82  0E02      	MOVLW 0x02
+0A84  6E1E      	MOVWF gbl_mouse_report_descriptor+D'25'
 
    0x95, 0x01,                    //  REPORT_COUNT (1)
-0A26  0E95      	MOVLW 0x95
-0A28  6E1F      	MOVWF gbl_mouse_report_descriptor+D'26'
-0A2A  0E01      	MOVLW 0x01
-0A2C  6E20      	MOVWF gbl_mouse_report_descriptor+D'27'
+0A86  0E95      	MOVLW 0x95
+0A88  6E1F      	MOVWF gbl_mouse_report_descriptor+D'26'
+0A8A  0E01      	MOVLW 0x01
+0A8C  6E20      	MOVWF gbl_mouse_report_descriptor+D'27'
 
    0x75, 0x05,                    //  REPORT_SIZE (5)
-0A2E  0E75      	MOVLW 0x75
-0A30  6E21      	MOVWF gbl_mouse_report_descriptor+D'28'
-0A32  0E05      	MOVLW 0x05
-0A34  6E22      	MOVWF gbl_mouse_report_descriptor+D'29'
+0A8E  0E75      	MOVLW 0x75
+0A90  6E21      	MOVWF gbl_mouse_report_descriptor+D'28'
+0A92  0E05      	MOVLW 0x05
+0A94  6E22      	MOVWF gbl_mouse_report_descriptor+D'29'
 
    0x81, 0x01,                    //  INPUT (Cnst,Ary,Abs)
-0A36  0E81      	MOVLW 0x81
-0A38  6E23      	MOVWF gbl_mouse_report_descriptor+D'30'
-0A3A  0E01      	MOVLW 0x01
-0A3C  6E24      	MOVWF gbl_mouse_report_descriptor+D'31'
+0A96  0E81      	MOVLW 0x81
+0A98  6E23      	MOVWF gbl_mouse_report_descriptor+D'30'
+0A9A  0E01      	MOVLW 0x01
+0A9C  6E24      	MOVWF gbl_mouse_report_descriptor+D'31'
 
    0x05, 0x01,                    //  USAGE_PAGE (Generic Desktop)
-0A3E  0E05      	MOVLW 0x05
-0A40  6E25      	MOVWF gbl_mouse_report_descriptor+D'32'
-0A42  0E01      	MOVLW 0x01
-0A44  6E26      	MOVWF gbl_mouse_report_descriptor+D'33'
+0A9E  0E05      	MOVLW 0x05
+0AA0  6E25      	MOVWF gbl_mouse_report_descriptor+D'32'
+0AA2  0E01      	MOVLW 0x01
+0AA4  6E26      	MOVWF gbl_mouse_report_descriptor+D'33'
 
    0x09, 0x30,                    //  USAGE (X)
-0A46  0E09      	MOVLW 0x09
-0A48  6E27      	MOVWF gbl_mouse_report_descriptor+D'34'
-0A4A  0E30      	MOVLW 0x30
-0A4C  6E28      	MOVWF gbl_mouse_report_descriptor+D'35'
+0AA6  0E09      	MOVLW 0x09
+0AA8  6E27      	MOVWF gbl_mouse_report_descriptor+D'34'
+0AAA  0E30      	MOVLW 0x30
+0AAC  6E28      	MOVWF gbl_mouse_report_descriptor+D'35'
 
    0x09, 0x31,                    //  USAGE (Y)
-0A4E  0E09      	MOVLW 0x09
-0A50  6E29      	MOVWF gbl_mouse_report_descriptor+D'36'
-0A52  0E31      	MOVLW 0x31
-0A54  6E2A      	MOVWF gbl_mouse_report_descriptor+D'37'
+0AAE  0E09      	MOVLW 0x09
+0AB0  6E29      	MOVWF gbl_mouse_report_descriptor+D'36'
+0AB2  0E31      	MOVLW 0x31
+0AB4  6E2A      	MOVWF gbl_mouse_report_descriptor+D'37'
 
    0x15, 0x81,                    //  LOGICAL_MINIMUM (-127)
-0A56  0E15      	MOVLW 0x15
-0A58  6E2B      	MOVWF gbl_mouse_report_descriptor+D'38'
-0A5A  0E81      	MOVLW 0x81
-0A5C  6E2C      	MOVWF gbl_mouse_report_descriptor+D'39'
+0AB6  0E15      	MOVLW 0x15
+0AB8  6E2B      	MOVWF gbl_mouse_report_descriptor+D'38'
+0ABA  0E81      	MOVLW 0x81
+0ABC  6E2C      	MOVWF gbl_mouse_report_descriptor+D'39'
 
    0x25, 0x7f,                    //  LOGICAL_MAXIMUM (127)
-0A5E  0E25      	MOVLW 0x25
-0A60  6E2D      	MOVWF gbl_mouse_report_descriptor+D'40'
-0A62  0E7F      	MOVLW 0x7F
-0A64  6E2E      	MOVWF gbl_mouse_report_descriptor+D'41'
+0ABE  0E25      	MOVLW 0x25
+0AC0  6E2D      	MOVWF gbl_mouse_report_descriptor+D'40'
+0AC2  0E7F      	MOVLW 0x7F
+0AC4  6E2E      	MOVWF gbl_mouse_report_descriptor+D'41'
 
    0x75, 0x08,                    //  REPORT_SIZE (8)
-0A66  0E75      	MOVLW 0x75
-0A68  6E2F      	MOVWF gbl_mouse_report_descriptor+D'42'
-0A6A  0E08      	MOVLW 0x08
-0A6C  6E30      	MOVWF gbl_mouse_report_descriptor+D'43'
+0AC6  0E75      	MOVLW 0x75
+0AC8  6E2F      	MOVWF gbl_mouse_report_descriptor+D'42'
+0ACA  0E08      	MOVLW 0x08
+0ACC  6E30      	MOVWF gbl_mouse_report_descriptor+D'43'
 
    0x95, 0x02,                    //  REPORT_COUNT (2)
-0A6E  0E95      	MOVLW 0x95
-0A70  6E31      	MOVWF gbl_mouse_report_descriptor+D'44'
-0A72  0E02      	MOVLW 0x02
-0A74  6E32      	MOVWF gbl_mouse_report_descriptor+D'45'
+0ACE  0E95      	MOVLW 0x95
+0AD0  6E31      	MOVWF gbl_mouse_report_descriptor+D'44'
+0AD2  0E02      	MOVLW 0x02
+0AD4  6E32      	MOVWF gbl_mouse_report_descriptor+D'45'
 
    0x81, 0x06,                    //  INPUT (Data,Var,Rel)
-0A76  0E81      	MOVLW 0x81
-0A78  6E33      	MOVWF gbl_mouse_report_descriptor+D'46'
-0A7A  0E06      	MOVLW 0x06
-0A7C  6E34      	MOVWF gbl_mouse_report_descriptor+D'47'
+0AD6  0E81      	MOVLW 0x81
+0AD8  6E33      	MOVWF gbl_mouse_report_descriptor+D'46'
+0ADA  0E06      	MOVLW 0x06
+0ADC  6E34      	MOVWF gbl_mouse_report_descriptor+D'47'
 
    0xc0,                          //  END_COLLECTION
-0A7E  0EC0      	MOVLW 0xC0
-0A80  6E35      	MOVWF gbl_mouse_report_descriptor+D'48'
+0ADE  0EC0      	MOVLW 0xC0
+0AE0  6E35      	MOVWF gbl_mouse_report_descriptor+D'48'
 
    0xc0                           //  END_COLLECTION
-0A82  0EC0      	MOVLW 0xC0
-0A84  6E36      	MOVWF gbl_mouse_report_descriptor+D'49'
+0AE2  0EC0      	MOVLW 0xC0
+0AE4  6E36      	MOVWF gbl_mouse_report_descriptor+D'49'
 
 };
 
@@ -2901,274 +2981,274 @@ struct  {
 } complete_mouse_configuration = {
 	{	// configuration descriptor - - - - - - - - - - 
 		0x09,	// length,
-0A86  0E09      	MOVLW 0x09
-0A88  6E37      	MOVWF gbl_complete_mouse_configuration
+0AE6  0E09      	MOVLW 0x09
+0AE8  6E37      	MOVWF gbl_complete_mouse_configuration
 
 		dt_CONFIGURATION,	// descriptor_type,
-0A8A  0E02      	MOVLW 0x02
-0A8C  6E38      	MOVWF gbl_complete_mouse_configuration+D'1'
+0AEA  0E02      	MOVLW 0x02
+0AEC  6E38      	MOVWF gbl_complete_mouse_configuration+D'1'
 
 		sizeof(complete_mouse_configuration),	// total_length;
-0A8E  0E22      	MOVLW 0x22
-0A90  6E39      	MOVWF gbl_complete_mouse_configuration+D'2'
-0A92  6A3A      	CLRF gbl_complete_mouse_configuration+D'3'
+0AEE  0E22      	MOVLW 0x22
+0AF0  6E39      	MOVWF gbl_complete_mouse_configuration+D'2'
+0AF2  6A3A      	CLRF gbl_complete_mouse_configuration+D'3'
 
 		0x01,	// num_interfaces,
-0A94  0E01      	MOVLW 0x01
-0A96  6E3B      	MOVWF gbl_complete_mouse_configuration+D'4'
+0AF4  0E01      	MOVLW 0x01
+0AF6  6E3B      	MOVWF gbl_complete_mouse_configuration+D'4'
 
 		0x01,	// configuration_value,
-0A98  0E01      	MOVLW 0x01
-0A9A  6E3C      	MOVWF gbl_complete_mouse_configuration+D'5'
+0AF8  0E01      	MOVLW 0x01
+0AFA  6E3C      	MOVWF gbl_complete_mouse_configuration+D'5'
 
 		0x00,	// configuration_string_id,
-0A9C  6A3D      	CLRF gbl_complete_mouse_configuration+D'6'
+0AFC  6A3D      	CLRF gbl_complete_mouse_configuration+D'6'
 
 		0b10000000, // attributes (bus powered, no remote wake up)
-0A9E  0E80      	MOVLW 0x80
-0AA0  6E3E      	MOVWF gbl_complete_mouse_configuration+D'7'
+0AFE  0E80      	MOVLW 0x80
+0B00  6E3E      	MOVWF gbl_complete_mouse_configuration+D'7'
 
 		100,	// max_power; (200ma)
-0AA2  0E64      	MOVLW 0x64
-0AA4  6E3F      	MOVWF gbl_complete_mouse_configuration+D'8'
+0B02  0E64      	MOVLW 0x64
+0B04  6E3F      	MOVWF gbl_complete_mouse_configuration+D'8'
 
 	},
 	{	// interface descriptor - - - - - - - - - - - -
 		0x09,	// length,
-0AA6  0E09      	MOVLW 0x09
-0AA8  6E40      	MOVWF gbl_complete_mouse_configuration+D'9'
+0B06  0E09      	MOVLW 0x09
+0B08  6E40      	MOVWF gbl_complete_mouse_configuration+D'9'
 
 		dt_INTERFACE,	// descriptor_type,
-0AAA  0E04      	MOVLW 0x04
-0AAC  6E41      	MOVWF gbl_complete_mouse_configuration+D'10'
+0B0A  0E04      	MOVLW 0x04
+0B0C  6E41      	MOVWF gbl_complete_mouse_configuration+D'10'
 
 		0x00,	// interface_number, (starts at zero)
-0AAE  6A42      	CLRF gbl_complete_mouse_configuration+D'11'
+0B0E  6A42      	CLRF gbl_complete_mouse_configuration+D'11'
 
 		0x00,	// alternate_setting, (no alternatives)
-0AB0  6A43      	CLRF gbl_complete_mouse_configuration+D'12'
+0B10  6A43      	CLRF gbl_complete_mouse_configuration+D'12'
 
 		0x01,	// num_endpoints,
-0AB2  0E01      	MOVLW 0x01
-0AB4  6E44      	MOVWF gbl_complete_mouse_configuration+D'13'
+0B12  0E01      	MOVLW 0x01
+0B14  6E44      	MOVWF gbl_complete_mouse_configuration+D'13'
 
 		0x03,	// interface_class, (HID)
-0AB6  0E03      	MOVLW 0x03
-0AB8  6E45      	MOVWF gbl_complete_mouse_configuration+D'14'
+0B16  0E03      	MOVLW 0x03
+0B18  6E45      	MOVWF gbl_complete_mouse_configuration+D'14'
 
 		0x01,	// interface_subclass, (boot - is this necessary?)
-0ABA  0E01      	MOVLW 0x01
-0ABC  6E46      	MOVWF gbl_complete_mouse_configuration+D'15'
+0B1A  0E01      	MOVLW 0x01
+0B1C  6E46      	MOVWF gbl_complete_mouse_configuration+D'15'
 
 		0x02,	// interface_protocol, (mouse)
-0ABE  0E02      	MOVLW 0x02
-0AC0  6E47      	MOVWF gbl_complete_mouse_configuration+D'16'
+0B1E  0E02      	MOVLW 0x02
+0B20  6E47      	MOVWF gbl_complete_mouse_configuration+D'16'
 
 		0x00,	// interface_string_id;
-0AC2  6A48      	CLRF gbl_complete_mouse_configuration+D'17'
+0B22  6A48      	CLRF gbl_complete_mouse_configuration+D'17'
 
 	},
 	{	// hid descriptor - - - - - - - - - - - - - - -
 		0x09,	// length,
-0AC4  0E09      	MOVLW 0x09
-0AC6  6E49      	MOVWF gbl_complete_mouse_configuration+D'18'
+0B24  0E09      	MOVLW 0x09
+0B26  6E49      	MOVWF gbl_complete_mouse_configuration+D'18'
 
 		dt_HID,	// descriptor_type;
-0AC8  0E21      	MOVLW 0x21
-0ACA  6E4A      	MOVWF gbl_complete_mouse_configuration+D'19'
+0B28  0E21      	MOVLW 0x21
+0B2A  6E4A      	MOVWF gbl_complete_mouse_configuration+D'19'
 
 		0x0110,	// hid_spec in BCD (1.10)
-0ACC  0E10      	MOVLW 0x10
-0ACE  6E4B      	MOVWF gbl_complete_mouse_configuration+D'20'
-0AD0  0E01      	MOVLW 0x01
-0AD2  6E4C      	MOVWF gbl_complete_mouse_configuration+D'21'
+0B2C  0E10      	MOVLW 0x10
+0B2E  6E4B      	MOVWF gbl_complete_mouse_configuration+D'20'
+0B30  0E01      	MOVLW 0x01
+0B32  6E4C      	MOVWF gbl_complete_mouse_configuration+D'21'
 
 		0x00,	// country_code, (0=not country specific)
-0AD4  6A4D      	CLRF gbl_complete_mouse_configuration+D'22'
+0B34  6A4D      	CLRF gbl_complete_mouse_configuration+D'22'
 
 		0x01,	// num_class_descriptors, (1)
-0AD6  0E01      	MOVLW 0x01
-0AD8  6E4E      	MOVWF gbl_complete_mouse_configuration+D'23'
+0B36  0E01      	MOVLW 0x01
+0B38  6E4E      	MOVWF gbl_complete_mouse_configuration+D'23'
 
 		0x22,	// class_descriptor_type; (0x22 = report)
-0ADA  0E22      	MOVLW 0x22
-0ADC  6E4F      	MOVWF gbl_complete_mouse_configuration+D'24'
+0B3A  0E22      	MOVLW 0x22
+0B3C  6E4F      	MOVWF gbl_complete_mouse_configuration+D'24'
 
 		sizeof(mouse_report_descriptor)	// class_descriptor_length; (report descriptor length)
-0ADE  0E32      	MOVLW 0x32
-0AE0  6E50      	MOVWF gbl_complete_mouse_configuration+D'25'
-0AE2  6A51      	CLRF gbl_complete_mouse_configuration+D'26'
+0B3E  0E32      	MOVLW 0x32
+0B40  6E50      	MOVWF gbl_complete_mouse_configuration+D'25'
+0B42  6A51      	CLRF gbl_complete_mouse_configuration+D'26'
 
 	},
 	{	// endpoint descriptor - - - - - - - - - - - - -
 		0x07,	// length,
-0AE4  0E07      	MOVLW 0x07
-0AE6  6E52      	MOVWF gbl_complete_mouse_configuration+D'27'
+0B44  0E07      	MOVLW 0x07
+0B46  6E52      	MOVWF gbl_complete_mouse_configuration+D'27'
 
 		dt_ENDPOINT,	// descriptor_type,
-0AE8  0E05      	MOVLW 0x05
-0AEA  6E53      	MOVWF gbl_complete_mouse_configuration+D'28'
+0B48  0E05      	MOVLW 0x05
+0B4A  6E53      	MOVWF gbl_complete_mouse_configuration+D'28'
 
 		0b10000001,	// endpoint_address, (Endpoint 1, IN)
-0AEC  0E81      	MOVLW 0x81
-0AEE  6E54      	MOVWF gbl_complete_mouse_configuration+D'29'
+0B4C  0E81      	MOVLW 0x81
+0B4E  6E54      	MOVWF gbl_complete_mouse_configuration+D'29'
 
 		0b00000011,	// attributes; (Interrupt)
-0AF0  0E03      	MOVLW 0x03
-0AF2  6E55      	MOVWF gbl_complete_mouse_configuration+D'30'
+0B50  0E03      	MOVLW 0x03
+0B52  6E55      	MOVWF gbl_complete_mouse_configuration+D'30'
 
 		3,	// max_packet_size;
-0AF4  0E03      	MOVLW 0x03
-0AF6  6E56      	MOVWF gbl_complete_mouse_configuration+D'31'
-0AF8  6A57      	CLRF gbl_complete_mouse_configuration+D'32'
+0B54  0E03      	MOVLW 0x03
+0B56  6E56      	MOVWF gbl_complete_mouse_configuration+D'31'
+0B58  6A57      	CLRF gbl_complete_mouse_configuration+D'32'
 
 		10,	// interval (10ms)
-0AFA  0E0A      	MOVLW 0x0A
-0AFC  6E58      	MOVWF gbl_complete_mouse_configuration+D'33'
+0B5A  0E0A      	MOVLW 0x0A
+0B5C  6E58      	MOVWF gbl_complete_mouse_configuration+D'33'
 
 	}	
 };	
 uns8 string_00 [] = 
 	{
 		4,	// length,
-0AFE  0E04      	MOVLW 0x04
-0B00  6FBE      	MOVWF gbl_string_00, 1
+0B5E  0E04      	MOVLW 0x04
+0B60  6FBE      	MOVWF gbl_string_00, 1
 
 		dt_STRING,	// descriptor type
-0B02  0E03      	MOVLW 0x03
-0B04  6FBF      	MOVWF gbl_string_00+D'1', 1
+0B62  0E03      	MOVLW 0x03
+0B64  6FBF      	MOVWF gbl_string_00+D'1', 1
 
 		9,	// magic for US english
-0B06  0E09      	MOVLW 0x09
-0B08  6FC0      	MOVWF gbl_string_00+D'2', 1
+0B66  0E09      	MOVLW 0x09
+0B68  6FC0      	MOVWF gbl_string_00+D'2', 1
 
 		4
-0B0A  0E04      	MOVLW 0x04
-0B0C  6FC1      	MOVWF gbl_string_00+D'3', 1
+0B6A  0E04      	MOVLW 0x04
+0B6C  6FC1      	MOVWF gbl_string_00+D'3', 1
 
 	};
 uns8 string_01[] =
 	{
 		// string 0 (1) - Manufacturer
 		24,	// length,
-0B0E  0E18      	MOVLW 0x18
-0B10  6F60      	MOVWF gbl_string_01, 1
+0B6E  0E18      	MOVLW 0x18
+0B70  6F60      	MOVWF gbl_string_01, 1
 
 		dt_STRING,	// descriptor_type;
-0B12  0E03      	MOVLW 0x03
-0B14  6F61      	MOVWF gbl_string_01+D'1', 1
+0B72  0E03      	MOVLW 0x03
+0B74  6F61      	MOVWF gbl_string_01+D'1', 1
 
 		
 		'P', 0, 
-0B16  0E50      	MOVLW 0x50
-0B18  6F62      	MOVWF gbl_string_01+D'2', 1
-0B1A  6B63      	CLRF gbl_string_01+D'3', 1
+0B76  0E50      	MOVLW 0x50
+0B78  6F62      	MOVWF gbl_string_01+D'2', 1
+0B7A  6B63      	CLRF gbl_string_01+D'3', 1
 
 		'i', 0,
-0B1C  0E69      	MOVLW 0x69
-0B1E  6F64      	MOVWF gbl_string_01+D'4', 1
-0B20  6B65      	CLRF gbl_string_01+D'5', 1
+0B7C  0E69      	MOVLW 0x69
+0B7E  6F64      	MOVWF gbl_string_01+D'4', 1
+0B80  6B65      	CLRF gbl_string_01+D'5', 1
 
 		'c', 0,
-0B22  0E63      	MOVLW 0x63
-0B24  6F66      	MOVWF gbl_string_01+D'6', 1
-0B26  6B67      	CLRF gbl_string_01+D'7', 1
+0B82  0E63      	MOVLW 0x63
+0B84  6F66      	MOVWF gbl_string_01+D'6', 1
+0B86  6B67      	CLRF gbl_string_01+D'7', 1
 
 		'P', 0,
-0B28  0E50      	MOVLW 0x50
-0B2A  6F68      	MOVWF gbl_string_01+D'8', 1
-0B2C  6B69      	CLRF gbl_string_01+D'9', 1
+0B88  0E50      	MOVLW 0x50
+0B8A  6F68      	MOVWF gbl_string_01+D'8', 1
+0B8C  6B69      	CLRF gbl_string_01+D'9', 1
 
 		'a', 0,
-0B2E  0E61      	MOVLW 0x61
-0B30  6F6A      	MOVWF gbl_string_01+D'10', 1
-0B32  6B6B      	CLRF gbl_string_01+D'11', 1
+0B8E  0E61      	MOVLW 0x61
+0B90  6F6A      	MOVWF gbl_string_01+D'10', 1
+0B92  6B6B      	CLRF gbl_string_01+D'11', 1
 
 		'c', 0,
-0B34  0E63      	MOVLW 0x63
-0B36  6F6C      	MOVWF gbl_string_01+D'12', 1
-0B38  6B6D      	CLRF gbl_string_01+D'13', 1
+0B94  0E63      	MOVLW 0x63
+0B96  6F6C      	MOVWF gbl_string_01+D'12', 1
+0B98  6B6D      	CLRF gbl_string_01+D'13', 1
 
 		'k', 0,
-0B3A  0E6B      	MOVLW 0x6B
-0B3C  6F6E      	MOVWF gbl_string_01+D'14', 1
-0B3E  6B6F      	CLRF gbl_string_01+D'15', 1
+0B9A  0E6B      	MOVLW 0x6B
+0B9C  6F6E      	MOVWF gbl_string_01+D'14', 1
+0B9E  6B6F      	CLRF gbl_string_01+D'15', 1
 
 		' ', 0,
-0B40  0E20      	MOVLW 0x20
-0B42  6F70      	MOVWF gbl_string_01+D'16', 1
-0B44  6B71      	CLRF gbl_string_01+D'17', 1
+0BA0  0E20      	MOVLW 0x20
+0BA2  6F70      	MOVWF gbl_string_01+D'16', 1
+0BA4  6B71      	CLRF gbl_string_01+D'17', 1
 
 		'I', 0,
-0B46  0E49      	MOVLW 0x49
-0B48  6F72      	MOVWF gbl_string_01+D'18', 1
-0B4A  6B73      	CLRF gbl_string_01+D'19', 1
+0BA6  0E49      	MOVLW 0x49
+0BA8  6F72      	MOVWF gbl_string_01+D'18', 1
+0BAA  6B73      	CLRF gbl_string_01+D'19', 1
 
 		'n', 0,
-0B4C  0E6E      	MOVLW 0x6E
-0B4E  6F74      	MOVWF gbl_string_01+D'20', 1
-0B50  6B75      	CLRF gbl_string_01+D'21', 1
+0BAC  0E6E      	MOVLW 0x6E
+0BAE  6F74      	MOVWF gbl_string_01+D'20', 1
+0BB0  6B75      	CLRF gbl_string_01+D'21', 1
 
 		'c', 0
-0B52  0E63      	MOVLW 0x63
-0B54  6F76      	MOVWF gbl_string_01+D'22', 1
-0B56  6B77      	CLRF gbl_string_01+D'23', 1
+0BB2  0E63      	MOVLW 0x63
+0BB4  6F76      	MOVWF gbl_string_01+D'22', 1
+0BB6  6B77      	CLRF gbl_string_01+D'23', 1
 
 	};
 uns8 string_02[] =
 	{	
 		20, // length	
-0B58  0E14      	MOVLW 0x14
-0B5A  6F78      	MOVWF gbl_string_02, 1
+0BB8  0E14      	MOVLW 0x14
+0BBA  6F78      	MOVWF gbl_string_02, 1
 
 		dt_STRING,	// descriptory_type;
-0B5C  0E03      	MOVLW 0x03
-0B5E  6F79      	MOVWF gbl_string_02+D'1', 1
+0BBC  0E03      	MOVLW 0x03
+0BBE  6F79      	MOVWF gbl_string_02+D'1', 1
 
 		'J', 0,
-0B60  0E4A      	MOVLW 0x4A
-0B62  6F7A      	MOVWF gbl_string_02+D'2', 1
-0B64  6B7B      	CLRF gbl_string_02+D'3', 1
+0BC0  0E4A      	MOVLW 0x4A
+0BC2  6F7A      	MOVWF gbl_string_02+D'2', 1
+0BC4  6B7B      	CLRF gbl_string_02+D'3', 1
 
 		'o', 0,
-0B66  0E6F      	MOVLW 0x6F
-0B68  6F7C      	MOVWF gbl_string_02+D'4', 1
-0B6A  6B7D      	CLRF gbl_string_02+D'5', 1
+0BC6  0E6F      	MOVLW 0x6F
+0BC8  6F7C      	MOVWF gbl_string_02+D'4', 1
+0BCA  6B7D      	CLRF gbl_string_02+D'5', 1
 
 		'y', 0,
-0B6C  0E79      	MOVLW 0x79
-0B6E  6F7E      	MOVWF gbl_string_02+D'6', 1
-0B70  6B7F      	CLRF gbl_string_02+D'7', 1
+0BCC  0E79      	MOVLW 0x79
+0BCE  6F7E      	MOVWF gbl_string_02+D'6', 1
+0BD0  6B7F      	CLRF gbl_string_02+D'7', 1
 
 		'-', 0,
-0B72  0E2D      	MOVLW 0x2D
-0B74  6F80      	MOVWF gbl_string_02+D'8', 1
-0B76  6B81      	CLRF gbl_string_02+D'9', 1
+0BD2  0E2D      	MOVLW 0x2D
+0BD4  6F80      	MOVWF gbl_string_02+D'8', 1
+0BD6  6B81      	CLRF gbl_string_02+D'9', 1
 
 		'M', 0,
-0B78  0E4D      	MOVLW 0x4D
-0B7A  6F82      	MOVWF gbl_string_02+D'10', 1
-0B7C  6B83      	CLRF gbl_string_02+D'11', 1
+0BD8  0E4D      	MOVLW 0x4D
+0BDA  6F82      	MOVWF gbl_string_02+D'10', 1
+0BDC  6B83      	CLRF gbl_string_02+D'11', 1
 
 		'o', 0,
-0B7E  0E6F      	MOVLW 0x6F
-0B80  6F84      	MOVWF gbl_string_02+D'12', 1
-0B82  6B85      	CLRF gbl_string_02+D'13', 1
+0BDE  0E6F      	MOVLW 0x6F
+0BE0  6F84      	MOVWF gbl_string_02+D'12', 1
+0BE2  6B85      	CLRF gbl_string_02+D'13', 1
 
 		'u', 0,
-0B84  0E75      	MOVLW 0x75
-0B86  6F86      	MOVWF gbl_string_02+D'14', 1
-0B88  6B87      	CLRF gbl_string_02+D'15', 1
+0BE4  0E75      	MOVLW 0x75
+0BE6  6F86      	MOVWF gbl_string_02+D'14', 1
+0BE8  6B87      	CLRF gbl_string_02+D'15', 1
 
 		's', 0,
-0B8A  0E73      	MOVLW 0x73
-0B8C  6F88      	MOVWF gbl_string_02+D'16', 1
-0B8E  6B89      	CLRF gbl_string_02+D'17', 1
+0BEA  0E73      	MOVLW 0x73
+0BEC  6F88      	MOVWF gbl_string_02+D'16', 1
+0BEE  6B89      	CLRF gbl_string_02+D'17', 1
 
 		'e', 0,
-0B90  0E65      	MOVLW 0x65
-0B92  6F8A      	MOVWF gbl_string_02+D'18', 1
-0B94  6B8B      	CLRF gbl_string_02+D'19', 1
+0BF0  0E65      	MOVLW 0x65
+0BF2  6F8A      	MOVWF gbl_string_02+D'18', 1
+0BF4  6B8B      	CLRF gbl_string_02+D'19', 1
 
 	};
 
@@ -3513,9 +3593,9 @@ void usb_handle_class_request_callback(setup_data_packet sdp) {
 ////////////////////////////////////////
 // Code with no source :-)
 ////////////////////////////////////////
-0000  EF93F004  	GOTO	_startup
+0000  EFC2F004  	GOTO	_startup
 
-0008  EFCDF005  	GOTO	interrupt
+0008  EFFDF005  	GOTO	interrupt
 000C            delay_ms_00000
 000C            ; { delay_ms ; function begin
 000C  53E7      	MOVF delay_ms_00000_arg_del, F, 1
@@ -3726,7 +3806,6 @@ void usb_handle_class_request_callback(setup_data_packet sdp) {
 
 
 
-0926            _startup
 
 
 
@@ -3734,7 +3813,22 @@ void usb_handle_class_request_callback(setup_data_packet sdp) {
 
 
 
-0B96  EF3FF004  	GOTO	main
+
+
+
+
+
+
+
+0984            _startup
+
+
+
+
+
+
+
+0BF6  EF64F004  	GOTO	main
 
 
 

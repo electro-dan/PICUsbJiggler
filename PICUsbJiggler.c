@@ -61,12 +61,15 @@ void initialise() {
 
     intcon2.RBPU = 0; // Port B pull-ups enabled
 
+	usb_setup();
     
     timer_setup_0(TIMER_16BIT_MODE, TIMER_PRESCALER_OFF, 59530); // close enough to 1ms at 24Mhz
 
 	turn_usb_ints_on();
     intcon.PEIE = 1; // Enables all unmasked peripheral interrupts
     intcon.GIE = 1;
+    
+    usb_enable_module();
     
     timer_start_0();
 }
@@ -119,17 +122,20 @@ void main() {
 			}	
 		}
         // Check for button press
-        if(BUTTON) {
-			delay_ms(100);
-			if(BUTTON) {
-				if (isJiggling) {
-					isJiggling = 1;
-					LED = 1;
-				} else {
-					isJiggling = 0;
-					LED = 0;
+        if(buttonOld != BUTTON) {
+			if(!BUTTON) {
+				delay_ms(100);
+				if(!BUTTON) {
+					if (!isJiggling) {
+						isJiggling = 1;
+						LED = 1;
+					} else {
+						isJiggling = 0;
+						LED = 0;
+					}
 				}
 			}
         }
+        buttonOld = BUTTON;
     }
 } 

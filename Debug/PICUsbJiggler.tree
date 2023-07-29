@@ -1,17 +1,19 @@
 // SourceBoost Linker Call Tree Dump
 
 _startup:"NoSourceFile",line = 0
-{  main:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 90
+{  main:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 93
   {    initialise:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 46
-    {      timer_setup_0:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_timer.c",line = 26
+    {      usb_setup:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 588
+      {      }      timer_setup_0:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_timer.c",line = 26
       {      }      turn_usb_ints_on:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 577
+      {      }      usb_enable_module:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 646
       {      }      timer_start_0:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_timer.c",line = 66
       {      }    }    tick_get_count:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_tick.c",line = 18
     {    }    tick_calc_diff:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_tick.c",line = 32
     {    }    usb_get_state:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 652
     {    }    usb_send_data:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 180
     {    }    delay_ms:"NoSourceFile",line = 0
-    {    }  }}interrupt:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 82
+    {    }  }}interrupt:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 85
 {  usb_handle_isr:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 549
   {    usb_handle_transaction:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 376
     {      memcpy8:"C:\Temp\string.c",line = 1336
@@ -39,6 +41,6 @@ _startup:"NoSourceFile",line = 0
       {      }      usb_prime_ep0_out:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 302
       {      }    }    usb_handle_reset:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 498
     {    }    usb_handle_stall:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_usb.c",line = 543
-    {    }  }  timer_0_callback:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 75
+    {    }  }  timer_0_callback:"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 78
   {    handle_tick:"Z:\home\dan\PIC\PICUsbJiggler\pic_pack_lib\pic_tick.c",line = 40
     {    }  }}
