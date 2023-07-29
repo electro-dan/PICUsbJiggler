@@ -1,5 +1,5 @@
 [Settings]
-Active Directory=Z:\home\dan\PIC\PICUsbJiggler\
+Active Directory=Z:\home\dan\PIC\PICUsbJiggler2\
 Target=PIC18F2550
 Active Compiler=BoostC
 Active Config=Debug

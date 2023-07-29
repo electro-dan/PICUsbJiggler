@@ -1,18 +1,18 @@
 // SourceBoost Linker Function Resource Usage Dump
 
 #GLOBAL:"global",line = 0,ram = 246.2,rom = 0;
-PutEP1(unsigned char,signed char*):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 231,ram = 10.0,rom = 136;
-USBSleep(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 255,ram = 0.0,rom = 14;
-USBActivity(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 268,ram = 0.0,rom = 12;
-USBReset(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 282,ram = 0.0,rom = 54;
-CopyDescriptorToEP0(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 314,ram = 6.0,rom = 130;
-InitUSB(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 335,ram = 3.0,rom = 74;
-USBStall(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 361,ram = 0.0,rom = 4;
-Count_Error(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 369,ram = 0.0,rom = 90;
-Process_Req(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 403,ram = 22.0,rom = 2718;
-ServiceUSB(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 814,ram = 0.0,rom = 26;
-interrupt(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 831,ram = 0.0,rom = 116;
-main(void):"Z:\home\dan\PIC\PICUsbJiggler\PICUsbJiggler.c",line = 864,ram = 36.0,rom = 310;
+PutEP1(unsigned char,signed char*):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 231,ram = 10.0,rom = 136;
+USBSleep(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 255,ram = 0.0,rom = 14;
+USBActivity(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 268,ram = 0.0,rom = 12;
+USBReset(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 282,ram = 0.0,rom = 50;
+CopyDescriptorToEP0(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 313,ram = 6.0,rom = 130;
+InitUSB(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 335,ram = 3.0,rom = 66;
+USBStall(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 368,ram = 0.0,rom = 4;
+Count_Error(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 376,ram = 0.0,rom = 90;
+Process_Req(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 410,ram = 22.0,rom = 2718;
+ServiceUSB(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 821,ram = 0.0,rom = 26;
+interrupt(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 838,ram = 0.0,rom = 114;
+main(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 870,ram = 31.0,rom = 276;
 delay_ms(unsigned char):"NoSourceFile",line = 0,ram = 0.0,rom = 104;
 _startup(void):"NoSourceFile",line = 0,ram = 0.0,rom = 778;
 #HEAP_BLOCK: 0, 1048, 1000;

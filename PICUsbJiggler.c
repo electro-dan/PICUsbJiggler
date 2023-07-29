@@ -279,7 +279,6 @@ void USBActivity() {
 /* enable the USB                                                     */
 /* ****************************************************************** */
 void USBReset() {
-	portb = 1;		// Lite led 0 to indicate Reset status
 	USB_Curr_Config = 0;
 	USB_IsIdle = 0;
 	bTOK_DONE = 0; // clear TOK_DNE bit in uir 4 times to 
@@ -332,12 +331,20 @@ void CopyDescriptorToEP0() {
 /* Initializes the USB peripheral, sets up the interrupts             */
 /* ****************************************************************** */
 void InitUSB() {
-	ucfg = 00010000b; //use onchip receiver, internal pullup resistors, low speed and no pingpong buffers
-	uie = 00000001b;	// enable the Reset interrupt ONLY!!
-	uir = 0;	// clear all USB interrupt flags
-	pie2 = 00100000b ; // enable usb interrupts
-	ucon = 01000000b;	// reset pingpong buffers
-	ucon = 00001000b;	// unlock pingpong buffers and enable usb
+	//ucfg.UTRDIS = 0; // enable internal transceiver
+	ucfg.FSEN = 1; // Full speed enable
+	ucfg.UPUEN = 1; // Enable on-chip pull-ups
+	//ucfg.PPB1 = 0; // Disable ping-pong buffering
+	//ucfg.PPB0 = 0; // Disable ping-pong buffering
+	//uie.STALLIE = 1; // interrupt on stall
+	//uie.TRNIE = 1; //   on transaction complete
+	uie.URSTIE = 1; //   on reset 
+	pie2.USBIE = 1; // general USB interrupts
+	
+	ucon.PPBRST = 1; // reset pingpong buffers
+	ucon.PPBRST = 0; // unlock pingpong buffers
+	ucon.USBEN = 1;	// enable usb
+	
 	USB_Curr_Config = 0;
 	USB_status_device = 1;
 	char USB_Interface[] = {0,0,0};
@@ -828,15 +835,14 @@ void ServiceUSB() {
 // Interrupt service routine. Branch off to different interrupts
 ////////////////////////////////////////////////////////////////	
 void interrupt(void) {
-    portb = 0; //clear indicator leds
-	if (bUSBIE && bUSBIF) {
-		if (bACTIVITY && bACTIVITY_E) // WAS IT AN ACTIVITY WAKEUP?
-			USBActivity ();
+    if (pie2.USBIE && pir2.USBIF) {
+		if (uir.ACTVIF && uie.ACTVIE) // WAS IT AN ACTIVITY WAKEUP?
+			USBActivity();
 		
-        if (bUSBRST && bUSBRST_E) // USB reset must be serviced immediately
+        if (uir.URSTIF && uie.URSTIE) // USB reset must be serviced immediately
 			USBReset();
 		
-        if (bTOK_DONE && bTOK_DONE_E) { // WAS IT A TOKEN DONE 
+        if (uir.TRNIF && uie.TRNIE) { // WAS IT A TOKEN DONE 
 			if (USB_dev_req == SET_ADDRESS)	{
                 // Finish Set Address
 				USB_dev_req = NULL;
@@ -863,13 +869,11 @@ void main() {
 	signed char buffer[3];
     const signed char tablex [] = {-1, -1, -1, 1, 1, 1,  1,  1, 1, -1,  -1, -1};
     const signed char tabley [] = {-1, 0, 1,  1,  0, -1, -1, 0,  1, 1, 0, -1 };
-	const unsigned char led[] = {1, 2, 4, 8, 16};
-    // The table array contains the directional data for simulated mouse 
+	// The table array contains the directional data for simulated mouse 
     // movement to form the infinity symbol (i.e. figure 8).   Movements are relative
     // to the previous position. 
 	ddrb = 0;
 	for (i = 0; i < 5; i++) {
-	    portb = led[i]; // flash leds to make sure chip is running
 	    for (j=0; j<64000; j++); // Small delay (greater than 16us) in order to
 	};
 

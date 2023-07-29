@@ -150,8 +150,8 @@ CVRR	C:\Program Files\SourceBoost\Include\pic18F2550.h	681;"	d
 CVRSS	C:\Program Files\SourceBoost\Include\pic18F2550.h	680;"	d
 ConfigDescriptor	PICUsbJiggler.c	182;"	v
 ConfiguredUSB	PICUsbJiggler.h	18;"	d
-CopyDescriptorToEP0	PICUsbJiggler.c	311;"	f
-Count_Error	PICUsbJiggler.c	368;"	f
+CopyDescriptorToEP0	PICUsbJiggler.c	310;"	f
+Count_Error	PICUsbJiggler.c	375;"	f
 D	C:\Program Files\SourceBoost\Include\pic18F2550.h	821;"	d
 DATA_ADDRESS	C:\Program Files\SourceBoost\Include\pic18F2550.h	819;"	d
 DC	C:\Program Files\SourceBoost\Include\pic18F2550.h	929;"	d
@@ -415,7 +415,7 @@ IRVST	C:\Program Files\SourceBoost\Include\pic18F2550.h	868;"	d
 IRVST	C:\Program Files\SourceBoost\Include\pic18F2550.h	888;"	d
 IVRST	C:\Program Files\SourceBoost\Include\pic18F2550.h	879;"	d
 IVRST	C:\Program Files\SourceBoost\Include\pic18F2550.h	899;"	d
-InitUSB	PICUsbJiggler.c	334;"	f
+InitUSB	PICUsbJiggler.c	333;"	f
 LATA	C:\Program Files\SourceBoost\Include\pic18F2550.h	59;"	d
 LATA0	C:\Program Files\SourceBoost\Include\pic18F2550.h	442;"	d
 LATA1	C:\Program Files\SourceBoost\Include\pic18F2550.h	443;"	d
@@ -557,7 +557,7 @@ PSSAC0	C:\Program Files\SourceBoost\Include\pic18F2550.h	692;"	d
 PSSAC0	C:\Program Files\SourceBoost\Include\pic18F2550.h	700;"	d
 PSSAC1	C:\Program Files\SourceBoost\Include\pic18F2550.h	693;"	d
 PSSAC1	C:\Program Files\SourceBoost\Include\pic18F2550.h	701;"	d
-Process_Req	PICUsbJiggler.c	395;"	f
+Process_Req	PICUsbJiggler.c	402;"	f
 PutEP1	PICUsbJiggler.c	227;"	f
 QUEUE_HEADS	C:\Program Files\SourceBoost\Include\novo.h	81;"	d
 R	C:\Program Files\SourceBoost\Include\pic18F2550.h	820;"	d
@@ -718,7 +718,7 @@ SWDTEN	C:\Program Files\SourceBoost\Include\pic18F2550.h	863;"	d
 SYNC	C:\Program Files\SourceBoost\Include\pic18F2550.h	652;"	d
 Scheduler	C:\Program Files\SourceBoost\Include\novo.h	154;"	t
 Send_0Len_pkt	PICUsbJiggler.h	21;"	d
-ServiceUSB	PICUsbJiggler.c	813;"	f
+ServiceUSB	PICUsbJiggler.c	820;"	f
 String0	PICUsbJiggler.c	93;"	v
 String1	PICUsbJiggler.c	94;"	v
 String2	PICUsbJiggler.c	104;"	v
@@ -933,7 +933,7 @@ USBIF	PICUsbJiggler.h	101;"	v
 USBIP	C:\Program Files\SourceBoost\Include\pic18F2550.h	622;"	d
 USBReset	PICUsbJiggler.c	281;"	f
 USBSleep	PICUsbJiggler.c	254;"	f
-USBStall	PICUsbJiggler.c	360;"	f
+USBStall	PICUsbJiggler.c	367;"	f
 USB_BTO_ERR	PICUsbJiggler.c	64;"	v
 USB_BTS_ERR	PICUsbJiggler.c	67;"	v
 USB_CRC16_ERR	PICUsbJiggler.c	62;"	v
@@ -1189,7 +1189,7 @@ intcon	C:\Program Files\SourceBoost\Include\novo.h	67;"	v
 intcon	C:\Program Files\SourceBoost\Include\pic18F2550.h	1317;"	v
 intcon2	C:\Program Files\SourceBoost\Include\pic18F2550.h	1316;"	v
 intcon3	C:\Program Files\SourceBoost\Include\pic18F2550.h	1315;"	v
-interrupt	PICUsbJiggler.c	830;"	f
+interrupt	PICUsbJiggler.c	837;"	f
 ipr1	C:\Program Files\SourceBoost\Include\pic18F2550.h	1232;"	v
 ipr2	C:\Program Files\SourceBoost\Include\pic18F2550.h	1235;"	v
 isJiggling	PICUsbJiggler.h	7;"	v
@@ -1198,7 +1198,7 @@ latb	C:\Program Files\SourceBoost\Include\pic18F2550.h	1219;"	v
 latc	C:\Program Files\SourceBoost\Include\pic18F2550.h	1220;"	v
 late	C:\Program Files\SourceBoost\Include\pic18F2550.h	1221;"	v
 lvdcon	C:\Program Files\SourceBoost\Include\pic18F2550.h	1286;"	v
-main	PICUsbJiggler.c	860;"	f
+main	PICUsbJiggler.c	866;"	f
 nop	C:\Program Files\SourceBoost\Include\boostc.h	59;"	f
 osccon	C:\Program Files\SourceBoost\Include\pic18F2550.h	1287;"	v
 osctune	C:\Program Files\SourceBoost\Include\pic18F2550.h	1229;"	v

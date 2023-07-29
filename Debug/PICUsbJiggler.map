@@ -16,20 +16,20 @@ Address  Length   Unique Name      Name
 00000000:00000008 _resetvector     _resetvector  
 00000008:00000004 _interruptVector _interruptVector  
 0000000C:00000068 delay_ms_00000   delay_ms(unsigned char)  
-00000074:00000036 USBReset_00000   USBReset(void)  
-000000AA:0000000C USBActivit_0000A USBActivity(void)  
-000000B6:00000082 CopyDescri_0000B CopyDescriptorToEP0(void)  
-00000138:00000004 USBStall_00000   USBStall(void)  
-0000013C:0000000E USBSleep_00000   USBSleep(void)  
-0000014A:00000A9E Process_Re_0000D Process_Req(void)  
-00000BE8:0000005A Count_Erro_0000C Count_Error(void)  
-00000C42:0000001A ServiceUSB_00000 ServiceUSB(void)  
-00000C5C:00000088 PutEP1_00000     PutEP1(unsigned char,signed char*)  
-00000CE4:0000004A InitUSB_00000    InitUSB(void)  
-00000D2E:00000136 main             main(void)  
-00000E64:0000030A _startup_00000   _startup(void)  
-0000116E:00000074 interrupt        interrupt(void)  
-000011E2:00006E1E *Unused Block 
+00000074:00000032 USBReset_00000   USBReset(void)  
+000000A6:0000000C USBActivit_0000A USBActivity(void)  
+000000B2:00000082 CopyDescri_0000B CopyDescriptorToEP0(void)  
+00000134:00000004 USBStall_00000   USBStall(void)  
+00000138:0000000E USBSleep_00000   USBSleep(void)  
+00000146:00000A9E Process_Re_0000D Process_Req(void)  
+00000BE4:0000005A Count_Erro_0000C Count_Error(void)  
+00000C3E:0000001A ServiceUSB_00000 ServiceUSB(void)  
+00000C58:00000088 PutEP1_00000     PutEP1(unsigned char,signed char*)  
+00000CE0:00000042 InitUSB_00000    InitUSB(void)  
+00000D22:00000114 main             main(void)  
+00000E36:0000030A _startup_00000   _startup(void)  
+00001140:00000072 interrupt        interrupt(void)  
+000011B2:00006E4E *Unused Block 
 
 Register usage
 ==============
@@ -78,29 +78,28 @@ Address  Bit Lengh Bit Mask   Unique Name                      Name
 000000FF:00000008             PutEP1_00000_1_i                 i
 00000100:00000060             main_1_tablex                    tablex
 0000010C:00000060             main_1_tabley                    tabley
-00000118:00000028             main_1_led                       led
-0000011D:00000010             Process_Re_0000D_1_UEPArray      UEPArray
-0000011F:00000008             Process_Re_0000D_1_Descrip_0000E DescriptorType
-00000120:00000008             Process_Re_0000D_1_Endpoint      Endpoint
-00000121:00000008             Process_Re_0000D_1_Interface     Interface
-00000122:00000008             Process_Re_0000D_1_DescriptorID  DescriptorID
-00000123:00000008             Process_Re_0000D_1_StringID      StringID
-00000124:00000008             CompTempVar587                  
-00000125:00000008             CompTempVar588                  
-00000126:00000008             CompTempVar589                  
-00000127:00000008             CompTempVar600                  
-00000128:00000008             CompTempVar601                  
-00000129:00000008             CompTempVar726                  
-0000012A:00000008             CompTempVar721                  
-0000012B:00000010             CompTempVar722                  
-0000012C:00000008             CompTempVar648                  
-0000012D:00000008             CompTempVar723                  
-0000012E:00000008             CompTempVar650                  
-0000012F:00000008             CompTempVar673                  
-00000130:00000008             CompTempVar674                  
-00000131:00000008             CopyDescri_0000B_1_bufindex      bufindex
-00000132:00000008             CompTempVar586                  
-00000134:00000008             CompTempVar583                  
+00000118:00000010             Process_Re_0000D_1_UEPArray      UEPArray
+0000011A:00000008             Process_Re_0000D_1_Descrip_0000E DescriptorType
+0000011B:00000008             Process_Re_0000D_1_Endpoint      Endpoint
+0000011C:00000008             Process_Re_0000D_1_Interface     Interface
+0000011D:00000008             Process_Re_0000D_1_DescriptorID  DescriptorID
+0000011E:00000008             Process_Re_0000D_1_StringID      StringID
+0000011F:00000008             CompTempVar587                  
+00000120:00000008             CompTempVar588                  
+00000121:00000008             CompTempVar589                  
+00000122:00000008             CompTempVar600                  
+00000123:00000008             CompTempVar601                  
+00000124:00000008             CompTempVar726                  
+00000125:00000008             CompTempVar721                  
+00000126:00000010             CompTempVar722                  
+00000127:00000008             CompTempVar648                  
+00000128:00000008             CompTempVar723                  
+00000129:00000008             CompTempVar650                  
+0000012A:00000008             CompTempVar673                  
+0000012B:00000008             CompTempVar674                  
+0000012C:00000008             CopyDescri_0000B_1_bufindex      bufindex
+0000012D:00000008             CompTempVar586                  
+0000012F:00000008             CompTempVar583                  
 00000400:00000008             gbl_bd0statoe                    bd0statoe
 00000401:00000008             gbl_bd0cntoe                     bd0cntoe
 00000402:00000008             gbl_bd0adrloe                    bd0adrloe
@@ -261,6 +260,6 @@ Address  Bit Lengh Bit Mask   Unique Name                      Name
 
 Memory Usage Report
 ===================
-RAM available:2048 bytes, used:333 bytes (16.3%), free:1715 bytes (83.7%), 
+RAM available:2048 bytes, used:328 bytes (16.1%), free:1720 bytes (83.9%), 
 Heap size:1000 bytes, Heap max single alloc:127 bytes
-ROM available:32768 bytes, used:4578 bytes (14.0%), free:28190 bytes (86.0%)
+ROM available:32768 bytes, used:4530 bytes (13.9%), free:28238 bytes (86.1%)

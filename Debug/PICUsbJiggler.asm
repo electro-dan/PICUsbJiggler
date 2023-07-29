@@ -243,106 +243,105 @@ gbl_ConfigDescriptor             EQU	0x0000003D ; bytes:34
 gbl_ReportDescrSize              EQU	0x000000EC ; bytes:2
 gbl_HIDDescriptor                EQU	0x000000B8 ; bytes:9
 PutEP1_00000_arg_bytes           EQU	0x000000FE ; bytes:1
-PutEP1_00000_arg_buffer          EQU	0x0000011D ; bytes:2
-CompTempVarRet569                EQU	0x00000122 ; bytes:1
-PutEP1_00000_1_tobuffer          EQU	0x0000011F ; bytes:2
+PutEP1_00000_arg_buffer          EQU	0x00000118 ; bytes:2
+CompTempVarRet569                EQU	0x0000011D ; bytes:1
+PutEP1_00000_1_tobuffer          EQU	0x0000011A ; bytes:2
 PutEP1_00000_1_i                 EQU	0x000000FF ; bytes:1
-CompTempVar570                   EQU	0x00000121 ; bytes:1
-CompTempVar573                   EQU	0x00000122 ; bytes:2
-CompTempVar574                   EQU	0x00000124 ; bytes:1
-CompTempVar578                   EQU	0x00000122 ; bytes:1
-CompTempVar579                   EQU	0x00000123 ; bytes:1
-CopyDescri_0000B_1_USBbuffer     EQU	0x0000012F ; bytes:2
-CopyDescri_0000B_1_bufindex      EQU	0x00000131 ; bytes:1
-CompTempVar582                   EQU	0x00000132 ; bytes:2
-CompTempVar583                   EQU	0x00000134 ; bytes:1
-CompTempVar586                   EQU	0x00000132 ; bytes:1
-InitUSB_00000_1_USB_Interface    EQU	0x0000011D ; bytes:3
+CompTempVar570                   EQU	0x0000011C ; bytes:1
+CompTempVar573                   EQU	0x0000011D ; bytes:2
+CompTempVar574                   EQU	0x0000011F ; bytes:1
+CompTempVar578                   EQU	0x0000011D ; bytes:1
+CompTempVar579                   EQU	0x0000011E ; bytes:1
+CopyDescri_0000B_1_USBbuffer     EQU	0x0000012A ; bytes:2
+CopyDescri_0000B_1_bufindex      EQU	0x0000012C ; bytes:1
+CompTempVar582                   EQU	0x0000012D ; bytes:2
+CompTempVar583                   EQU	0x0000012F ; bytes:1
+CompTempVar586                   EQU	0x0000012D ; bytes:1
+InitUSB_00000_1_USB_Interface    EQU	0x00000118 ; bytes:3
 Process_Re_0000D_1_OutBuffer     EQU	0x000000FE ; bytes:2
-Process_Re_0000D_1_UEPArray      EQU	0x0000011D ; bytes:2
-Process_Re_0000D_1_Descrip_0000E EQU	0x0000011F ; bytes:1
-Process_Re_0000D_1_Endpoint      EQU	0x00000120 ; bytes:1
-Process_Re_0000D_1_Interface     EQU	0x00000121 ; bytes:1
-Process_Re_0000D_1_DescriptorID  EQU	0x00000122 ; bytes:1
-Process_Re_0000D_1_StringID      EQU	0x00000123 ; bytes:1
-CompTempVar587                   EQU	0x00000124 ; bytes:1
-CompTempVar588                   EQU	0x00000125 ; bytes:1
-CompTempVar589                   EQU	0x00000126 ; bytes:1
-CompTempVar593                   EQU	0x00000127 ; bytes:1
-CompTempVar596                   EQU	0x00000128 ; bytes:1
-CompTempVar597                   EQU	0x00000127 ; bytes:1
-CompTempVar598                   EQU	0x00000127 ; bytes:1
-CompTempVar599                   EQU	0x00000127 ; bytes:1
-CompTempVar600                   EQU	0x00000127 ; bytes:1
-CompTempVar601                   EQU	0x00000128 ; bytes:1
-CompTempVar605                   EQU	0x00000129 ; bytes:2
-CompTempVar606                   EQU	0x0000012B ; bytes:1
-CompTempVar610                   EQU	0x00000129 ; bytes:1
-CompTempVar612                   EQU	0x00000129 ; bytes:1
-CompTempVar614                   EQU	0x00000129 ; bytes:1
-CompTempVar615                   EQU	0x00000129 ; bytes:1
-CompTempVar617                   EQU	0x00000129 ; bytes:1
-CompTempVar621                   EQU	0x00000129 ; bytes:2
-CompTempVar622                   EQU	0x0000012B ; bytes:1
-CompTempVar625                   EQU	0x00000129 ; bytes:1
-CompTempVar627                   EQU	0x00000129 ; bytes:1
-CompTempVar628                   EQU	0x0000012A ; bytes:1
-CompTempVar631                   EQU	0x0000012B ; bytes:1
-CompTempVar634                   EQU	0x0000012B ; bytes:1
-CompTempVar635                   EQU	0x0000012C ; bytes:1
-CompTempVar636                   EQU	0x00000129 ; bytes:1
-CompTempVar637                   EQU	0x0000012A ; bytes:1
-CompTempVar640                   EQU	0x0000012B ; bytes:1
-CompTempVar643                   EQU	0x0000012B ; bytes:1
-CompTempVar644                   EQU	0x0000012C ; bytes:1
-CompTempVar645                   EQU	0x00000129 ; bytes:1
-CompTempVar646                   EQU	0x0000012A ; bytes:1
-CompTempVar647                   EQU	0x0000012B ; bytes:1
-CompTempVar648                   EQU	0x0000012C ; bytes:1
-CompTempVar649                   EQU	0x0000012D ; bytes:1
-CompTempVar650                   EQU	0x0000012E ; bytes:1
-CompTempVar654                   EQU	0x0000012F ; bytes:1
-CompTempVar657                   EQU	0x0000012F ; bytes:1
-CompTempVar658                   EQU	0x00000130 ; bytes:1
-CompTempVar662                   EQU	0x0000012F ; bytes:1
-CompTempVar665                   EQU	0x0000012F ; bytes:1
-CompTempVar666                   EQU	0x00000130 ; bytes:1
-CompTempVar670                   EQU	0x0000012F ; bytes:1
-CompTempVar673                   EQU	0x0000012F ; bytes:1
-CompTempVar674                   EQU	0x00000130 ; bytes:1
-CompTempVar677                   EQU	0x00000129 ; bytes:1
-CompTempVar681                   EQU	0x00000129 ; bytes:1
-CompTempVar683                   EQU	0x0000012A ; bytes:1
-CompTempVar684                   EQU	0x0000012B ; bytes:1
-CompTempVar688                   EQU	0x00000129 ; bytes:1
-CompTempVar690                   EQU	0x0000012A ; bytes:1
-CompTempVar691                   EQU	0x0000012B ; bytes:1
-CompTempVar693                   EQU	0x00000129 ; bytes:1
-CompTempVar695                   EQU	0x0000012A ; bytes:1
-CompTempVar696                   EQU	0x0000012B ; bytes:1
-CompTempVar700                   EQU	0x00000129 ; bytes:1
-CompTempVar701                   EQU	0x0000012A ; bytes:1
-CompTempVar705                   EQU	0x00000129 ; bytes:1
-CompTempVar706                   EQU	0x0000012A ; bytes:1
-CompTempVar707                   EQU	0x00000129 ; bytes:1
-CompTempVar708                   EQU	0x00000129 ; bytes:1
-CompTempVar709                   EQU	0x0000012A ; bytes:1
-CompTempVar710                   EQU	0x0000012B ; bytes:2
-CompTempVar711                   EQU	0x0000012D ; bytes:1
-CompTempVar715                   EQU	0x00000129 ; bytes:1
-CompTempVar719                   EQU	0x0000012A ; bytes:1
-CompTempVar720                   EQU	0x00000129 ; bytes:1
-CompTempVar721                   EQU	0x0000012A ; bytes:1
-CompTempVar722                   EQU	0x0000012B ; bytes:2
-CompTempVar723                   EQU	0x0000012D ; bytes:1
-CompTempVar726                   EQU	0x00000129 ; bytes:1
+Process_Re_0000D_1_UEPArray      EQU	0x00000118 ; bytes:2
+Process_Re_0000D_1_Descrip_0000E EQU	0x0000011A ; bytes:1
+Process_Re_0000D_1_Endpoint      EQU	0x0000011B ; bytes:1
+Process_Re_0000D_1_Interface     EQU	0x0000011C ; bytes:1
+Process_Re_0000D_1_DescriptorID  EQU	0x0000011D ; bytes:1
+Process_Re_0000D_1_StringID      EQU	0x0000011E ; bytes:1
+CompTempVar587                   EQU	0x0000011F ; bytes:1
+CompTempVar588                   EQU	0x00000120 ; bytes:1
+CompTempVar589                   EQU	0x00000121 ; bytes:1
+CompTempVar593                   EQU	0x00000122 ; bytes:1
+CompTempVar596                   EQU	0x00000123 ; bytes:1
+CompTempVar597                   EQU	0x00000122 ; bytes:1
+CompTempVar598                   EQU	0x00000122 ; bytes:1
+CompTempVar599                   EQU	0x00000122 ; bytes:1
+CompTempVar600                   EQU	0x00000122 ; bytes:1
+CompTempVar601                   EQU	0x00000123 ; bytes:1
+CompTempVar605                   EQU	0x00000124 ; bytes:2
+CompTempVar606                   EQU	0x00000126 ; bytes:1
+CompTempVar610                   EQU	0x00000124 ; bytes:1
+CompTempVar612                   EQU	0x00000124 ; bytes:1
+CompTempVar614                   EQU	0x00000124 ; bytes:1
+CompTempVar615                   EQU	0x00000124 ; bytes:1
+CompTempVar617                   EQU	0x00000124 ; bytes:1
+CompTempVar621                   EQU	0x00000124 ; bytes:2
+CompTempVar622                   EQU	0x00000126 ; bytes:1
+CompTempVar625                   EQU	0x00000124 ; bytes:1
+CompTempVar627                   EQU	0x00000124 ; bytes:1
+CompTempVar628                   EQU	0x00000125 ; bytes:1
+CompTempVar631                   EQU	0x00000126 ; bytes:1
+CompTempVar634                   EQU	0x00000126 ; bytes:1
+CompTempVar635                   EQU	0x00000127 ; bytes:1
+CompTempVar636                   EQU	0x00000124 ; bytes:1
+CompTempVar637                   EQU	0x00000125 ; bytes:1
+CompTempVar640                   EQU	0x00000126 ; bytes:1
+CompTempVar643                   EQU	0x00000126 ; bytes:1
+CompTempVar644                   EQU	0x00000127 ; bytes:1
+CompTempVar645                   EQU	0x00000124 ; bytes:1
+CompTempVar646                   EQU	0x00000125 ; bytes:1
+CompTempVar647                   EQU	0x00000126 ; bytes:1
+CompTempVar648                   EQU	0x00000127 ; bytes:1
+CompTempVar649                   EQU	0x00000128 ; bytes:1
+CompTempVar650                   EQU	0x00000129 ; bytes:1
+CompTempVar654                   EQU	0x0000012A ; bytes:1
+CompTempVar657                   EQU	0x0000012A ; bytes:1
+CompTempVar658                   EQU	0x0000012B ; bytes:1
+CompTempVar662                   EQU	0x0000012A ; bytes:1
+CompTempVar665                   EQU	0x0000012A ; bytes:1
+CompTempVar666                   EQU	0x0000012B ; bytes:1
+CompTempVar670                   EQU	0x0000012A ; bytes:1
+CompTempVar673                   EQU	0x0000012A ; bytes:1
+CompTempVar674                   EQU	0x0000012B ; bytes:1
+CompTempVar677                   EQU	0x00000124 ; bytes:1
+CompTempVar681                   EQU	0x00000124 ; bytes:1
+CompTempVar683                   EQU	0x00000125 ; bytes:1
+CompTempVar684                   EQU	0x00000126 ; bytes:1
+CompTempVar688                   EQU	0x00000124 ; bytes:1
+CompTempVar690                   EQU	0x00000125 ; bytes:1
+CompTempVar691                   EQU	0x00000126 ; bytes:1
+CompTempVar693                   EQU	0x00000124 ; bytes:1
+CompTempVar695                   EQU	0x00000125 ; bytes:1
+CompTempVar696                   EQU	0x00000126 ; bytes:1
+CompTempVar700                   EQU	0x00000124 ; bytes:1
+CompTempVar701                   EQU	0x00000125 ; bytes:1
+CompTempVar705                   EQU	0x00000124 ; bytes:1
+CompTempVar706                   EQU	0x00000125 ; bytes:1
+CompTempVar707                   EQU	0x00000124 ; bytes:1
+CompTempVar708                   EQU	0x00000124 ; bytes:1
+CompTempVar709                   EQU	0x00000125 ; bytes:1
+CompTempVar710                   EQU	0x00000126 ; bytes:2
+CompTempVar711                   EQU	0x00000128 ; bytes:1
+CompTempVar715                   EQU	0x00000124 ; bytes:1
+CompTempVar719                   EQU	0x00000125 ; bytes:1
+CompTempVar720                   EQU	0x00000124 ; bytes:1
+CompTempVar721                   EQU	0x00000125 ; bytes:1
+CompTempVar722                   EQU	0x00000126 ; bytes:2
+CompTempVar723                   EQU	0x00000128 ; bytes:1
+CompTempVar726                   EQU	0x00000124 ; bytes:1
 main_1_i                         EQU	0x000000F8 ; bytes:1
 main_1_j                         EQU	0x000000F9 ; bytes:2
 main_1_buffer                    EQU	0x000000FB ; bytes:3
 main_1_tablex                    EQU	0x00000100 ; bytes:12
 main_1_tabley                    EQU	0x0000010C ; bytes:12
-main_1_led                       EQU	0x00000118 ; bytes:5
-CompTempVar733                   EQU	0x000000FE ; bytes:1
+CompTempVar732                   EQU	0x000000FE ; bytes:1
 delay_ms_00000_arg_del           EQU	0x000000FE ; bytes:1
 Int1Context                      EQU	0x00000001 ; bytes:4
 	ORG 0x00000000
@@ -411,8 +410,6 @@ label2
 	ORG 0x00000074
 USBReset_00000
 ; { USBReset ; function begin
-	MOVLW 0x01
-	MOVWF gbl_portb
 	MOVLB 0x00
 	CLRF gbl_USB_Curr_Config, 1
 	CLRF gbl_USB_IsIdle, 1
@@ -440,7 +437,7 @@ USBReset_00000
 	RETURN
 ; } USBReset function end
 
-	ORG 0x000000AA
+	ORG 0x000000A6
 USBActivit_0000A
 ; { USBActivity ; function begin
 	BCF gbl_bACTIVITY,2
@@ -451,7 +448,7 @@ USBActivit_0000A
 	RETURN
 ; } USBActivity function end
 
-	ORG 0x000000B6
+	ORG 0x000000B2
 CopyDescri_0000B
 ; { CopyDescriptorToEP0 ; function begin
 	MOVLB 0x04
@@ -525,14 +522,14 @@ label6
 	RETURN
 ; } CopyDescriptorToEP0 function end
 
-	ORG 0x00000138
+	ORG 0x00000134
 USBStall_00000
 ; { USBStall ; function begin
 	BCF gbl_bSTALL,5
 	RETURN
 ; } USBStall function end
 
-	ORG 0x0000013C
+	ORG 0x00000138
 USBSleep_00000
 ; { USBSleep ; function begin
 	BSF gbl_bACTIVITY_E,2
@@ -544,7 +541,7 @@ USBSleep_00000
 	RETURN
 ; } USBSleep function end
 
-	ORG 0x0000014A
+	ORG 0x00000146
 Process_Re_0000D
 ; { Process_Req ; function begin
 	MOVF gbl_ustat, W
@@ -1993,7 +1990,7 @@ label104
 	RETURN
 ; } Process_Req function end
 
-	ORG 0x00000BE8
+	ORG 0x00000BE4
 Count_Erro_0000C
 ; { Count_Error ; function begin
 	BTFSS gbl_bPID_ERR,0
@@ -2049,7 +2046,7 @@ label110
 	RETURN
 ; } Count_Error function end
 
-	ORG 0x00000C42
+	ORG 0x00000C3E
 ServiceUSB_00000
 ; { ServiceUSB ; function begin
 	BTFSC gbl_bTOK_DONE,3
@@ -2063,7 +2060,7 @@ ServiceUSB_00000
 	RETURN
 ; } ServiceUSB function end
 
-	ORG 0x00000C5C
+	ORG 0x00000C58
 PutEP1_00000
 ; { PutEP1 ; function begin
 	CLRF gbl_ddrb
@@ -2139,20 +2136,16 @@ label113
 	RETURN
 ; } PutEP1 function end
 
-	ORG 0x00000CE4
+	ORG 0x00000CE0
 InitUSB_00000
 ; { InitUSB ; function begin
-	MOVLW 0x10
-	MOVWF gbl_ucfg
-	MOVLW 0x01
-	MOVWF gbl_uie
-	CLRF gbl_uir
-	MOVLW 0x20
-	MOVWF gbl_pie2
-	MOVLW 0x40
-	MOVWF gbl_ucon
-	MOVLW 0x08
-	MOVWF gbl_ucon
+	BSF gbl_ucfg,2
+	BSF gbl_ucfg,4
+	BSF gbl_uie,0
+	BSF gbl_pie2,5
+	BSF gbl_ucon,6
+	BCF gbl_ucon,6
+	BSF gbl_ucon,3
 	MOVLB 0x00
 	CLRF gbl_USB_Curr_Config, 1
 	MOVLW 0x01
@@ -2181,7 +2174,7 @@ InitUSB_00000
 	RETURN
 ; } InitUSB function end
 
-	ORG 0x00000D2E
+	ORG 0x00000D22
 main
 ; { main ; function begin
 	MOVLB 0x01
@@ -2212,16 +2205,6 @@ main
 	MOVWF main_1_tabley+D'9', 1
 	CLRF main_1_tabley+D'10', 1
 	SETF main_1_tabley+D'11', 1
-	MOVLW 0x01
-	MOVWF main_1_led, 1
-	MOVLW 0x02
-	MOVWF main_1_led+D'1', 1
-	MOVLW 0x04
-	MOVWF main_1_led+D'2', 1
-	MOVLW 0x08
-	MOVWF main_1_led+D'3', 1
-	MOVLW 0x10
-	MOVWF main_1_led+D'4', 1
 	CLRF gbl_ddrb
 	MOVLB 0x00
 	CLRF main_1_i, 1
@@ -2229,12 +2212,6 @@ label114
 	MOVLW 0x05
 	CPFSLT main_1_i, 1
 	BRA	label118
-	LFSR 0x00,  main_1_led
-	MOVF FSR0L, W
-	MOVF main_1_i, W, 1
-	ADDWF FSR0L, F
-	MOVF INDF0, W
-	MOVWF gbl_portb
 	CLRF main_1_j, 1
 	CLRF main_1_j+D'1', 1
 label115
@@ -2298,9 +2275,9 @@ label121
 	MOVLW 0x03
 	MOVLB 0x00
 	ANDWF gbl_USWSTAT, W, 1
-	MOVWF CompTempVar733, 1
+	MOVWF CompTempVar732, 1
 	MOVLW 0x03
-	CPFSEQ CompTempVar733, 1
+	CPFSEQ CompTempVar732, 1
 	BRA	label122
 	MOVLW 0x03
 	MOVWF PutEP1_00000_arg_bytes, 1
@@ -2345,7 +2322,7 @@ label124
 	BRA	label119
 ; } main function end
 
-	ORG 0x00000E64
+	ORG 0x00000E36
 _startup
 	BCF gbl_isJiggling,0
 	BSF gbl_buttonOld,1
@@ -2735,33 +2712,32 @@ _startup
 	MOVWF gbl_HIDDescriptor+D'7', 1
 	CLRF gbl_HIDDescriptor+D'8', 1
 	GOTO	main
-	ORG 0x0000116E
+	ORG 0x00001140
 interrupt
 ; { interrupt ; function begin
 	MOVFF FSR0H,  Int1Context
 	MOVFF FSR0L,  Int1Context+D'1'
 	MOVFF PRODH,  Int1Context+D'2'
 	MOVFF PRODL,  Int1Context+D'3'
-	CLRF gbl_portb
-	BTFSS gbl_bUSBIE,5
+	BTFSS gbl_pie2,5
 	BRA	label131
-	BTFSS gbl_bUSBIF,5
+	BTFSS gbl_pir2,5
 	BRA	label131
-	BTFSS gbl_bACTIVITY,2
+	BTFSS gbl_uir,2
 	BRA	label126
-	BTFSS gbl_bACTIVITY_E,2
+	BTFSS gbl_uie,2
 	BRA	label126
 	CALL USBActivit_0000A
 label126
-	BTFSS gbl_bUSBRST,0
+	BTFSS gbl_uir,0
 	BRA	label127
-	BTFSS gbl_bUSBRST_E,0
+	BTFSS gbl_uie,0
 	BRA	label127
 	CALL USBReset_00000
 label127
-	BTFSS gbl_bTOK_DONE,3
+	BTFSS gbl_uir,3
 	BRA	label130
-	BTFSS gbl_bTOK_DONE_E,3
+	BTFSS gbl_uie,3
 	BRA	label130
 	MOVLW 0x05
 	MOVLB 0x00
