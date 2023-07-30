@@ -1,8 +1,10 @@
 //###########################################################################
-// filename:		usbtestCC.c
+// filename:		PICUsbJiggler.c
 //##########################################################################
-// The Irritating Mouse - This program causes the mouse pointer to move in a 
-//                        figure 8 (infinity) shape
+// The Jiggle Mouse - Program causes the mouse pointer to move in a figure 8 
+//		(infinity) shape. Modified by electro-dan to switch on/off.
+//		Also modified to work with PIC18F2550 with 4MHz crystal
+//		Serial debugging removed
 //   CC indicates changes from original Circuit Cellar source
 //
 // Author:	                Copyright 2005 by Robert Lang		
@@ -26,7 +28,7 @@
 //################################################################################
 //
 // include files:
-#include "system.h" //pic definition files required by boostc
+#include <system.h>
 #include "PICUsbJiggler.h" 
 
 // Configuration registers
@@ -101,7 +103,7 @@ const char String1 [] = {20, STRING,
 'h',0,
 'i',0,
 'p',0};
-const char String2[] = {56,STRING,
+const char String2[] = {48,STRING,
 'P',0,
 'i',0,
 'c',0,
@@ -113,16 +115,12 @@ const char String2[] = {56,STRING,
 '5',0,
 '0',0,
 ' ',0,
-'I',0,
-'r',0,
-'r',0,
+'J',0,
 'i',0,
-'t',0,
-'a',0,
-'t',0,
-'i',0,
-'n',0,
 'g',0,
+'g',0,
+'l',0,
+'e',0,
 ' ',0, 
 'M',0,
 'o',0,
@@ -218,12 +216,12 @@ const char  HIDDescriptor [] =    {
     sizeof(ReportDescriptor1), sizeof(ReportDescriptor1)>>8  // Size of report descriptor
 };
 
-/* PutEP1 **************************************************************** */
-/* Tests the EP1 IN OWNS bit.  If there is a buffer available to us, your  */
-/* buffer is copied and turned over to the SIE for transmission on the     */
-/* next IN transfer and returns TRUE (1).  If the buffer is not available, */
-/* FALSE is returned (0).                                                  */
-/* *********************************************************************** */
+/***********************************************************************************
+ PutEP1 
+ Tests the EP1 IN OWNS bit.  If there is a buffer available to us, your buffer is 
+ copied and turned over to the SIE for transmission on the next IN transfer and 
+ returns TRUE (1).  If the buffer is not available, FALSE is returned (0).                                                  
+***********************************************************************************/
 unsigned char PutEP1(unsigned char bytes, signed char *buffer) {
 	signed char * tobuffer;
 	unsigned char i;
@@ -246,45 +244,44 @@ unsigned char PutEP1(unsigned char bytes, signed char *buffer) {
 	return FALSE;	/* Buffer not available, return false */
 }
 
-/* ********************************************************************* */
-/* Enable Wakeup on interupt and Activity interrupt then put the         */
-/* device to sleep to save power.  Activity on the D+/D- lines will      */
-/* set the ACTIVITY interrupt, waking up the part.                       */
-/* ********************************************************************* */
+/***********************************************************************************
+ Enable Wakeup on interupt and Activity interrupt then put the device to sleep to 
+ save power.  Activity on the D+/D- lines will set the ACTIVITY interrupt, waking up
+ the part.                       
+***********************************************************************************/
 void USBSleep() {
-	bACTIVITY_E = 1; // enable activity interrupt
-	bUIDLE = 0; //disable idle interrupt
-	bSUSPND	= 1;  // put in suspend mode
+	uie.ACTVIE = 1; // enable activity interrupt
+	uie.IDLEIE = 0; //disable idle interrupt
+	ucon.SUSPND	= 1; // put in suspend mode
 	USB_IsIdle = 1; // mark device as idle
 }
 
-/* ********************************************************************* */
-/* Service the Activity Interrupt.  This is only enabled when the        */
-/* device is put to sleep as a result of inactivity on the bus.  This    */
-/* code wakes up the part, disables the activity interrupt and reenables */
-/* the idle interrupt.                                                   */
-/* ********************************************************************* */
+/***********************************************************************************
+ Service the Activity Interrupt.  This is only enabled when the device is put to 
+ sleep as a result of inactivity on the bus.  This code wakes up the part, disables 
+ the activity interrupt and reenables the idle interrupt.                                                   
+***********************************************************************************/
 void USBActivity() {
-	bACTIVITY = 0;
-	bACTIVITY_E = 0;
-	bSUSPND = 0; //normal operation
+	uir.ACTVIF = 0;
+	uie.ACTVIE = 0;
+	ucon.SUSPND = 0; //normal operation
 	USB_IsIdle = 0;
 }
 
-/* ****************************************************************** */
-/* USB Reset interrupt triggered (SE0)                                */
-/* initialize the Buffer Descriptor Table,                            */
-/* Transition to the DEFAULT state,                                   */
-/* Set address to 0                                                   */
-/* enable the USB                                                     */
-/* ****************************************************************** */
+/***********************************************************************************
+ USB Reset interrupt triggered (SE0)                                
+ initialize the Buffer Descriptor Table,                            
+ Transition to the DEFAULT state,                                   
+ Set address to 0                                                   
+ Enable the USB                                                     
+***********************************************************************************/
 void USBReset() {
 	USB_Curr_Config = 0;
 	USB_IsIdle = 0;
-	bTOK_DONE = 0; // clear TOK_DNE bit in uir 4 times to 
-	bTOK_DONE = 0; // clear out the USTAT FIFO.  See Microchip 	
-	bTOK_DONE = 0; // 18F2455 data sheet.
-	bTOK_DONE = 0;
+	uir.TRNIF = 0; // clear TOK_DNE bit in uir 4 times to 
+	uir.TRNIF = 0; // clear out the USTAT FIFO.  See Microchip 	
+	uir.TRNIF = 0; // 18F2455 data sheet.
+	uir.TRNIF = 0;
 	bd0cntoe = 8; //set up for 8 byte buffer
 	bd0statoe = 0x88;	// EP0 Out buffer (USB OWNS)
 	bd0statie = 0x08;    // EP0 In buffer (MCU OWNS)
@@ -296,17 +293,17 @@ void USBReset() {
 	USB_status_device = 1;
 }
 
-/* ******************* */
-/* CopyDescriptorToEP0 ************************************************** */
-/* copies the next chunk of buffer descriptor over to the EP0 In buffer.  */
-/* Inputs:                                                                */
-/*    EP0_start - points to first byte of configuration table to transfer */
-/*    EP0_end - total number of bytes to transfer                         */
-/*    EP0_maxLength - maximum number of bytes that can be sent during     */
-/*    a single transfer                                                   */
-/*                                                                        */
-/* toggles the data0/1 bit before setting the UOWN bit over to SIE.       */
-/* ********************************************************************** */
+/***********************************************************************************
+ CopyDescriptorToEP0 
+ copies the next chunk of buffer descriptor over to the EP0 In buffer.  
+ Inputs:                                                                
+    EP0_start - points to first byte of configuration table to transfer 
+    EP0_end - total number of bytes to transfer                         
+    EP0_maxLength - maximum number of bytes that can be sent during     
+    a single transfer                                                   
+                                                                        
+ toggles the data0/1 bit before setting the UOWN bit over to SIE.       
+***********************************************************************************/
 void CopyDescriptorToEP0() {
 	unsigned char *  USBbuffer;  /* pointer to the USB Buffers */
 	unsigned char bufindex;
@@ -326,10 +323,10 @@ void CopyDescriptorToEP0() {
 	bd0statie |= 0x88;		/* set OWN and DTSEN bits */
 }
 
-/* ******** */
-/* Init USB ********************************************************* */
-/* Initializes the USB peripheral, sets up the interrupts             */
-/* ****************************************************************** */
+/***********************************************************************************
+ Init USB
+ Initializes the USB peripheral, sets up the interrupts
+***********************************************************************************/
 void InitUSB() {
 	//ucfg.UTRDIS = 0; // enable internal transceiver
 	ucfg.FSEN = 1; // Full speed enable
@@ -356,49 +353,50 @@ void InitUSB() {
 	USB_DFN8_ERR = 0;
 	USB_BTO_ERR = 0;
 	USB_BTS_ERR = 0;
-	intcon = intcon | 11000000b; // Enable GIE & PEIE
+	intcon.GIE = 1; // Enable GIE & PEIE
+	intcon.PEIE = 1;
 }
 
-/* ********************************************************************* */
-/* This is activated by the STALL bit in the UIR register.  It really    */
-/* just tells us that the SIE sent a STALL handshake.  So far, Don't     */
-/* see that any action is required.  Clear the bit and move on.          */
-/* ********************************************************************* */
+/***********************************************************************************
+ This is activated by the STALL bit in the UIR register. It really just tells us 
+ that the SIE sent a STALL handshake.  So far, Don't see that any action is 
+ required.  Clear the bit and move on.
+***********************************************************************************/
 void USBStall() {
-	bSTALL = 0;
+	uir.STALLIF = 0;
 }
 
-/* ****************************************************************** */
-/* The SIE detected an error.  This code increments the appropriate   */
-/* error counter and clears the flag.                                 */
-/* ****************************************************************** */
+/***********************************************************************************
+ The SIE detected an error.  This code increments the appropriate error counter 
+ and clears the flag.
+***********************************************************************************/
 void Count_Error() {
-	if (bPID_ERR && bPID_ERR_E) {
+	if (ueir.PIDEF && ueie.PIDEE) {
 		++USB_PID_ERR;
 	}
-	if (bCRC5 && bCRC5_E) {
+	if (ueir.CRC5EF && ueie.CRC5EE) {
 		++USB_CRC5_ERR;
 	}
-	if (bCRC16 && bCRC16_E) {
+	if (ueir.CRC16EF && ueie.CRC16EE) {
 		++USB_CRC16_ERR;
 	}
-	if (bDFN8 && bDFN8_E) {
+	if (ueir.DFN8EF && ueie.DFN8EE) {
 		++USB_DFN8_ERR;
 	}
-	if (bBTO_ERR && bBTO_ERR_E) {
+	if (ueir.BTOEF && ueie.BTOEE) {
 		++USB_BTO_ERR;
 	}
-	if (bBTS_ERR && bBTS_ERR_E) {
+	if (ueir.BTSEF && ueie.BTSEE) {
 		++USB_BTS_ERR;
 	}
-	ueir = 0; //Clear all USB error flag bits
-	bUERR = 0; //Clear master USB error flag bit
+	ueir = 0; // Clear all USB error flag bits
+	uir.UERRIF = 0; // Clear master USB error flag bit
 }
-/* ******************************************************************* */
-/* Process token done interrupt...  Most of the work gets done through */
-/* this interrupt.  Token Done is signaled in response to an In, Out,  */
-/* or Setup transaction.                                               */
-/* ******************************************************************* */
+
+/***********************************************************************************
+ Process token done interrupt...  Most of the work gets done through this interrupt.  
+ Token Done is signaled in response to an In, Out, or Setup transaction.
+***********************************************************************************/
 void Process_Req() {
 	unsigned char *OutBuffer;
 	unsigned char *UEPArray;
@@ -410,11 +408,11 @@ void Process_Req() {
 	USB_USTAT = ustat;
 	ACTIVE_BUF = (USB_USTAT >> 3) * 2; //EP*2 (IF OUTPUT)
 	ACTIVE_BUF = (ACTIVE_BUF + (USB_USTAT & 0x4) >> 2);  //=EP*2 + 1 (IF INPUT) 
-//save data in buffer descriptor table
+	// save data in buffer descriptor table
 	BDTCopy.EPStat = BDT[ACTIVE_BUF].EPStat;
 	BDTCopy.bytes = BDT[ACTIVE_BUF].bytes;
 	BDTCopy.address = BDT[ACTIVE_BUF].address;
-	bTOK_DONE = 0;
+	uir.TRNIF = 0;
 	if ((BDTCopy.EPStat & 0x3C) == TOKEN_IN) {
         // TOKEN IN
 		if (USB_USTAT == 0x04) { 
@@ -444,14 +442,14 @@ void Process_Req() {
 		BufferCopy.wValue = Buffer->wValue;
 		BufferCopy.wIndex = Buffer->wIndex;
 		BufferCopy.wLength = Buffer->wLength;
-        bPID_ERR = 0;  // Clear REQUEST ERROR  
+        ueir.PIDEF = 0;  // Clear REQUEST ERROR  
 		bd0cntoe = 0x08;
 		if (BufferCopy.bmRequestType == 0x21)
 			bd0statoe = 0xC8;
 		else
 	        bd0statoe = 0x88;/* Turn the buffer around, make it available for the SIE */
 		bd0statie = 0x08;
-		bPKT_DIS = 0;
+		ucon.PKTDIS = 0;
 		USB_dev_req = 0;
 		switch (BufferCopy.bmRequestType) {
             // First bmRequestType ************************************		
@@ -814,26 +812,26 @@ void Process_Req() {
     }
 }
 
-/* ********************************************************************* */
-/* Branch off and service the USB interrupt flags			 */
-/* ********************************************************************* */
+/***********************************************************************************
+ Branch off and service the USB interrupt flags
+***********************************************************************************/
 void ServiceUSB() {
-	if (bTOK_DONE)
+	if (uir.TRNIF)
 		Process_Req();
 	
-    if (bSTALL)
+    if (uir.STALLIF)
 		USBStall();
 	
-    if (bUERR)
+    if (uir.UERRIF)
 	    Count_Error();
 	
-    if (bUIDLE)	
+    if (uie.IDLEIE)	
 		USBSleep();
 }
 
-////////////////////////////////////////////////////////////////
-// Interrupt service routine. Branch off to different interrupts
-////////////////////////////////////////////////////////////////	
+/***********************************************************************************
+ Interrupt service routine. Branch off to different interrupts
+***********************************************************************************/
 void interrupt(void) {
     if (pie2.USBIE && pir2.USBIF) {
 		if (uir.ACTVIF && uie.ACTVIE) // WAS IT AN ACTIVITY WAKEUP?
@@ -854,39 +852,85 @@ void interrupt(void) {
 				else
 					USWSTAT= DEFAULT_STATE;
 			}
-			bTOK_DONE = 0; // clear Token Done flag
+			uir.TRNIF = 0; // clear Token Done flag
 		}
-		bUSBIF = 0;	 // Clear USB interrupt flag
+		pir2.USBIF = 0;	 // Clear USB interrupt flag
 	}
 }
 
-//*****************************************************
-//  AT LAST THE MAIN PROGRAM
-//*****************************************************
+char read_button() {
+	if (!BUTTON)
+		return 1;
+	else
+		return 0;
+}
+
+char testButton() {
+    static char button_history = 0;
+    char pressed = 0;    
+ 
+    button_history = button_history << 1;
+    button_history |= read_button();
+    if ((button_history & 0b11000111) == 0b00000111) { 
+        pressed = 1;
+        button_history = 0b11111111;
+    }
+    return pressed;
+}
+
+/***********************************************************************************
+ THE MAIN PROGRAM
+***********************************************************************************/
 void main() {
+
+    // IO ports setup
+    trisa = 0x00; // all ouptuts
+    porta = 0x00; // set to off
+    trisb = 0x04; // RB2 input
+    portb = 0x00; // set to off
+    trisc = 0x00; // all ouptuts
+    portc = 0x00; // set to off
+
+    intcon2.RBPU = 0; // Port B pull-ups enabled
+
+    // ADC setup
+    adcon0 = 0x00; //  ADC off
+    adcon1 = 0x0F; // All digital I/O
+
 	unsigned char i;
 	unsigned short j;
 	signed char buffer[3];
     const signed char tablex [] = {-1, -1, -1, 1, 1, 1,  1,  1, 1, -1,  -1, -1};
     const signed char tabley [] = {-1, 0, 1,  1,  0, -1, -1, 0,  1, 1, 0, -1 };
-	// The table array contains the directional data for simulated mouse 
-    // movement to form the infinity symbol (i.e. figure 8).   Movements are relative
-    // to the previous position. 
+	// The table array contains the directional data for simulated mouse movement to 
+	// form the infinity symbol (i.e. figure 8). Movements are relative to the 
+	// previous position. 
 	ddrb = 0;
-	for (i = 0; i < 5; i++) {
-	    for (j=0; j<64000; j++); // Small delay (greater than 16us) in order to
-	};
+	delay_ms(14);
 
 	InitUSB(); // allow SIE to come online before beginning USB initialization
 	buffer[0] = 0;	//we won't be simulating mouse buttons		
 	i = 10;
 	j = 0;
-    t0con = 11000111b; //set up timer0 as 8 bit timer with prescaler of 256 and enable
+    
+    //set up timer0 as 8 bit timer with prescaler of 256 and enable
     // 4/24* 10^6 * 256 * 256 = 10.9 msec timer overflow
-
-	while (1) {
-		if (bTMR0IF) {	// Poll all functions every 10.9ms
-			bTMR0IF = 0;   // clear the timer flag
+    t0con = 11000111b; 
+    
+    while (1) {
+		// Poll all functions every 10.9ms
+		if (intcon.TMR0IF) { 
+			if (testButton()) {
+				if (!isJiggling) {
+                    isJiggling = 1;
+                    LED = 1;
+                } else {
+                    isJiggling = 0;
+                    LED = 0;
+                }
+            }
+			
+			intcon.TMR0IF = 0;   // clear the timer flag
 			ServiceUSB();	// Service USB functions
 			if (isJiggling) {
                 // send same data 10 times (100 msec)
@@ -905,28 +949,13 @@ void main() {
         if (ConfiguredUSB()) {
             // Wait until device is configured before using EP1.  If Endpoints 1 or 2 are used before
 			//   the device is configured, errors will occur.
-		    if (PutEP1(3, buffer)) {
-                // Increment i if EP1 IN buffer is accessible
-                i++;
-                //   to the PIC.  If not accessible, try again next time.
-            }
+		    if (isJiggling) {
+				if (PutEP1(3, buffer)) {
+					// Increment i if EP1 IN buffer is accessible to the PIC.
+					// If not accessible, try again next time.
+					i++;
+				}
+			}
 		}
-        
-        // Check for button press
-        if (buttonOld != BUTTON) {
-            if(!BUTTON) {
-                delay_ms(100);
-                if(!BUTTON) {
-                    if (!isJiggling) {
-                        isJiggling = 1;
-                        LED = 1;
-                    } else {
-                        isJiggling = 0;
-                        LED = 0;
-                    }
-                }
-            }
-        }
-        buttonOld = BUTTON;
 	}
 }
