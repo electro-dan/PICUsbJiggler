@@ -19,19 +19,19 @@ Address  Length   Unique Name      Name
 00000074:00000032 USBReset_00000   USBReset(void)  
 000000A6:0000000C USBActivit_0000A USBActivity(void)  
 000000B2:00000082 CopyDescri_0000B CopyDescriptorToEP0(void)  
-00000134:00000012 read_butto_0000F read_button(void)  
-00000146:00000004 USBStall_00000   USBStall(void)  
-0000014A:0000000E USBSleep_00000   USBSleep(void)  
-00000158:00000A74 Process_Re_0000D Process_Req(void)  
-00000BCC:0000005A Count_Erro_0000C Count_Error(void)  
-00000C26:00000032 testButton_00000 testButton(void)  
-00000C58:0000001A ServiceUSB_00000 ServiceUSB(void)  
-00000C72:00000088 PutEP1_00000     PutEP1(unsigned char,signed char*)  
-00000CFA:0000003C InitUSB_00000    InitUSB(void)  
-00000D36:000000F0 main             main(void)  
-00000E26:000002F6 _startup_00000   _startup(void)  
-0000111C:00000072 interrupt        interrupt(void)  
-0000118E:00006E72 *Unused Block 
+00000134:00000004 USBStall_00000   USBStall(void)  
+00000138:0000000E USBSleep_00000   USBSleep(void)  
+00000146:00000AAA Process_Re_0000D Process_Req(void)  
+00000BF0:0000005A Count_Erro_0000C Count_Error(void)  
+00000C4A:00000012 timer1Set_00000  timer1Set(bit)  
+00000C5C:00000022 testButton_00000 testButton(void)  
+00000C7E:0000001A ServiceUSB_00000 ServiceUSB(void)  
+00000C98:00000082 PutEP1_00000     PutEP1(unsigned char,signed char*)  
+00000D1A:00000038 InitUSB_00000    InitUSB(void)  
+00000D52:00000120 main             main(void)  
+00000E72:000002FC _startup_00000   _startup(void)  
+0000116E:000000AC interrupt        interrupt(void)  
+0000121A:00006DE6 *Unused Block 
 
 Register usage
 ==============
@@ -49,62 +49,65 @@ Address  Bit Lengh Bit Mask   Unique Name                      Name
 000000B6:00000048             gbl_HIDDescriptor                HIDDescriptor
 000000BF:00000040             gbl_BufferCopy                   BufferCopy
 000000C7:00000020             gbl_String0                      String0
-000000CB:00000010             gbl_USB_PID_ERR                  USB_PID_ERR
-000000CD:00000010             gbl_USB_CRC5_ERR                 USB_CRC5_ERR
-000000CF:00000010             gbl_USB_CRC16_ERR                USB_CRC16_ERR
-000000D1:00000010             gbl_USB_DFN8_ERR                 USB_DFN8_ERR
-000000D3:00000010             gbl_USB_BTO_ERR                  USB_BTO_ERR
-000000D5:00000010             gbl_USB_WRT_ERR                  USB_WRT_ERR
-000000D7:00000010             gbl_USB_OWN_ERR                  USB_OWN_ERR
-000000D9:00000010             gbl_USB_BTS_ERR                  USB_BTS_ERR
-000000DB:00000010             gbl_EP0_start                    EP0_start
-000000DD:00000010             gbl_EP0_end                      EP0_end
-000000DF:00000010             gbl_BDT                          BDT
-000000E1:00000010             gbl_Buffer                       Buffer
-000000E3:00000010             gbl_ReportDescrSize              ReportDescrSize
-000000E5:00000001  0b00000010 CompGblVar48                    
-000000E6:00000008             gbl_buttonState                  buttonState
-000000E7:00000008             gbl_USB_IsIdle                   USB_IsIdle
-000000E8:00000008             gbl_USB_status_device            USB_status_device
-000000E9:00000008             gbl_USB_Curr_Config              USB_Curr_Config
-000000EA:00000008             gbl_USB_address_pending          USB_address_pending
-000000EB:00000008             gbl_USB_dev_req                  USB_dev_req
-000000EC:00000008             gbl_USB_USTAT                    USB_USTAT
-000000ED:00000008             gbl_ACTIVE_BUF                   ACTIVE_BUF
-000000EE:00000008             gbl_USB_protocol                 USB_protocol
-000000EF:00000008             gbl_USWSTAT                      USWSTAT
-000000F0:00000008             gbl_EP0_maxLength                EP0_maxLength
-000000F1:00000008             testButton_00000_1_button__00010 button_history
-000000F2:00000008             main_1_i                         i
-000000F3:00000010             main_1_j                         j
-000000F5:00000018             main_1_buffer                    buffer
-000000F8:00000008             delay_ms_00000_arg_del           del
-000000F9:00000008             CompTempVar730                  
-000000FA:00000008             CompTempVarRet729                $ret
-000000FB:00000010             PutEP1_00000_1_tobuffer          tobuffer
-000000FC:00000008             Process_Re_0000D_1_Descrip_0000E DescriptorType
-000000FD:00000008             Process_Re_0000D_1_Endpoint      Endpoint
-000000FE:00000008             Process_Re_0000D_1_Interface     Interface
-000000FF:00000008             Process_Re_0000D_1_DescriptorID  DescriptorID
+000000CB:00000010             gbl_bres                         bres
+000000CD:00000010             gbl_USB_PID_ERR                  USB_PID_ERR
+000000CF:00000010             gbl_USB_CRC5_ERR                 USB_CRC5_ERR
+000000D1:00000010             gbl_USB_CRC16_ERR                USB_CRC16_ERR
+000000D3:00000010             gbl_USB_DFN8_ERR                 USB_DFN8_ERR
+000000D5:00000010             gbl_USB_BTO_ERR                  USB_BTO_ERR
+000000D7:00000010             gbl_USB_WRT_ERR                  USB_WRT_ERR
+000000D9:00000010             gbl_USB_OWN_ERR                  USB_OWN_ERR
+000000DB:00000010             gbl_USB_BTS_ERR                  USB_BTS_ERR
+000000DD:00000010             gbl_EP0_start                    EP0_start
+000000DF:00000010             gbl_EP0_end                      EP0_end
+000000E1:00000010             gbl_BDT                          BDT
+000000E3:00000010             gbl_Buffer                       Buffer
+000000E5:00000010             gbl_ReportDescrSize              ReportDescrSize
+000000E7:00000001  0b00000001 gbl_isJiggling                   isJiggling
+000000E8:00000008             gbl_buttonState                  buttonState
+000000E9:00000008             gbl_iSec                         iSec
+000000EA:00000008             gbl_iMin                         iMin
+000000EB:00000008             gbl_cTask                        cTask
+000000EC:00000008             gbl_USB_IsIdle                   USB_IsIdle
+000000ED:00000008             gbl_USB_status_device            USB_status_device
+000000EE:00000008             gbl_USB_Curr_Config              USB_Curr_Config
+000000EF:00000008             gbl_USB_address_pending          USB_address_pending
+000000F0:00000008             gbl_USB_dev_req                  USB_dev_req
+000000F1:00000008             gbl_USB_USTAT                    USB_USTAT
+000000F2:00000008             gbl_ACTIVE_BUF                   ACTIVE_BUF
+000000F3:00000008             gbl_USB_protocol                 USB_protocol
+000000F4:00000008             gbl_USWSTAT                      USWSTAT
+000000F5:00000008             gbl_EP0_maxLength                EP0_maxLength
+000000F6:00000008             main_1_i                         i
+000000F7:00000010             main_1_j                         j
+000000F9:00000018             main_1_buffer                    buffer
+000000FC:00000008             delay_ms_00000_arg_del           del
+000000FD:00000008             CompTempVarRet727                $ret
+000000FE:00000010             Process_Re_0000D_1_UEPArray      UEPArray
+000000FF:00000008             PutEP1_00000_1_i                 i
 00000100:00000060             main_1_tablex                    tablex
 0000010C:00000060             main_1_tabley                    tabley
-00000118:00000008             Process_Re_0000D_1_StringID      StringID
-00000119:00000008             CompTempVar588                  
-0000011A:00000008             CompTempVar589                  
-0000011B:00000008             CompTempVar590                  
-0000011C:00000008             CompTempVar601                  
-0000011D:00000008             CompTempVar602                  
-0000011E:00000008             CompTempVar727                  
-0000011F:00000008             CompTempVar722                  
-00000120:00000010             CompTempVar723                  
-00000121:00000008             CompTempVar649                  
-00000122:00000008             CompTempVar724                  
-00000123:00000008             CompTempVar651                  
-00000124:00000008             CompTempVar674                  
-00000125:00000008             CompTempVar675                  
-00000126:00000008             CopyDescri_0000B_1_bufindex      bufindex
-00000127:00000008             CompTempVar587                  
-00000129:00000008             CompTempVar584                  
+00000118:00000008             Process_Re_0000D_1_Descrip_0000E DescriptorType
+00000119:00000008             Process_Re_0000D_1_Endpoint      Endpoint
+0000011A:00000008             Process_Re_0000D_1_Interface     Interface
+0000011B:00000008             Process_Re_0000D_1_DescriptorID  DescriptorID
+0000011C:00000008             Process_Re_0000D_1_StringID      StringID
+0000011D:00000008             CompTempVar587                  
+0000011E:00000008             CompTempVar588                  
+0000011F:00000008             CompTempVar589                  
+00000120:00000008             CompTempVar600                  
+00000121:00000008             CompTempVar601                  
+00000122:00000008             CompTempVar726                  
+00000123:00000008             CompTempVar721                  
+00000124:00000010             CompTempVar722                  
+00000125:00000008             CompTempVar648                  
+00000126:00000008             CompTempVar723                  
+00000127:00000008             CompTempVar650                  
+00000128:00000008             CompTempVar673                  
+00000129:00000008             CompTempVar674                  
+0000012A:00000008             CopyDescri_0000B_1_bufindex      bufindex
+0000012B:00000008             CompTempVar586                  
+0000012D:00000008             CompTempVar583                  
 00000400:00000008             gbl_bd0statoe                    bd0statoe
 00000401:00000008             gbl_bd0cntoe                     bd0cntoe
 00000402:00000008             gbl_bd0adrloe                    bd0adrloe
@@ -265,6 +268,6 @@ Address  Bit Lengh Bit Mask   Unique Name                      Name
 
 Memory Usage Report
 ===================
-RAM available:2048 bytes, used:322 bytes (15.8%), free:1726 bytes (84.2%), 
+RAM available:2048 bytes, used:326 bytes (16.0%), free:1722 bytes (84.0%), 
 Heap size:1000 bytes, Heap max single alloc:127 bytes
-ROM available:32768 bytes, used:4494 bytes (13.8%), free:28274 bytes (86.2%)
+ROM available:32768 bytes, used:4634 bytes (14.2%), free:28134 bytes (85.8%)

@@ -4,9 +4,22 @@
 #define LED (portb.1) // LED pin
 #define BUTTON (portb.2) // Button (switch) pin
 
-bit isJiggling = 0; // When 0, device does nothing
-char buttonState = 0xFF; // Records state every 10.9ms
+#define JIGGLE_TIMEOUT 30 // How many minutes to jiggle for
 
+bit isJiggling = 0; // When 0, device does nothing
+char buttonState = 0; // Records state every 10.9ms
+
+unsigned int bres = 0;
+char iSec = 0;
+char iMin = 0;
+
+// Tasks
+char cTask;
+#define TASK_TIMER0 1
+#define TASK_TIMER1_MIN 2
+
+
+// Variables originally from usb_defs.h
 #define TRUE   1
 #define FALSE  0
 #define NULL   0

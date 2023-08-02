@@ -156,8 +156,12 @@ gbl_tos                          EQU	0x00000FFD ; bytes:1
 gbl_tosl                         EQU	0x00000FFD ; bytes:1
 gbl_tosh                         EQU	0x00000FFE ; bytes:1
 gbl_tosu                         EQU	0x00000FFF ; bytes:1
-gbl_isJiggling                   EQU	0x000000E5 ; bit:0
-gbl_buttonState                  EQU	0x000000E6 ; bytes:1
+gbl_isJiggling                   EQU	0x000000E7 ; bit:0
+gbl_buttonState                  EQU	0x000000E8 ; bytes:1
+gbl_bres                         EQU	0x000000CB ; bytes:2
+gbl_iSec                         EQU	0x000000E9 ; bytes:1
+gbl_iMin                         EQU	0x000000EA ; bytes:1
+gbl_cTask                        EQU	0x000000EB ; bytes:1
 gbl_bd0statoe                    EQU	0x00000400 ; bytes:1
 gbl_bd0cntoe                     EQU	0x00000401 ; bytes:1
 gbl_bd0adrloe                    EQU	0x00000402 ; bytes:1
@@ -182,29 +186,29 @@ gbl_bd2statie                    EQU	0x00000414 ; bytes:1
 gbl_bd2cntie                     EQU	0x00000415 ; bytes:1
 gbl_bd2adrlie                    EQU	0x00000416 ; bytes:1
 gbl_bd2adrhie                    EQU	0x00000417 ; bytes:1
-gbl_USB_IsIdle                   EQU	0x000000E7 ; bytes:1
-gbl_USB_status_device            EQU	0x000000E8 ; bytes:1
-gbl_USB_Curr_Config              EQU	0x000000E9 ; bytes:1
-gbl_USB_address_pending          EQU	0x000000EA ; bytes:1
-gbl_USB_dev_req                  EQU	0x000000EB ; bytes:1
+gbl_USB_IsIdle                   EQU	0x000000EC ; bytes:1
+gbl_USB_status_device            EQU	0x000000ED ; bytes:1
+gbl_USB_Curr_Config              EQU	0x000000EE ; bytes:1
+gbl_USB_address_pending          EQU	0x000000EF ; bytes:1
+gbl_USB_dev_req                  EQU	0x000000F0 ; bytes:1
 gbl_USB_Interface                EQU	0x0000005D ; bytes:3
-gbl_USB_USTAT                    EQU	0x000000EC ; bytes:1
-gbl_ACTIVE_BUF                   EQU	0x000000ED ; bytes:1
-gbl_USB_protocol                 EQU	0x000000EE ; bytes:1
-gbl_USWSTAT                      EQU	0x000000EF ; bytes:1
-gbl_USB_PID_ERR                  EQU	0x000000CB ; bytes:2
-gbl_USB_CRC5_ERR                 EQU	0x000000CD ; bytes:2
-gbl_USB_CRC16_ERR                EQU	0x000000CF ; bytes:2
-gbl_USB_DFN8_ERR                 EQU	0x000000D1 ; bytes:2
-gbl_USB_BTO_ERR                  EQU	0x000000D3 ; bytes:2
-gbl_USB_WRT_ERR                  EQU	0x000000D5 ; bytes:2
-gbl_USB_OWN_ERR                  EQU	0x000000D7 ; bytes:2
-gbl_USB_BTS_ERR                  EQU	0x000000D9 ; bytes:2
-gbl_EP0_start                    EQU	0x000000DB ; bytes:2
-gbl_EP0_end                      EQU	0x000000DD ; bytes:2
-gbl_EP0_maxLength                EQU	0x000000F0 ; bytes:1
-gbl_BDT                          EQU	0x000000DF ; bytes:2
-gbl_Buffer                       EQU	0x000000E1 ; bytes:2
+gbl_USB_USTAT                    EQU	0x000000F1 ; bytes:1
+gbl_ACTIVE_BUF                   EQU	0x000000F2 ; bytes:1
+gbl_USB_protocol                 EQU	0x000000F3 ; bytes:1
+gbl_USWSTAT                      EQU	0x000000F4 ; bytes:1
+gbl_USB_PID_ERR                  EQU	0x000000CD ; bytes:2
+gbl_USB_CRC5_ERR                 EQU	0x000000CF ; bytes:2
+gbl_USB_CRC16_ERR                EQU	0x000000D1 ; bytes:2
+gbl_USB_DFN8_ERR                 EQU	0x000000D3 ; bytes:2
+gbl_USB_BTO_ERR                  EQU	0x000000D5 ; bytes:2
+gbl_USB_WRT_ERR                  EQU	0x000000D7 ; bytes:2
+gbl_USB_OWN_ERR                  EQU	0x000000D9 ; bytes:2
+gbl_USB_BTS_ERR                  EQU	0x000000DB ; bytes:2
+gbl_EP0_start                    EQU	0x000000DD ; bytes:2
+gbl_EP0_end                      EQU	0x000000DF ; bytes:2
+gbl_EP0_maxLength                EQU	0x000000F5 ; bytes:1
+gbl_BDT                          EQU	0x000000E1 ; bytes:2
+gbl_Buffer                       EQU	0x000000E3 ; bytes:2
 gbl_BufferCopy                   EQU	0x000000BF ; bytes:8
 gbl_BDTCopy                      EQU	0x00000059 ; bytes:4
 gbl_String0                      EQU	0x000000C7 ; bytes:4
@@ -213,115 +217,112 @@ gbl_String2                      EQU	0x00000060 ; bytes:48
 gbl_ReportDescriptor1            EQU	0x00000005 ; bytes:50
 gbl_DeviceDescriptor             EQU	0x000000A4 ; bytes:18
 gbl_ConfigDescriptor             EQU	0x00000037 ; bytes:34
-gbl_ReportDescrSize              EQU	0x000000E3 ; bytes:2
+gbl_ReportDescrSize              EQU	0x000000E5 ; bytes:2
 gbl_HIDDescriptor                EQU	0x000000B6 ; bytes:9
-CompGblVar48                     EQU	0x000000E5 ; bit:1
-testButton_00000_1_button__00010 EQU	0x000000F1 ; bytes:1
-PutEP1_00000_arg_bytes           EQU	0x000000F8 ; bytes:1
-PutEP1_00000_arg_buffer          EQU	0x000000F9 ; bytes:2
-CompTempVarRet570                EQU	0x000000FF ; bytes:1
-PutEP1_00000_1_tobuffer          EQU	0x000000FB ; bytes:2
-PutEP1_00000_1_i                 EQU	0x000000FD ; bytes:1
-CompTempVar571                   EQU	0x000000FE ; bytes:1
-CompTempVar574                   EQU	0x00000118 ; bytes:2
-CompTempVar575                   EQU	0x000000FF ; bytes:1
-CompTempVar579                   EQU	0x000000FF ; bytes:1
-CompTempVar580                   EQU	0x00000118 ; bytes:1
-CopyDescri_0000B_1_USBbuffer     EQU	0x00000124 ; bytes:2
-CopyDescri_0000B_1_bufindex      EQU	0x00000126 ; bytes:1
-CompTempVar583                   EQU	0x00000127 ; bytes:2
-CompTempVar584                   EQU	0x00000129 ; bytes:1
-CompTempVar587                   EQU	0x00000127 ; bytes:1
-InitUSB_00000_1_USB_Interface    EQU	0x000000F8 ; bytes:3
-Process_Re_0000D_1_OutBuffer     EQU	0x000000F8 ; bytes:2
-Process_Re_0000D_1_UEPArray      EQU	0x000000FA ; bytes:2
-Process_Re_0000D_1_Descrip_0000E EQU	0x000000FC ; bytes:1
-Process_Re_0000D_1_Endpoint      EQU	0x000000FD ; bytes:1
-Process_Re_0000D_1_Interface     EQU	0x000000FE ; bytes:1
-Process_Re_0000D_1_DescriptorID  EQU	0x000000FF ; bytes:1
-Process_Re_0000D_1_StringID      EQU	0x00000118 ; bytes:1
-CompTempVar588                   EQU	0x00000119 ; bytes:1
-CompTempVar589                   EQU	0x0000011A ; bytes:1
-CompTempVar590                   EQU	0x0000011B ; bytes:1
-CompTempVar594                   EQU	0x0000011C ; bytes:1
-CompTempVar597                   EQU	0x0000011D ; bytes:1
-CompTempVar598                   EQU	0x0000011C ; bytes:1
-CompTempVar599                   EQU	0x0000011C ; bytes:1
-CompTempVar600                   EQU	0x0000011C ; bytes:1
-CompTempVar601                   EQU	0x0000011C ; bytes:1
-CompTempVar602                   EQU	0x0000011D ; bytes:1
-CompTempVar606                   EQU	0x0000011E ; bytes:2
-CompTempVar607                   EQU	0x00000120 ; bytes:1
-CompTempVar611                   EQU	0x0000011E ; bytes:1
-CompTempVar613                   EQU	0x0000011E ; bytes:1
-CompTempVar615                   EQU	0x0000011E ; bytes:1
-CompTempVar616                   EQU	0x0000011E ; bytes:1
-CompTempVar618                   EQU	0x0000011E ; bytes:1
-CompTempVar622                   EQU	0x0000011E ; bytes:2
-CompTempVar623                   EQU	0x00000120 ; bytes:1
-CompTempVar626                   EQU	0x0000011E ; bytes:1
-CompTempVar628                   EQU	0x0000011E ; bytes:1
-CompTempVar629                   EQU	0x0000011F ; bytes:1
-CompTempVar632                   EQU	0x00000120 ; bytes:1
-CompTempVar635                   EQU	0x00000120 ; bytes:1
-CompTempVar636                   EQU	0x00000121 ; bytes:1
-CompTempVar637                   EQU	0x0000011E ; bytes:1
-CompTempVar638                   EQU	0x0000011F ; bytes:1
-CompTempVar641                   EQU	0x00000120 ; bytes:1
-CompTempVar644                   EQU	0x00000120 ; bytes:1
-CompTempVar645                   EQU	0x00000121 ; bytes:1
-CompTempVar646                   EQU	0x0000011E ; bytes:1
-CompTempVar647                   EQU	0x0000011F ; bytes:1
-CompTempVar648                   EQU	0x00000120 ; bytes:1
-CompTempVar649                   EQU	0x00000121 ; bytes:1
-CompTempVar650                   EQU	0x00000122 ; bytes:1
-CompTempVar651                   EQU	0x00000123 ; bytes:1
-CompTempVar655                   EQU	0x00000124 ; bytes:1
-CompTempVar658                   EQU	0x00000124 ; bytes:1
-CompTempVar659                   EQU	0x00000125 ; bytes:1
-CompTempVar663                   EQU	0x00000124 ; bytes:1
-CompTempVar666                   EQU	0x00000124 ; bytes:1
-CompTempVar667                   EQU	0x00000125 ; bytes:1
-CompTempVar671                   EQU	0x00000124 ; bytes:1
-CompTempVar674                   EQU	0x00000124 ; bytes:1
-CompTempVar675                   EQU	0x00000125 ; bytes:1
-CompTempVar678                   EQU	0x0000011E ; bytes:1
-CompTempVar682                   EQU	0x0000011E ; bytes:1
-CompTempVar684                   EQU	0x0000011F ; bytes:1
-CompTempVar685                   EQU	0x00000120 ; bytes:1
-CompTempVar689                   EQU	0x0000011E ; bytes:1
-CompTempVar691                   EQU	0x0000011F ; bytes:1
-CompTempVar692                   EQU	0x00000120 ; bytes:1
-CompTempVar694                   EQU	0x0000011E ; bytes:1
-CompTempVar696                   EQU	0x0000011F ; bytes:1
-CompTempVar697                   EQU	0x00000120 ; bytes:1
-CompTempVar701                   EQU	0x0000011E ; bytes:1
-CompTempVar702                   EQU	0x0000011F ; bytes:1
-CompTempVar706                   EQU	0x0000011E ; bytes:1
-CompTempVar707                   EQU	0x0000011F ; bytes:1
-CompTempVar708                   EQU	0x0000011E ; bytes:1
-CompTempVar709                   EQU	0x0000011E ; bytes:1
-CompTempVar710                   EQU	0x0000011F ; bytes:1
-CompTempVar711                   EQU	0x00000120 ; bytes:2
-CompTempVar712                   EQU	0x00000122 ; bytes:1
-CompTempVar716                   EQU	0x0000011E ; bytes:1
-CompTempVar720                   EQU	0x0000011F ; bytes:1
-CompTempVar721                   EQU	0x0000011E ; bytes:1
-CompTempVar722                   EQU	0x0000011F ; bytes:1
-CompTempVar723                   EQU	0x00000120 ; bytes:2
-CompTempVar724                   EQU	0x00000122 ; bytes:1
-CompTempVar727                   EQU	0x0000011E ; bytes:1
-CompTempVarRet728                EQU	0x000000FA ; bytes:1
-CompTempVarRet729                EQU	0x000000FA ; bytes:1
-testButton_00000_1_pressed       EQU	0x000000F8 ; bytes:1
-CompTempVar730                   EQU	0x000000F9 ; bytes:1
-main_1_i                         EQU	0x000000F2 ; bytes:1
-main_1_j                         EQU	0x000000F3 ; bytes:2
-main_1_buffer                    EQU	0x000000F5 ; bytes:3
+PutEP1_00000_arg_bytes           EQU	0x000000FC ; bytes:1
+PutEP1_00000_arg_buffer          EQU	0x000000FD ; bytes:2
+CompTempVarRet569                EQU	0x0000011B ; bytes:1
+PutEP1_00000_1_tobuffer          EQU	0x00000118 ; bytes:2
+PutEP1_00000_1_i                 EQU	0x000000FF ; bytes:1
+CompTempVar570                   EQU	0x0000011A ; bytes:1
+CompTempVar573                   EQU	0x0000011B ; bytes:2
+CompTempVar574                   EQU	0x0000011D ; bytes:1
+CompTempVar578                   EQU	0x0000011B ; bytes:1
+CompTempVar579                   EQU	0x0000011C ; bytes:1
+CopyDescri_0000B_1_USBbuffer     EQU	0x00000128 ; bytes:2
+CopyDescri_0000B_1_bufindex      EQU	0x0000012A ; bytes:1
+CompTempVar582                   EQU	0x0000012B ; bytes:2
+CompTempVar583                   EQU	0x0000012D ; bytes:1
+CompTempVar586                   EQU	0x0000012B ; bytes:1
+InitUSB_00000_1_USB_Interface    EQU	0x000000FC ; bytes:3
+Process_Re_0000D_1_OutBuffer     EQU	0x000000FC ; bytes:2
+Process_Re_0000D_1_UEPArray      EQU	0x000000FE ; bytes:2
+Process_Re_0000D_1_Descrip_0000E EQU	0x00000118 ; bytes:1
+Process_Re_0000D_1_Endpoint      EQU	0x00000119 ; bytes:1
+Process_Re_0000D_1_Interface     EQU	0x0000011A ; bytes:1
+Process_Re_0000D_1_DescriptorID  EQU	0x0000011B ; bytes:1
+Process_Re_0000D_1_StringID      EQU	0x0000011C ; bytes:1
+CompTempVar587                   EQU	0x0000011D ; bytes:1
+CompTempVar588                   EQU	0x0000011E ; bytes:1
+CompTempVar589                   EQU	0x0000011F ; bytes:1
+CompTempVar593                   EQU	0x00000120 ; bytes:1
+CompTempVar596                   EQU	0x00000121 ; bytes:1
+CompTempVar597                   EQU	0x00000120 ; bytes:1
+CompTempVar598                   EQU	0x00000120 ; bytes:1
+CompTempVar599                   EQU	0x00000120 ; bytes:1
+CompTempVar600                   EQU	0x00000120 ; bytes:1
+CompTempVar601                   EQU	0x00000121 ; bytes:1
+CompTempVar605                   EQU	0x00000122 ; bytes:2
+CompTempVar606                   EQU	0x00000124 ; bytes:1
+CompTempVar610                   EQU	0x00000122 ; bytes:1
+CompTempVar612                   EQU	0x00000122 ; bytes:1
+CompTempVar614                   EQU	0x00000122 ; bytes:1
+CompTempVar615                   EQU	0x00000122 ; bytes:1
+CompTempVar617                   EQU	0x00000122 ; bytes:1
+CompTempVar621                   EQU	0x00000122 ; bytes:2
+CompTempVar622                   EQU	0x00000124 ; bytes:1
+CompTempVar625                   EQU	0x00000122 ; bytes:1
+CompTempVar627                   EQU	0x00000122 ; bytes:1
+CompTempVar628                   EQU	0x00000123 ; bytes:1
+CompTempVar631                   EQU	0x00000124 ; bytes:1
+CompTempVar634                   EQU	0x00000124 ; bytes:1
+CompTempVar635                   EQU	0x00000125 ; bytes:1
+CompTempVar636                   EQU	0x00000122 ; bytes:1
+CompTempVar637                   EQU	0x00000123 ; bytes:1
+CompTempVar640                   EQU	0x00000124 ; bytes:1
+CompTempVar643                   EQU	0x00000124 ; bytes:1
+CompTempVar644                   EQU	0x00000125 ; bytes:1
+CompTempVar645                   EQU	0x00000122 ; bytes:1
+CompTempVar646                   EQU	0x00000123 ; bytes:1
+CompTempVar647                   EQU	0x00000124 ; bytes:1
+CompTempVar648                   EQU	0x00000125 ; bytes:1
+CompTempVar649                   EQU	0x00000126 ; bytes:1
+CompTempVar650                   EQU	0x00000127 ; bytes:1
+CompTempVar654                   EQU	0x00000128 ; bytes:1
+CompTempVar657                   EQU	0x00000128 ; bytes:1
+CompTempVar658                   EQU	0x00000129 ; bytes:1
+CompTempVar662                   EQU	0x00000128 ; bytes:1
+CompTempVar665                   EQU	0x00000128 ; bytes:1
+CompTempVar666                   EQU	0x00000129 ; bytes:1
+CompTempVar670                   EQU	0x00000128 ; bytes:1
+CompTempVar673                   EQU	0x00000128 ; bytes:1
+CompTempVar674                   EQU	0x00000129 ; bytes:1
+CompTempVar677                   EQU	0x00000122 ; bytes:1
+CompTempVar681                   EQU	0x00000122 ; bytes:1
+CompTempVar683                   EQU	0x00000123 ; bytes:1
+CompTempVar684                   EQU	0x00000124 ; bytes:1
+CompTempVar688                   EQU	0x00000122 ; bytes:1
+CompTempVar690                   EQU	0x00000123 ; bytes:1
+CompTempVar691                   EQU	0x00000124 ; bytes:1
+CompTempVar693                   EQU	0x00000122 ; bytes:1
+CompTempVar695                   EQU	0x00000123 ; bytes:1
+CompTempVar696                   EQU	0x00000124 ; bytes:1
+CompTempVar700                   EQU	0x00000122 ; bytes:1
+CompTempVar701                   EQU	0x00000123 ; bytes:1
+CompTempVar705                   EQU	0x00000122 ; bytes:1
+CompTempVar706                   EQU	0x00000123 ; bytes:1
+CompTempVar707                   EQU	0x00000122 ; bytes:1
+CompTempVar708                   EQU	0x00000122 ; bytes:1
+CompTempVar709                   EQU	0x00000123 ; bytes:1
+CompTempVar710                   EQU	0x00000124 ; bytes:2
+CompTempVar711                   EQU	0x00000126 ; bytes:1
+CompTempVar715                   EQU	0x00000122 ; bytes:1
+CompTempVar719                   EQU	0x00000123 ; bytes:1
+CompTempVar720                   EQU	0x00000122 ; bytes:1
+CompTempVar721                   EQU	0x00000123 ; bytes:1
+CompTempVar722                   EQU	0x00000124 ; bytes:2
+CompTempVar723                   EQU	0x00000126 ; bytes:1
+CompTempVar726                   EQU	0x00000122 ; bytes:1
+timer1Set_00000_arg_isOn         EQU	0x000000FC ; bit:0
+CompTempVarRet727                EQU	0x000000FD ; bytes:1
+CompTempVar728                   EQU	0x000000FC ; bytes:1
+main_1_i                         EQU	0x000000F6 ; bytes:1
+main_1_j                         EQU	0x000000F7 ; bytes:2
+main_1_buffer                    EQU	0x000000F9 ; bytes:3
 main_1_tablex                    EQU	0x00000100 ; bytes:12
 main_1_tabley                    EQU	0x0000010C ; bytes:12
-CompTempVar737                   EQU	0x000000F8 ; bytes:1
-delay_ms_00000_arg_del           EQU	0x000000F8 ; bytes:1
+CompTempVar734                   EQU	0x000000FC ; bytes:1
+delay_ms_00000_arg_del           EQU	0x000000FC ; bytes:1
 Int1Context                      EQU	0x00000001 ; bytes:4
 	ORG 0x00000000
 	GOTO	_startup
@@ -434,15 +435,15 @@ CopyDescri_0000B
 	MOVF gbl_bd0adrlie, W, 1
 	MOVLB 0x01
 	MOVWF CopyDescri_0000B_1_USBbuffer, 1
-	CLRF CompTempVar583+D'1', 1
-	CLRF CompTempVar584, 1
+	CLRF CompTempVar582+D'1', 1
+	CLRF CompTempVar583, 1
 	MOVLB 0x04
 	MOVF gbl_bd0adrhie, W, 1
 	MOVLB 0x01
 	MOVWF CopyDescri_0000B_1_USBbuffer+D'1', 1
-	MOVF CompTempVar584, W, 1
+	MOVF CompTempVar583, W, 1
 	ADDWF CopyDescri_0000B_1_USBbuffer, F, 1
-	MOVF CompTempVar583+D'1', W, 1
+	MOVF CompTempVar582+D'1', W, 1
 	ADDWFC CopyDescri_0000B_1_USBbuffer+D'1', F, 1
 	CLRF CopyDescri_0000B_1_bufindex, 1
 label3
@@ -465,13 +466,13 @@ label4
 	MOVWF FSR0L
 	MOVF INDF0, W
 	MOVLB 0x01
-	MOVWF CompTempVar587, 1
+	MOVWF CompTempVar586, 1
 	MOVF CopyDescri_0000B_1_USBbuffer+D'1', W, 1
 	MOVWF FSR0H
 	MOVF CopyDescri_0000B_1_USBbuffer, W, 1
 	ADDWF CopyDescri_0000B_1_bufindex, W, 1
 	MOVWF FSR0L
-	MOVF CompTempVar587, W, 1
+	MOVF CompTempVar586, W, 1
 	MOVWF INDF0
 	MOVLB 0x00
 	INFSNZ gbl_EP0_start, F, 1
@@ -502,28 +503,13 @@ label6
 ; } CopyDescriptorToEP0 function end
 
 	ORG 0x00000134
-read_butto_0000F
-; { read_button ; function begin
-	BTFSC gbl_portb,2
-	BRA	label7
-	MOVLW 0x01
-	MOVLB 0x00
-	MOVWF CompTempVarRet728, 1
-	RETURN
-label7
-	MOVLB 0x00
-	CLRF CompTempVarRet728, 1
-	RETURN
-; } read_button function end
-
-	ORG 0x00000146
 USBStall_00000
 ; { USBStall ; function begin
 	BCF gbl_uir,5
 	RETURN
 ; } USBStall function end
 
-	ORG 0x0000014A
+	ORG 0x00000138
 USBSleep_00000
 ; { USBSleep ; function begin
 	BSF gbl_uie,2
@@ -535,7 +521,7 @@ USBSleep_00000
 	RETURN
 ; } USBSleep function end
 
-	ORG 0x00000158
+	ORG 0x00000146
 Process_Re_0000D
 ; { Process_Req ; function begin
 	MOVF gbl_ustat, W
@@ -552,25 +538,38 @@ Process_Re_0000D
 	MOVLW 0x04
 	ANDWF gbl_USB_USTAT, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar594, 1
-	CLRF CompTempVar597, 1
-	MOVF CompTempVar594, W, 1
+	MOVWF CompTempVar593, 1
+	CLRF CompTempVar596, 1
+	MOVF CompTempVar593, W, 1
 	MOVLB 0x00
 	ADDWF gbl_ACTIVE_BUF, F, 1
-	BNC	label8
+	BNC	label7
 	MOVLB 0x01
-	INCF CompTempVar597, F, 1
-label8
+	INCF CompTempVar596, F, 1
+label7
 	MOVLB 0x01
-	RRCF CompTempVar597, F, 1
+	RRCF CompTempVar596, F, 1
 	MOVLB 0x00
 	RRCF gbl_ACTIVE_BUF, F, 1
 	MOVLB 0x01
-	RRCF CompTempVar597, F, 1
+	RRCF CompTempVar596, F, 1
 	MOVLB 0x00
 	RRCF gbl_ACTIVE_BUF, F, 1
 	MOVF gbl_BDT+D'1', W, 1
 	MOVWF FSR0H
+	MOVF gbl_BDT, W, 1
+	MOVWF FSR0L
+	MOVF gbl_ACTIVE_BUF, W, 1
+	MOVLB 0x01
+	MOVWF CompTempVar597, 1
+	RLCF CompTempVar597, F, 1
+	RLCF CompTempVar597, F, 1
+	MOVLW 0xFC
+	ANDWF CompTempVar597, W, 1
+	ADDWF FSR0L, F
+	MOVF INDF0, W
+	MOVWF gbl_BDTCopy
+	MOVLB 0x00
 	MOVF gbl_BDT, W, 1
 	MOVWF FSR0L
 	MOVF gbl_ACTIVE_BUF, W, 1
@@ -581,8 +580,8 @@ label8
 	MOVLW 0xFC
 	ANDWF CompTempVar598, W, 1
 	ADDWF FSR0L, F
-	MOVF INDF0, W
-	MOVWF gbl_BDTCopy
+	MOVF PREINC0, W
+	MOVWF gbl_BDTCopy+D'1'
 	MOVLB 0x00
 	MOVF gbl_BDT, W, 1
 	MOVWF FSR0L
@@ -594,19 +593,6 @@ label8
 	MOVLW 0xFC
 	ANDWF CompTempVar599, W, 1
 	ADDWF FSR0L, F
-	MOVF PREINC0, W
-	MOVWF gbl_BDTCopy+D'1'
-	MOVLB 0x00
-	MOVF gbl_BDT, W, 1
-	MOVWF FSR0L
-	MOVF gbl_ACTIVE_BUF, W, 1
-	MOVLB 0x01
-	MOVWF CompTempVar600, 1
-	RLCF CompTempVar600, F, 1
-	RLCF CompTempVar600, F, 1
-	MOVLW 0xFC
-	ANDWF CompTempVar600, W, 1
-	ADDWF FSR0L, F
 	MOVLW 0x02
 	ADDWF FSR0L, F
 	MOVF POSTINC0, W
@@ -616,31 +602,31 @@ label8
 	BCF gbl_uir,3
 	MOVLW 0x3C
 	ANDWF gbl_BDTCopy, W
-	MOVWF CompTempVar588, 1
+	MOVWF CompTempVar587, 1
 	MOVLW 0x24
-	CPFSEQ CompTempVar588, 1
-	BRA	label10
+	CPFSEQ CompTempVar587, 1
+	BRA	label9
 	MOVLW 0x04
 	MOVLB 0x00
 	CPFSEQ gbl_USB_USTAT, 1
-	BRA	label9
+	BRA	label8
 	MOVLW 0x06
 	CPFSEQ gbl_USB_dev_req, 1
 	RETURN
 	CALL CopyDescri_0000B
 	RETURN
-label9
+label8
 	MOVLW 0x0C
 	CPFSEQ gbl_USB_USTAT, 1
 	RETURN
 	RETURN
-label10
+label9
 	MOVLW 0x3C
 	ANDWF gbl_BDTCopy, W
-	MOVWF CompTempVar589, 1
+	MOVWF CompTempVar588, 1
 	MOVLW 0x04
-	CPFSEQ CompTempVar589, 1
-	BRA	label11
+	CPFSEQ CompTempVar588, 1
+	BRA	label10
 	MOVLB 0x00
 	MOVF gbl_USB_USTAT, F, 1
 	BTFSC STATUS,Z
@@ -649,30 +635,30 @@ label10
 	CPFSEQ gbl_USB_USTAT, 1
 	RETURN
 	RETURN
-label11
+label10
 	MOVLW 0x3C
 	ANDWF gbl_BDTCopy, W
-	MOVWF CompTempVar590, 1
+	MOVWF CompTempVar589, 1
 	MOVLW 0x34
-	CPFSEQ CompTempVar590, 1
+	CPFSEQ CompTempVar589, 1
 	RETURN
 	MOVLB 0x04
 	MOVF gbl_bd0adrloe, W, 1
 	MOVLB 0x00
 	MOVWF gbl_Buffer, 1
 	MOVLB 0x01
-	CLRF CompTempVar606+D'1', 1
-	CLRF CompTempVar607, 1
+	CLRF CompTempVar605+D'1', 1
+	CLRF CompTempVar606, 1
 	MOVLB 0x04
 	MOVF gbl_bd0adrhoe, W, 1
 	MOVLB 0x00
 	MOVWF gbl_Buffer+D'1', 1
 	MOVLB 0x01
-	MOVF CompTempVar607, W, 1
+	MOVF CompTempVar606, W, 1
 	MOVLB 0x00
 	ADDWF gbl_Buffer, F, 1
 	MOVLB 0x01
-	MOVF CompTempVar606+D'1', W, 1
+	MOVF CompTempVar605+D'1', W, 1
 	MOVLB 0x00
 	ADDWFC gbl_Buffer+D'1', F, 1
 	MOVF gbl_Buffer+D'1', W, 1
@@ -713,68 +699,68 @@ label11
 	MOVLW 0x21
 	MOVLB 0x00
 	CPFSEQ gbl_BufferCopy, 1
-	BRA	label12
+	BRA	label11
 	MOVLW 0xC8
 	MOVLB 0x04
 	MOVWF gbl_bd0statoe, 1
-	BRA	label13
-label12
+	BRA	label12
+label11
 	MOVLW 0x88
 	MOVLB 0x04
 	MOVWF gbl_bd0statoe, 1
-label13
+label12
 	MOVLW 0x08
 	MOVWF gbl_bd0statie, 1
 	BCF gbl_ucon,4
 	MOVLB 0x00
 	CLRF gbl_USB_dev_req, 1
 	MOVF gbl_BufferCopy, F, 1
-	BZ	label17
+	BZ	label16
 	DECF gbl_BufferCopy, W, 1
 	BTFSC STATUS,Z
-	BRA	label31
+	BRA	label30
 	MOVLW 0x02
 	CPFSEQ gbl_BufferCopy, 1
-	BRA	label14
-	BRA	label36
-label14
+	BRA	label13
+	BRA	label35
+label13
 	MOVLW 0x80
 	CPFSEQ gbl_BufferCopy, 1
-	BRA	label15
-	BRA	label46
-label15
+	BRA	label14
+	BRA	label45
+label14
 	MOVLW 0x81
 	CPFSEQ gbl_BufferCopy, 1
-	BRA	label16
-	BRA	label69
-label16
+	BRA	label15
+	BRA	label68
+label15
 	MOVLW 0x82
 	CPFSEQ gbl_BufferCopy, 1
-	BRA	label84
-	BRA	label82
-label17
+	GOTO	label83
+	BRA	label81
+label16
 	DECF gbl_BufferCopy+D'1', W, 1
-	BZ	label20
+	BZ	label19
 	MOVLW 0x03
 	CPFSEQ gbl_BufferCopy+D'1', 1
-	BRA	label18
-	BRA	label22
-label18
+	BRA	label17
+	BRA	label21
+label17
 	MOVLW 0x05
 	CPFSEQ gbl_BufferCopy+D'1', 1
-	BRA	label19
-	BRA	label24
-label19
+	BRA	label18
+	BRA	label23
+label18
 	MOVLW 0x09
 	CPFSEQ gbl_BufferCopy+D'1', 1
-	BRA	label30
-	BRA	label26
-label20
+	BRA	label29
+	BRA	label25
+label19
 	MOVLW 0x01
 	CPFSEQ gbl_BufferCopy+D'2', 1
-	BRA	label21
+	BRA	label20
 	MOVF gbl_BufferCopy+D'3', W, 1
-	BNZ	label21
+	BNZ	label20
 	BCF gbl_USB_status_device,1, 1
 	MOVLB 0x04
 	CLRF gbl_bd0cntie, 1
@@ -783,19 +769,19 @@ label20
 	MOVLB 0x00
 	CLRF gbl_USB_dev_req, 1
 	RETURN
-label21
+label20
 	BSF gbl_uep0,0
 	RETURN
-label22
+label21
 	MOVF gbl_BufferCopy+D'2', W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar601, 1
-	CLRF CompTempVar602, 1
+	MOVWF CompTempVar600, 1
+	CLRF CompTempVar601, 1
 	MOVLW 0x01
-	CPFSEQ CompTempVar601, 1
-	BRA	label23
-	MOVF CompTempVar602, W, 1
-	BNZ	label23
+	CPFSEQ CompTempVar600, 1
+	BRA	label22
+	MOVF CompTempVar601, W, 1
+	BNZ	label22
 	MOVLB 0x00
 	BSF gbl_USB_status_device,1, 1
 	MOVLB 0x04
@@ -805,15 +791,15 @@ label22
 	MOVLB 0x00
 	CLRF gbl_USB_dev_req, 1
 	RETURN
-label23
+label22
 	BSF gbl_uep0,0
 	RETURN
-label24
+label23
 	MOVF gbl_BufferCopy+D'2', W, 1
 	MOVWF gbl_USB_address_pending, 1
 	MOVLW 0x80
 	CPFSLT gbl_USB_address_pending, 1
-	BRA	label25
+	BRA	label24
 	MOVLB 0x04
 	CLRF gbl_bd0cntie, 1
 	MOVLW 0xC8
@@ -825,28 +811,28 @@ label24
 	MOVLW 0x09
 	MOVWF gbl_uie
 	RETURN
-label25
+label24
 	BSF gbl_uep0,0
 	RETURN
-label26
+label25
 	MOVLW 0x01
 	CPFSGT gbl_BufferCopy+D'2', 1
 	TSTFSZ gbl_BufferCopy+D'3', 1
-	BRA	label27
+	BRA	label26
 	MOVF gbl_BufferCopy+D'2', W, 1
 	MOVWF gbl_USB_Curr_Config, 1
-label27
+label26
 	MOVF gbl_BufferCopy+D'2', F, 1
-	BNZ	label28
+	BNZ	label27
 	MOVF gbl_BufferCopy+D'3', F, 1
-	BNZ	label28
+	BNZ	label27
 	MOVLW 0x02
 	MOVWF gbl_USWSTAT, 1
-	BRA	label29
-label28
+	BRA	label28
+label27
 	MOVLW 0x03
 	MOVWF gbl_USWSTAT, 1
-label29
+label28
 	MOVLB 0x04
 	CLRF gbl_bd0cntie, 1
 	MOVLW 0xC8
@@ -859,31 +845,33 @@ label29
 	MOVLW 0x1E
 	MOVWF gbl_uep1
 	RETURN
-label30
+label29
 	BSF gbl_uep0,0
 	RETURN
-label31
+label30
 	MOVLW 0x0B
 	CPFSEQ gbl_BufferCopy+D'1', 1
+	BRA	label31
 	BRA	label32
-	BRA	label33
-label32
+label31
 	DECF gbl_BufferCopy+D'1', W, 1
-	BZ	label35
+	BZ	label34
 	MOVLW 0x03
 	CPFSEQ gbl_BufferCopy+D'1', 1
-	BRA	label35
-	BRA	label35
-label33
+	BRA	label34
+	BRA	label34
+label32
 	MOVLW 0x03
 	CPFSEQ gbl_USWSTAT, 1
-	BRA	label34
+	BRA	label33
 	MOVF gbl_BufferCopy+D'4', W, 1
+	MOVLB 0x01
 	MOVWF Process_Re_0000D_1_Interface, 1
 	LFSR 0x00,  gbl_USB_Interface
 	MOVF FSR0L, W
 	MOVF Process_Re_0000D_1_Interface, W, 1
 	ADDWF FSR0L, F
+	MOVLB 0x00
 	MOVF gbl_BufferCopy+D'2', W, 1
 	MOVWF INDF0
 	MOVLB 0x04
@@ -893,44 +881,74 @@ label33
 	MOVLB 0x00
 	CLRF gbl_USB_dev_req, 1
 	RETURN
+label33
+	BSF gbl_uep0,0
+	RETURN
 label34
 	BSF gbl_uep0,0
 	RETURN
 label35
-	BSF gbl_uep0,0
-	RETURN
-label36
 	DECF gbl_BufferCopy+D'1', W, 1
-	BZ	label37
+	BZ	label36
 	MOVLW 0x03
 	CPFSEQ gbl_BufferCopy+D'1', 1
-	BRA	label45
-	BRA	label41
-label37
+	BRA	label44
+	BRA	label40
+label36
 	MOVLW HIGH(gbl_uep0+D'0')
 	MOVWF Process_Re_0000D_1_UEPArray+D'1', 1
 	MOVLW LOW(gbl_uep0+D'0')
 	MOVWF Process_Re_0000D_1_UEPArray, 1
 	MOVLW 0x0F
 	ANDWF gbl_BufferCopy+D'4', W, 1
+	MOVLB 0x01
 	MOVWF Process_Re_0000D_1_Endpoint, 1
+	MOVLB 0x00
 	MOVF gbl_BufferCopy+D'2', F, 1
-	BNZ	label40
+	BNZ	label39
 	MOVF gbl_BufferCopy+D'3', F, 1
-	BNZ	label40
+	BNZ	label39
 	MOVLW 0x03
 	ANDWF gbl_USWSTAT, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar611, 1
+	MOVWF CompTempVar610, 1
 	MOVLW 0x02
-	CPFSEQ CompTempVar611, 1
-	BRA	label38
-	MOVLB 0x00
+	CPFSEQ CompTempVar610, 1
+	BRA	label37
 	MOVF Process_Re_0000D_1_Endpoint, F, 1
-	BNZ	label38
+	BNZ	label37
+	MOVLB 0x00
 	MOVF Process_Re_0000D_1_UEPArray+D'1', W, 1
 	MOVWF FSR0H
 	MOVF Process_Re_0000D_1_UEPArray, W, 1
+	MOVLB 0x01
+	ADDWF Process_Re_0000D_1_Endpoint, W, 1
+	MOVWF FSR0L
+	BCF INDF0,0
+	MOVLB 0x04
+	CLRF gbl_bd0cntie, 1
+	MOVLW 0xC8
+	MOVWF gbl_bd0statie, 1
+	MOVLB 0x00
+	CLRF gbl_USB_dev_req, 1
+	RETURN
+label37
+	MOVLW 0x03
+	MOVLB 0x00
+	ANDWF gbl_USWSTAT, W, 1
+	MOVLB 0x01
+	MOVWF CompTempVar612, 1
+	MOVLW 0x03
+	CPFSEQ CompTempVar612, 1
+	BRA	label38
+	MOVLW 0x03
+	CPFSLT Process_Re_0000D_1_Endpoint, 1
+	BRA	label38
+	MOVLB 0x00
+	MOVF Process_Re_0000D_1_UEPArray+D'1', W, 1
+	MOVWF FSR0H
+	MOVF Process_Re_0000D_1_UEPArray, W, 1
+	MOVLB 0x01
 	ADDWF Process_Re_0000D_1_Endpoint, W, 1
 	MOVWF FSR0L
 	BCF INDF0,0
@@ -942,24 +960,48 @@ label37
 	CLRF gbl_USB_dev_req, 1
 	RETURN
 label38
-	MOVLW 0x03
+	BSF gbl_uep0,0
+	RETURN
+label39
+	BSF gbl_uep0,0
+	RETURN
+label40
+	MOVLW HIGH(gbl_uep0+D'0')
+	MOVLB 0x01
+	MOVWF CompTempVar614, 1
+	MOVLW LOW(gbl_uep0+D'0')
 	MOVLB 0x00
+	MOVWF Process_Re_0000D_1_UEPArray, 1
+	MOVLB 0x01
+	MOVF CompTempVar614, W, 1
+	MOVLB 0x00
+	MOVWF Process_Re_0000D_1_UEPArray+D'1', 1
+	MOVLW 0x0F
+	ANDWF gbl_BufferCopy+D'4', W, 1
+	MOVLB 0x01
+	MOVWF Process_Re_0000D_1_Endpoint, 1
+	MOVLB 0x00
+	MOVF gbl_BufferCopy+D'2', F, 1
+	BNZ	label43
+	MOVF gbl_BufferCopy+D'3', F, 1
+	BNZ	label43
+	MOVLW 0x03
 	ANDWF gbl_USWSTAT, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar613, 1
-	MOVLW 0x03
-	CPFSEQ CompTempVar613, 1
-	BRA	label39
-	MOVLW 0x03
+	MOVWF CompTempVar615, 1
+	MOVLW 0x02
+	CPFSEQ CompTempVar615, 1
+	BRA	label41
+	MOVF Process_Re_0000D_1_Endpoint, F, 1
+	BNZ	label41
 	MOVLB 0x00
-	CPFSLT Process_Re_0000D_1_Endpoint, 1
-	BRA	label39
 	MOVF Process_Re_0000D_1_UEPArray+D'1', W, 1
 	MOVWF FSR0H
 	MOVF Process_Re_0000D_1_UEPArray, W, 1
+	MOVLB 0x01
 	ADDWF Process_Re_0000D_1_Endpoint, W, 1
 	MOVWF FSR0L
-	BCF INDF0,0
+	BSF INDF0,0
 	MOVLB 0x04
 	CLRF gbl_bd0cntie, 1
 	MOVLW 0xC8
@@ -967,43 +1009,23 @@ label38
 	MOVLB 0x00
 	CLRF gbl_USB_dev_req, 1
 	RETURN
-label39
-	BSF gbl_uep0,0
-	RETURN
-label40
-	BSF gbl_uep0,0
-	RETURN
 label41
-	MOVLW HIGH(gbl_uep0+D'0')
-	MOVLB 0x01
-	MOVWF CompTempVar615, 1
-	MOVLW LOW(gbl_uep0+D'0')
-	MOVLB 0x00
-	MOVWF Process_Re_0000D_1_UEPArray, 1
-	MOVLB 0x01
-	MOVF CompTempVar615, W, 1
-	MOVLB 0x00
-	MOVWF Process_Re_0000D_1_UEPArray+D'1', 1
-	MOVLW 0x0F
-	ANDWF gbl_BufferCopy+D'4', W, 1
-	MOVWF Process_Re_0000D_1_Endpoint, 1
-	MOVF gbl_BufferCopy+D'2', F, 1
-	BNZ	label44
-	MOVF gbl_BufferCopy+D'3', F, 1
-	BNZ	label44
 	MOVLW 0x03
+	MOVLB 0x00
 	ANDWF gbl_USWSTAT, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar616, 1
-	MOVLW 0x02
-	CPFSEQ CompTempVar616, 1
+	MOVWF CompTempVar617, 1
+	MOVLW 0x03
+	CPFSEQ CompTempVar617, 1
+	BRA	label42
+	MOVLW 0x03
+	CPFSLT Process_Re_0000D_1_Endpoint, 1
 	BRA	label42
 	MOVLB 0x00
-	MOVF Process_Re_0000D_1_Endpoint, F, 1
-	BNZ	label42
 	MOVF Process_Re_0000D_1_UEPArray+D'1', W, 1
 	MOVWF FSR0H
 	MOVF Process_Re_0000D_1_UEPArray, W, 1
+	MOVLB 0x01
 	ADDWF Process_Re_0000D_1_Endpoint, W, 1
 	MOVWF FSR0L
 	BSF INDF0,0
@@ -1015,30 +1037,7 @@ label41
 	CLRF gbl_USB_dev_req, 1
 	RETURN
 label42
-	MOVLW 0x03
-	MOVLB 0x00
-	ANDWF gbl_USWSTAT, W, 1
-	MOVLB 0x01
-	MOVWF CompTempVar618, 1
-	MOVLW 0x03
-	CPFSEQ CompTempVar618, 1
-	BRA	label43
-	MOVLW 0x03
-	MOVLB 0x00
-	CPFSLT Process_Re_0000D_1_Endpoint, 1
-	BRA	label43
-	MOVF Process_Re_0000D_1_UEPArray+D'1', W, 1
-	MOVWF FSR0H
-	MOVF Process_Re_0000D_1_UEPArray, W, 1
-	ADDWF Process_Re_0000D_1_Endpoint, W, 1
-	MOVWF FSR0L
-	BSF INDF0,0
-	MOVLB 0x04
-	CLRF gbl_bd0cntie, 1
-	MOVLW 0xC8
-	MOVWF gbl_bd0statie, 1
-	MOVLB 0x00
-	CLRF gbl_USB_dev_req, 1
+	BSF gbl_uep0,0
 	RETURN
 label43
 	BSF gbl_uep0,0
@@ -1047,41 +1046,38 @@ label44
 	BSF gbl_uep0,0
 	RETURN
 label45
-	BSF gbl_uep0,0
-	RETURN
-label46
 	MOVLW 0x08
+	CPFSEQ gbl_BufferCopy+D'1', 1
+	BRA	label46
+	BRA	label48
+label46
+	MOVLW 0x06
 	CPFSEQ gbl_BufferCopy+D'1', 1
 	BRA	label47
 	BRA	label49
 label47
-	MOVLW 0x06
-	CPFSEQ gbl_BufferCopy+D'1', 1
-	BRA	label48
-	BRA	label50
-label48
 	MOVF gbl_BufferCopy+D'1', F, 1
 	BTFSC STATUS,Z
-	BRA	label68
+	BRA	label67
 	RETURN
-label49
+label48
 	MOVLB 0x04
 	MOVF gbl_bd0adrlie, W, 1
 	MOVLB 0x00
 	MOVWF Process_Re_0000D_1_OutBuffer, 1
 	MOVLB 0x01
-	CLRF CompTempVar622+D'1', 1
-	CLRF CompTempVar623, 1
+	CLRF CompTempVar621+D'1', 1
+	CLRF CompTempVar622, 1
 	MOVLB 0x04
 	MOVF gbl_bd0adrhie, W, 1
 	MOVLB 0x00
 	MOVWF Process_Re_0000D_1_OutBuffer+D'1', 1
 	MOVLB 0x01
-	MOVF CompTempVar623, W, 1
+	MOVF CompTempVar622, W, 1
 	MOVLB 0x00
 	ADDWF Process_Re_0000D_1_OutBuffer, F, 1
 	MOVLB 0x01
-	MOVF CompTempVar622+D'1', W, 1
+	MOVF CompTempVar621+D'1', W, 1
 	MOVLB 0x00
 	ADDWFC Process_Re_0000D_1_OutBuffer+D'1', F, 1
 	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
@@ -1089,8 +1085,8 @@ label49
 	MOVF Process_Re_0000D_1_OutBuffer, W, 1
 	MOVWF FSR0L
 	MOVLB 0x01
-	CLRF CompTempVar626, 1
-	MOVF CompTempVar626, W, 1
+	CLRF CompTempVar625, 1
+	MOVF CompTempVar625, W, 1
 	ADDWF FSR0L, F
 	MOVLB 0x00
 	MOVF gbl_USB_Curr_Config, W, 1
@@ -1101,12 +1097,14 @@ label49
 	MOVLW 0xC8
 	MOVWF gbl_bd0statie, 1
 	RETURN
-label50
+label49
 	MOVF gbl_BufferCopy+D'3', W, 1
+	MOVLB 0x01
 	MOVWF Process_Re_0000D_1_DescriptorID, 1
 	DECF Process_Re_0000D_1_DescriptorID, W, 1
-	BNZ	label53
+	BNZ	label52
 	MOVLW 0x06
+	MOVLB 0x00
 	MOVWF gbl_USB_dev_req, 1
 	MOVLW HIGH(gbl_DeviceDescriptor+D'0')
 	MOVWF gbl_EP0_start+D'1', 1
@@ -1114,7 +1112,7 @@ label50
 	MOVWF gbl_EP0_start, 1
 	MOVLW HIGH(gbl_DeviceDescriptor+D'0')
 	MOVLB 0x01
-	MOVWF CompTempVar632, 1
+	MOVWF CompTempVar631, 1
 	MOVLW LOW(gbl_DeviceDescriptor+D'0')
 	MOVLB 0x00
 	MOVWF gbl_EP0_end, 1
@@ -1122,57 +1120,58 @@ label50
 	MOVLW 0x12
 	ADDWF gbl_EP0_end, F, 1
 	MOVLB 0x01
-	MOVF CompTempVar632, W, 1
+	MOVF CompTempVar631, W, 1
 	MOVLB 0x00
 	ADDWFC gbl_EP0_end+D'1', F, 1
 	MOVF gbl_EP0_start, W, 1
 	SUBWF gbl_EP0_end, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar628, 1
+	MOVWF CompTempVar627, 1
 	MOVLB 0x00
 	MOVF gbl_EP0_start+D'1', W, 1
 	SUBWFB gbl_EP0_end+D'1', W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar629, 1
-	MOVF CompTempVar629, W, 1
-	MOVLB 0x00
-	SUBWF gbl_BufferCopy+D'7', W, 1
-	BNZ	label51
-	MOVLB 0x01
+	MOVWF CompTempVar628, 1
 	MOVF CompTempVar628, W, 1
 	MOVLB 0x00
+	SUBWF gbl_BufferCopy+D'7', W, 1
+	BNZ	label50
+	MOVLB 0x01
+	MOVF CompTempVar627, W, 1
+	MOVLB 0x00
 	SUBWF gbl_BufferCopy+D'6', W, 1
-label51
-	BC	label52
+label50
+	BC	label51
 	MOVF gbl_BufferCopy+D'6', W, 1
 	ADDWF gbl_EP0_start, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar635, 1
+	MOVWF CompTempVar634, 1
 	MOVLB 0x00
 	MOVF gbl_BufferCopy+D'7', W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar636, 1
+	MOVWF CompTempVar635, 1
 	MOVLB 0x00
 	MOVF gbl_EP0_start+D'1', W, 1
 	MOVLB 0x01
-	ADDWFC CompTempVar636, F, 1
-	MOVF CompTempVar635, W, 1
+	ADDWFC CompTempVar635, F, 1
+	MOVF CompTempVar634, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end, 1
 	MOVLB 0x01
-	MOVF CompTempVar636, W, 1
+	MOVF CompTempVar635, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end+D'1', 1
-label52
+label51
 	MOVLW 0x08
 	MOVWF gbl_EP0_maxLength, 1
 	CALL CopyDescri_0000B
 	RETURN
-label53
+label52
 	MOVLW 0x02
 	CPFSEQ Process_Re_0000D_1_DescriptorID, 1
-	BRA	label56
+	BRA	label55
 	MOVLW 0x06
+	MOVLB 0x00
 	MOVWF gbl_USB_dev_req, 1
 	MOVLW HIGH(gbl_ConfigDescriptor+D'0')
 	MOVWF gbl_EP0_start+D'1', 1
@@ -1180,7 +1179,7 @@ label53
 	MOVWF gbl_EP0_start, 1
 	MOVLW HIGH(gbl_ConfigDescriptor+D'0')
 	MOVLB 0x01
-	MOVWF CompTempVar641, 1
+	MOVWF CompTempVar640, 1
 	MOVLW LOW(gbl_ConfigDescriptor+D'0')
 	MOVLB 0x00
 	MOVWF gbl_EP0_end, 1
@@ -1188,56 +1187,57 @@ label53
 	MOVLW 0x22
 	ADDWF gbl_EP0_end, F, 1
 	MOVLB 0x01
-	MOVF CompTempVar641, W, 1
+	MOVF CompTempVar640, W, 1
 	MOVLB 0x00
 	ADDWFC gbl_EP0_end+D'1', F, 1
 	MOVF gbl_EP0_start, W, 1
 	SUBWF gbl_EP0_end, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar637, 1
+	MOVWF CompTempVar636, 1
 	MOVLB 0x00
 	MOVF gbl_EP0_start+D'1', W, 1
 	SUBWFB gbl_EP0_end+D'1', W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar638, 1
-	MOVF CompTempVar638, W, 1
-	MOVLB 0x00
-	SUBWF gbl_BufferCopy+D'7', W, 1
-	BNZ	label54
-	MOVLB 0x01
+	MOVWF CompTempVar637, 1
 	MOVF CompTempVar637, W, 1
 	MOVLB 0x00
+	SUBWF gbl_BufferCopy+D'7', W, 1
+	BNZ	label53
+	MOVLB 0x01
+	MOVF CompTempVar636, W, 1
+	MOVLB 0x00
 	SUBWF gbl_BufferCopy+D'6', W, 1
-label54
-	BC	label55
+label53
+	BC	label54
 	MOVF gbl_BufferCopy+D'6', W, 1
 	ADDWF gbl_EP0_start, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar644, 1
+	MOVWF CompTempVar643, 1
 	MOVLB 0x00
 	MOVF gbl_BufferCopy+D'7', W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar645, 1
+	MOVWF CompTempVar644, 1
 	MOVLB 0x00
 	MOVF gbl_EP0_start+D'1', W, 1
 	MOVLB 0x01
-	ADDWFC CompTempVar645, F, 1
-	MOVF CompTempVar644, W, 1
+	ADDWFC CompTempVar644, F, 1
+	MOVF CompTempVar643, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end, 1
 	MOVLB 0x01
-	MOVF CompTempVar645, W, 1
+	MOVF CompTempVar644, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end+D'1', 1
-label55
+label54
 	MOVLW 0x08
 	MOVWF gbl_EP0_maxLength, 1
 	CALL CopyDescri_0000B
 	RETURN
-label56
+label55
 	MOVLW 0x03
 	CPFSEQ Process_Re_0000D_1_DescriptorID, 1
-	BRA	label67
+	BRA	label66
+	MOVLB 0x00
 	MOVF gbl_BufferCopy+D'2', W, 1
 	MOVLB 0x01
 	MOVWF Process_Re_0000D_1_StringID, 1
@@ -1248,14 +1248,14 @@ label56
 	MOVWF gbl_EP0_maxLength, 1
 	MOVLB 0x01
 	MOVF Process_Re_0000D_1_StringID, F, 1
-	BZ	label57
+	BZ	label56
 	DECF Process_Re_0000D_1_StringID, W, 1
-	BZ	label60
+	BZ	label59
 	MOVLW 0x02
 	CPFSEQ Process_Re_0000D_1_StringID, 1
-	BRA	label66
-	BRA	label63
-label57
+	BRA	label65
+	BRA	label62
+label56
 	MOVLW HIGH(gbl_String0+D'0')
 	MOVLB 0x00
 	MOVWF gbl_EP0_start+D'1', 1
@@ -1263,7 +1263,7 @@ label57
 	MOVWF gbl_EP0_start, 1
 	MOVLW HIGH(gbl_String0+D'0')
 	MOVLB 0x01
-	MOVWF CompTempVar655, 1
+	MOVWF CompTempVar654, 1
 	MOVLW LOW(gbl_String0+D'0')
 	MOVLB 0x00
 	MOVWF gbl_EP0_end, 1
@@ -1271,51 +1271,51 @@ label57
 	MOVF gbl_String0, W, 1
 	ADDWF gbl_EP0_end, F, 1
 	MOVLB 0x01
-	MOVF CompTempVar655, W, 1
+	MOVF CompTempVar654, W, 1
 	MOVLB 0x00
 	ADDWFC gbl_EP0_end+D'1', F, 1
 	MOVF gbl_EP0_start, W, 1
 	SUBWF gbl_EP0_end, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar646, 1
+	MOVWF CompTempVar645, 1
 	MOVLB 0x00
 	MOVF gbl_EP0_start+D'1', W, 1
 	SUBWFB gbl_EP0_end+D'1', W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar647, 1
-	MOVF CompTempVar647, W, 1
-	MOVLB 0x00
-	SUBWF gbl_BufferCopy+D'7', W, 1
-	BNZ	label58
-	MOVLB 0x01
+	MOVWF CompTempVar646, 1
 	MOVF CompTempVar646, W, 1
 	MOVLB 0x00
+	SUBWF gbl_BufferCopy+D'7', W, 1
+	BNZ	label57
+	MOVLB 0x01
+	MOVF CompTempVar645, W, 1
+	MOVLB 0x00
 	SUBWF gbl_BufferCopy+D'6', W, 1
-label58
-	BC	label59
+label57
+	BC	label58
 	MOVF gbl_BufferCopy+D'6', W, 1
 	ADDWF gbl_EP0_start, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar658, 1
+	MOVWF CompTempVar657, 1
 	MOVLB 0x00
 	MOVF gbl_BufferCopy+D'7', W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar659, 1
+	MOVWF CompTempVar658, 1
 	MOVLB 0x00
 	MOVF gbl_EP0_start+D'1', W, 1
 	MOVLB 0x01
-	ADDWFC CompTempVar659, F, 1
-	MOVF CompTempVar658, W, 1
+	ADDWFC CompTempVar658, F, 1
+	MOVF CompTempVar657, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end, 1
 	MOVLB 0x01
-	MOVF CompTempVar659, W, 1
+	MOVF CompTempVar658, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end+D'1', 1
-label59
+label58
 	CALL CopyDescri_0000B
 	RETURN
-label60
+label59
 	MOVLW HIGH(gbl_String1+D'0')
 	MOVLB 0x00
 	MOVWF gbl_EP0_start+D'1', 1
@@ -1323,7 +1323,7 @@ label60
 	MOVWF gbl_EP0_start, 1
 	MOVLW HIGH(gbl_String1+D'0')
 	MOVLB 0x01
-	MOVWF CompTempVar663, 1
+	MOVWF CompTempVar662, 1
 	MOVLW LOW(gbl_String1+D'0')
 	MOVLB 0x00
 	MOVWF gbl_EP0_end, 1
@@ -1331,51 +1331,51 @@ label60
 	MOVF gbl_String1, W, 1
 	ADDWF gbl_EP0_end, F, 1
 	MOVLB 0x01
-	MOVF CompTempVar663, W, 1
+	MOVF CompTempVar662, W, 1
 	MOVLB 0x00
 	ADDWFC gbl_EP0_end+D'1', F, 1
 	MOVF gbl_EP0_start, W, 1
 	SUBWF gbl_EP0_end, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar648, 1
+	MOVWF CompTempVar647, 1
 	MOVLB 0x00
 	MOVF gbl_EP0_start+D'1', W, 1
 	SUBWFB gbl_EP0_end+D'1', W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar649, 1
-	MOVF CompTempVar649, W, 1
-	MOVLB 0x00
-	SUBWF gbl_BufferCopy+D'7', W, 1
-	BNZ	label61
-	MOVLB 0x01
+	MOVWF CompTempVar648, 1
 	MOVF CompTempVar648, W, 1
 	MOVLB 0x00
+	SUBWF gbl_BufferCopy+D'7', W, 1
+	BNZ	label60
+	MOVLB 0x01
+	MOVF CompTempVar647, W, 1
+	MOVLB 0x00
 	SUBWF gbl_BufferCopy+D'6', W, 1
-label61
-	BC	label62
+label60
+	BC	label61
 	MOVF gbl_BufferCopy+D'6', W, 1
 	ADDWF gbl_EP0_start, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar666, 1
+	MOVWF CompTempVar665, 1
 	MOVLB 0x00
 	MOVF gbl_BufferCopy+D'7', W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar667, 1
+	MOVWF CompTempVar666, 1
 	MOVLB 0x00
 	MOVF gbl_EP0_start+D'1', W, 1
 	MOVLB 0x01
-	ADDWFC CompTempVar667, F, 1
-	MOVF CompTempVar666, W, 1
+	ADDWFC CompTempVar666, F, 1
+	MOVF CompTempVar665, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end, 1
 	MOVLB 0x01
-	MOVF CompTempVar667, W, 1
+	MOVF CompTempVar666, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end+D'1', 1
-label62
+label61
 	CALL CopyDescri_0000B
 	RETURN
-label63
+label62
 	MOVLW HIGH(gbl_String2+D'0')
 	MOVLB 0x00
 	MOVWF gbl_EP0_start+D'1', 1
@@ -1383,7 +1383,7 @@ label63
 	MOVWF gbl_EP0_start, 1
 	MOVLW HIGH(gbl_String2+D'0')
 	MOVLB 0x01
-	MOVWF CompTempVar671, 1
+	MOVWF CompTempVar670, 1
 	MOVLW LOW(gbl_String2+D'0')
 	MOVLB 0x00
 	MOVWF gbl_EP0_end, 1
@@ -1391,49 +1391,54 @@ label63
 	MOVF gbl_String2, W, 1
 	ADDWF gbl_EP0_end, F, 1
 	MOVLB 0x01
-	MOVF CompTempVar671, W, 1
+	MOVF CompTempVar670, W, 1
 	MOVLB 0x00
 	ADDWFC gbl_EP0_end+D'1', F, 1
 	MOVF gbl_EP0_start, W, 1
 	SUBWF gbl_EP0_end, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar650, 1
+	MOVWF CompTempVar649, 1
 	MOVLB 0x00
 	MOVF gbl_EP0_start+D'1', W, 1
 	SUBWFB gbl_EP0_end+D'1', W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar651, 1
-	MOVF CompTempVar651, W, 1
-	MOVLB 0x00
-	SUBWF gbl_BufferCopy+D'7', W, 1
-	BNZ	label64
-	MOVLB 0x01
+	MOVWF CompTempVar650, 1
 	MOVF CompTempVar650, W, 1
 	MOVLB 0x00
+	SUBWF gbl_BufferCopy+D'7', W, 1
+	BNZ	label63
+	MOVLB 0x01
+	MOVF CompTempVar649, W, 1
+	MOVLB 0x00
 	SUBWF gbl_BufferCopy+D'6', W, 1
-label64
-	BC	label65
+label63
+	BC	label64
 	MOVF gbl_BufferCopy+D'6', W, 1
 	ADDWF gbl_EP0_start, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar674, 1
+	MOVWF CompTempVar673, 1
 	MOVLB 0x00
 	MOVF gbl_BufferCopy+D'7', W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar675, 1
+	MOVWF CompTempVar674, 1
 	MOVLB 0x00
 	MOVF gbl_EP0_start+D'1', W, 1
 	MOVLB 0x01
-	ADDWFC CompTempVar675, F, 1
-	MOVF CompTempVar674, W, 1
+	ADDWFC CompTempVar674, F, 1
+	MOVF CompTempVar673, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end, 1
 	MOVLB 0x01
-	MOVF CompTempVar675, W, 1
+	MOVF CompTempVar674, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end+D'1', 1
-label65
+label64
 	CALL CopyDescri_0000B
+	RETURN
+label65
+	MOVLW 0xCC
+	MOVLB 0x04
+	MOVWF gbl_bd0statie, 1
 	RETURN
 label66
 	MOVLW 0xCC
@@ -1441,11 +1446,6 @@ label66
 	MOVWF gbl_bd0statie, 1
 	RETURN
 label67
-	MOVLW 0xCC
-	MOVLB 0x04
-	MOVWF gbl_bd0statie, 1
-	RETURN
-label68
 	MOVF gbl_BDT+D'1', W, 1
 	MOVWF FSR0H
 	MOVF gbl_BDT, W, 1
@@ -1463,8 +1463,8 @@ label68
 	MOVF Process_Re_0000D_1_OutBuffer, W, 1
 	MOVWF FSR0L
 	MOVLB 0x01
-	CLRF CompTempVar678, 1
-	MOVF CompTempVar678, W, 1
+	CLRF CompTempVar677, 1
+	MOVF CompTempVar677, W, 1
 	ADDWF FSR0L, F
 	MOVLB 0x00
 	MOVF gbl_USB_status_device, W, 1
@@ -1481,27 +1481,31 @@ label68
 	MOVLW 0xC8
 	MOVWF gbl_bd0statie, 1
 	RETURN
-label69
+label68
 	MOVLW 0x0A
 	CPFSEQ gbl_BufferCopy+D'1', 1
+	BRA	label69
 	BRA	label70
-	BRA	label71
-label70
+label69
 	MOVF gbl_BufferCopy+D'1', F, 1
-	BZ	label73
+	BZ	label72
 	MOVLW 0x06
 	CPFSEQ gbl_BufferCopy+D'1', 1
 	RETURN
-	BRA	label76
-label71
+	BRA	label75
+label70
 	MOVF gbl_BufferCopy+D'4', W, 1
+	MOVLB 0x01
 	MOVWF Process_Re_0000D_1_Interface, 1
 	MOVLW 0x03
+	MOVLB 0x00
 	CPFSEQ gbl_USWSTAT, 1
-	BRA	label72
+	BRA	label71
 	MOVLW 0x01
+	MOVLB 0x01
 	CPFSLT Process_Re_0000D_1_Interface, 1
-	BRA	label72
+	BRA	label71
+	MOVLB 0x00
 	MOVF gbl_BDT+D'1', W, 1
 	MOVWF FSR0H
 	MOVF gbl_BDT, W, 1
@@ -1516,23 +1520,23 @@ label71
 	MOVWF Process_Re_0000D_1_OutBuffer+D'1', 1
 	LFSR 0x00,  gbl_USB_Interface
 	MOVF FSR0L, W
-	MOVF Process_Re_0000D_1_Interface, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar684, 1
-	MOVF CompTempVar684, W, 1
+	MOVF Process_Re_0000D_1_Interface, W, 1
+	MOVWF CompTempVar683, 1
+	MOVF CompTempVar683, W, 1
 	ADDWF FSR0L, F
 	MOVF INDF0, W
-	MOVWF CompTempVar685, 1
+	MOVWF CompTempVar684, 1
 	MOVLB 0x00
 	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
 	MOVWF FSR0H
 	MOVF Process_Re_0000D_1_OutBuffer, W, 1
 	MOVWF FSR0L
 	MOVLB 0x01
-	CLRF CompTempVar682, 1
-	MOVF CompTempVar682, W, 1
+	CLRF CompTempVar681, 1
+	MOVF CompTempVar681, W, 1
 	ADDWF FSR0L, F
-	MOVF CompTempVar685, W, 1
+	MOVF CompTempVar684, W, 1
 	MOVWF INDF0
 	MOVLW 0x01
 	MOVLB 0x04
@@ -1540,10 +1544,10 @@ label71
 	MOVLW 0xC8
 	MOVWF gbl_bd0statie, 1
 	RETURN
-label72
+label71
 	BSF gbl_uep0,0
 	RETURN
-label73
+label72
 	MOVF gbl_BDT+D'1', W, 1
 	MOVWF FSR0H
 	MOVF gbl_BDT, W, 1
@@ -1569,77 +1573,82 @@ label73
 	MOVWF gbl_bd0cntie, 1
 	MOVLB 0x00
 	MOVF gbl_BufferCopy+D'4', W, 1
+	MOVLB 0x01
 	MOVWF Process_Re_0000D_1_Interface, 1
 	MOVLW 0x02
+	MOVLB 0x00
 	CPFSEQ gbl_USWSTAT, 1
-	BRA	label74
+	BRA	label73
+	MOVLB 0x01
 	MOVF Process_Re_0000D_1_Interface, F, 1
-	BNZ	label74
+	BNZ	label73
 	LFSR 0x00,  gbl_USB_Interface
 	MOVF FSR0L, W
 	MOVF Process_Re_0000D_1_Interface, W, 1
-	MOVLB 0x01
-	MOVWF CompTempVar691, 1
-	MOVF CompTempVar691, W, 1
+	MOVWF CompTempVar690, 1
+	MOVF CompTempVar690, W, 1
 	ADDWF FSR0L, F
 	MOVF INDF0, W
-	MOVWF CompTempVar692, 1
+	MOVWF CompTempVar691, 1
 	MOVLB 0x00
 	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
 	MOVWF FSR0H
 	MOVF Process_Re_0000D_1_OutBuffer, W, 1
 	MOVWF FSR0L
 	MOVLB 0x01
-	CLRF CompTempVar689, 1
-	MOVF CompTempVar689, W, 1
+	CLRF CompTempVar688, 1
+	MOVF CompTempVar688, W, 1
 	ADDWF FSR0L, F
-	MOVF CompTempVar692, W, 1
+	MOVF CompTempVar691, W, 1
+	MOVWF INDF0
+	MOVLW 0xC8
+	MOVLB 0x04
+	MOVWF gbl_bd0statie, 1
+	RETURN
+label73
+	MOVLW 0x03
+	MOVLB 0x00
+	CPFSEQ gbl_USWSTAT, 1
+	BRA	label74
+	MOVLW 0x01
+	MOVLB 0x01
+	CPFSLT Process_Re_0000D_1_Interface, 1
+	BRA	label74
+	LFSR 0x00,  gbl_USB_Interface
+	MOVF FSR0L, W
+	MOVF Process_Re_0000D_1_Interface, W, 1
+	MOVWF CompTempVar695, 1
+	MOVF CompTempVar695, W, 1
+	ADDWF FSR0L, F
+	MOVF INDF0, W
+	MOVWF CompTempVar696, 1
+	MOVLB 0x00
+	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
+	MOVWF FSR0H
+	MOVF Process_Re_0000D_1_OutBuffer, W, 1
+	MOVWF FSR0L
+	MOVLB 0x01
+	CLRF CompTempVar693, 1
+	MOVF CompTempVar693, W, 1
+	ADDWF FSR0L, F
+	MOVF CompTempVar696, W, 1
 	MOVWF INDF0
 	MOVLW 0xC8
 	MOVLB 0x04
 	MOVWF gbl_bd0statie, 1
 	RETURN
 label74
-	MOVLW 0x03
-	CPFSEQ gbl_USWSTAT, 1
-	BRA	label75
-	MOVLW 0x01
-	CPFSLT Process_Re_0000D_1_Interface, 1
-	BRA	label75
-	LFSR 0x00,  gbl_USB_Interface
-	MOVF FSR0L, W
-	MOVF Process_Re_0000D_1_Interface, W, 1
-	MOVLB 0x01
-	MOVWF CompTempVar696, 1
-	MOVF CompTempVar696, W, 1
-	ADDWF FSR0L, F
-	MOVF INDF0, W
-	MOVWF CompTempVar697, 1
-	MOVLB 0x00
-	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
-	MOVWF FSR0H
-	MOVF Process_Re_0000D_1_OutBuffer, W, 1
-	MOVWF FSR0L
-	MOVLB 0x01
-	CLRF CompTempVar694, 1
-	MOVF CompTempVar694, W, 1
-	ADDWF FSR0L, F
-	MOVF CompTempVar697, W, 1
-	MOVWF INDF0
-	MOVLW 0xC8
-	MOVLB 0x04
-	MOVWF gbl_bd0statie, 1
-	RETURN
-label75
 	BSF gbl_uep0,0
 	RETURN
-label76
+label75
 	MOVF gbl_BufferCopy+D'3', W, 1
+	MOVLB 0x01
 	MOVWF Process_Re_0000D_1_Descrip_0000E, 1
 	MOVLW 0x22
 	CPFSEQ Process_Re_0000D_1_Descrip_0000E, 1
-	BRA	label78
+	BRA	label77
 	MOVLW 0x06
+	MOVLB 0x00
 	MOVWF gbl_USB_dev_req, 1
 	MOVF gbl_BufferCopy+D'4', F, 1
 	BTFSC STATUS,Z
@@ -1658,29 +1667,29 @@ label76
 	MOVWF gbl_EP0_maxLength, 1
 	MOVLW 0x32
 	SUBWF gbl_BufferCopy+D'6', W, 1
-	BC	label77
+	BC	label76
 	TSTFSZ gbl_BufferCopy+D'7', 1
-	BRA	label77
+	BRA	label76
 	MOVF gbl_BufferCopy+D'6', W, 1
 	ADDWF gbl_EP0_start, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar701, 1
+	MOVWF CompTempVar700, 1
 	MOVLB 0x00
 	MOVF gbl_BufferCopy+D'7', W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar702, 1
+	MOVWF CompTempVar701, 1
 	MOVLB 0x00
 	MOVF gbl_EP0_start+D'1', W, 1
 	MOVLB 0x01
-	ADDWFC CompTempVar702, F, 1
-	MOVF CompTempVar701, W, 1
+	ADDWFC CompTempVar701, F, 1
+	MOVF CompTempVar700, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end, 1
 	MOVLB 0x01
-	MOVF CompTempVar702, W, 1
+	MOVF CompTempVar701, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end+D'1', 1
-label77
+label76
 	CALL CopyDescri_0000B
 	MOVLW 0x01
 	MOVLB 0x00
@@ -1688,16 +1697,17 @@ label77
 	RETURN
 	MOVF gbl_BufferCopy+D'5', W, 1
 	RETURN
-label78
+label77
 	MOVLW 0x21
 	CPFSEQ Process_Re_0000D_1_Descrip_0000E, 1
-	BRA	label81
+	BRA	label80
 	MOVLW 0x06
+	MOVLB 0x00
 	MOVWF gbl_USB_dev_req, 1
 	MOVF gbl_BufferCopy+D'4', F, 1
-	BNZ	label80
+	BNZ	label79
 	MOVF gbl_BufferCopy+D'5', F, 1
-	BNZ	label80
+	BNZ	label79
 	MOVLW HIGH(gbl_HIDDescriptor+D'0')
 	MOVWF gbl_EP0_start+D'1', 1
 	MOVLW LOW(gbl_HIDDescriptor+D'0')
@@ -1712,76 +1722,77 @@ label78
 	MOVWF gbl_EP0_maxLength, 1
 	MOVLW 0x09
 	SUBWF gbl_BufferCopy+D'6', W, 1
-	BC	label79
+	BC	label78
 	TSTFSZ gbl_BufferCopy+D'7', 1
-	BRA	label79
+	BRA	label78
 	MOVF gbl_BufferCopy+D'6', W, 1
 	ADDWF gbl_EP0_start, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar706, 1
+	MOVWF CompTempVar705, 1
 	MOVLB 0x00
 	MOVF gbl_BufferCopy+D'7', W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar707, 1
+	MOVWF CompTempVar706, 1
 	MOVLB 0x00
 	MOVF gbl_EP0_start+D'1', W, 1
 	MOVLB 0x01
-	ADDWFC CompTempVar707, F, 1
-	MOVF CompTempVar706, W, 1
+	ADDWFC CompTempVar706, F, 1
+	MOVF CompTempVar705, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end, 1
 	MOVLB 0x01
-	MOVF CompTempVar707, W, 1
+	MOVF CompTempVar706, W, 1
 	MOVLB 0x00
 	MOVWF gbl_EP0_end+D'1', 1
-label79
+label78
 	CALL CopyDescri_0000B
-label80
+label79
 	MOVLW 0x01
 	MOVLB 0x00
 	CPFSEQ gbl_BufferCopy+D'4', 1
 	RETURN
 	MOVF gbl_BufferCopy+D'5', W, 1
 	RETURN
-label81
+label80
 	BSF gbl_uep0,0
 	RETURN
-label82
+label81
 	MOVF gbl_BufferCopy+D'1', F, 1
 	BTFSS STATUS,Z
 	RETURN
 	MOVLW HIGH(gbl_uep0+D'0')
 	MOVLB 0x01
-	MOVWF CompTempVar708, 1
+	MOVWF CompTempVar707, 1
 	MOVLW LOW(gbl_uep0+D'0')
 	MOVLB 0x00
 	MOVWF Process_Re_0000D_1_UEPArray, 1
 	MOVLB 0x01
-	MOVF CompTempVar708, W, 1
+	MOVF CompTempVar707, W, 1
 	MOVLB 0x00
 	MOVWF Process_Re_0000D_1_UEPArray+D'1', 1
 	MOVLW 0x0F
 	ANDWF gbl_BufferCopy+D'4', W, 1
+	MOVLB 0x01
 	MOVWF Process_Re_0000D_1_Endpoint, 1
 	MOVLB 0x04
 	MOVF gbl_bd0adrlie, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar709, 1
-	CLRF CompTempVar711+D'1', 1
-	CLRF CompTempVar712, 1
+	MOVWF CompTempVar708, 1
+	CLRF CompTempVar710+D'1', 1
+	CLRF CompTempVar711, 1
 	MOVLB 0x04
 	MOVF gbl_bd0adrhie, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar710, 1
-	MOVF CompTempVar712, W, 1
-	ADDWF CompTempVar709, F, 1
-	MOVF CompTempVar711+D'1', W, 1
-	ADDWFC CompTempVar710, F, 1
-	MOVF CompTempVar709, W, 1
+	MOVWF CompTempVar709, 1
+	MOVF CompTempVar711, W, 1
+	ADDWF CompTempVar708, F, 1
+	MOVF CompTempVar710+D'1', W, 1
+	ADDWFC CompTempVar709, F, 1
+	MOVF CompTempVar708, W, 1
 	MOVLB 0x00
 	MOVWF Process_Re_0000D_1_OutBuffer, 1
 	MOVLB 0x01
-	MOVF CompTempVar710, W, 1
+	MOVF CompTempVar709, W, 1
 	MOVLB 0x00
 	MOVWF Process_Re_0000D_1_OutBuffer+D'1', 1
 	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
@@ -1796,105 +1807,106 @@ label82
 	MOVLB 0x04
 	MOVWF gbl_bd0cntie, 1
 	MOVLW 0x03
-	MOVLB 0x00
+	MOVLB 0x01
 	CPFSLT Process_Re_0000D_1_Endpoint, 1
-	BRA	label83
+	BRA	label82
+	MOVLB 0x00
 	MOVF Process_Re_0000D_1_UEPArray+D'1', W, 1
 	MOVWF FSR0H
 	MOVF Process_Re_0000D_1_UEPArray, W, 1
+	MOVLB 0x01
 	ADDWF Process_Re_0000D_1_Endpoint, W, 1
 	MOVWF FSR0L
 	MOVLW 0x01
 	ANDWF INDF0, W
-	MOVLB 0x01
-	MOVWF CompTempVar720, 1
+	MOVWF CompTempVar719, 1
 	MOVLB 0x00
 	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
 	MOVWF FSR0H
 	MOVF Process_Re_0000D_1_OutBuffer, W, 1
 	MOVWF FSR0L
 	MOVLB 0x01
-	CLRF CompTempVar716, 1
-	MOVF CompTempVar716, W, 1
+	CLRF CompTempVar715, 1
+	MOVF CompTempVar715, W, 1
 	ADDWF FSR0L, F
-	MOVF CompTempVar720, W, 1
+	MOVF CompTempVar719, W, 1
 	MOVWF INDF0
 	MOVLW 0xC8
 	MOVLB 0x04
 	MOVWF gbl_bd0statie, 1
 	RETURN
-label83
+label82
 	BSF gbl_uep0,0
 	RETURN
-label84
+label83
 	BTFSS gbl_BufferCopy,5, 1
 	RETURN
 	MOVLB 0x04
 	MOVF gbl_bd0adrlie, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar721, 1
-	CLRF CompTempVar723+D'1', 1
-	CLRF CompTempVar724, 1
+	MOVWF CompTempVar720, 1
+	CLRF CompTempVar722+D'1', 1
+	CLRF CompTempVar723, 1
 	MOVLB 0x04
 	MOVF gbl_bd0adrhie, W, 1
 	MOVLB 0x01
-	MOVWF CompTempVar722, 1
-	MOVF CompTempVar724, W, 1
-	ADDWF CompTempVar721, F, 1
-	MOVF CompTempVar723+D'1', W, 1
-	ADDWFC CompTempVar722, F, 1
-	MOVF CompTempVar721, W, 1
+	MOVWF CompTempVar721, 1
+	MOVF CompTempVar723, W, 1
+	ADDWF CompTempVar720, F, 1
+	MOVF CompTempVar722+D'1', W, 1
+	ADDWFC CompTempVar721, F, 1
+	MOVF CompTempVar720, W, 1
 	MOVLB 0x00
 	MOVWF Process_Re_0000D_1_OutBuffer, 1
 	MOVLB 0x01
-	MOVF CompTempVar722, W, 1
+	MOVF CompTempVar721, W, 1
 	MOVLB 0x00
 	MOVWF Process_Re_0000D_1_OutBuffer+D'1', 1
 	MOVLW 0x21
 	CPFSEQ gbl_BufferCopy, 1
-	BRA	label85
-	BRA	label90
-label85
+	BRA	label84
+	BRA	label89
+label84
 	MOVLW 0xA1
 	CPFSEQ gbl_BufferCopy, 1
-	BRA	label86
-	BRA	label96
-label86
+	BRA	label85
+	BRA	label95
+label85
 	MOVLW 0x22
+	CPFSEQ gbl_BufferCopy, 1
+	BRA	label86
+	BRA	label100
+label86
+	MOVLW 0x23
 	CPFSEQ gbl_BufferCopy, 1
 	BRA	label87
 	BRA	label101
 label87
-	MOVLW 0x23
+	MOVLW 0xA2
 	CPFSEQ gbl_BufferCopy, 1
 	BRA	label88
 	BRA	label102
 label88
-	MOVLW 0xA2
-	CPFSEQ gbl_BufferCopy, 1
-	BRA	label89
-	BRA	label103
-label89
 	MOVLW 0xA3
 	CPFSEQ gbl_BufferCopy, 1
-	BRA	label105
 	BRA	label104
-label90
+	BRA	label103
+label89
 	MOVLW 0x0B
 	CPFSEQ gbl_BufferCopy+D'1', 1
-	BRA	label91
-	BRA	label93
-label91
+	BRA	label90
+	BRA	label92
+label90
 	MOVLW 0x09
 	CPFSEQ gbl_BufferCopy+D'1', 1
-	BRA	label92
+	BRA	label91
 	RETURN
-label92
+label91
 	MOVLW 0x0A
 	CPFSEQ gbl_BufferCopy+D'1', 1
-	BRA	label95
 	BRA	label94
-label93
+	BRA	label93
+label92
 	MOVF gbl_BufferCopy+D'2', W, 1
 	MOVWF gbl_USB_protocol, 1
 	MOVLB 0x04
@@ -1904,33 +1916,33 @@ label93
 	MOVLB 0x00
 	CLRF gbl_USB_dev_req, 1
 	RETURN
+label93
+	BSF gbl_uep0,0
+	RETURN
 label94
 	BSF gbl_uep0,0
 	RETURN
 label95
-	BSF gbl_uep0,0
-	RETURN
-label96
 	MOVLW 0x03
 	CPFSEQ gbl_BufferCopy+D'1', 1
+	BRA	label96
 	BRA	label97
-	BRA	label98
-label97
+label96
 	DECF gbl_BufferCopy+D'1', W, 1
 	BTFSC STATUS,Z
 	RETURN
 	MOVLW 0x02
 	CPFSEQ gbl_BufferCopy+D'1', 1
-	BRA	label100
 	BRA	label99
-label98
+	BRA	label98
+label97
 	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
 	MOVWF FSR0H
 	MOVF Process_Re_0000D_1_OutBuffer, W, 1
 	MOVWF FSR0L
 	MOVLB 0x01
-	CLRF CompTempVar727, 1
-	MOVF CompTempVar727, W, 1
+	CLRF CompTempVar726, 1
+	MOVF CompTempVar726, W, 1
 	ADDWF FSR0L, F
 	MOVLB 0x00
 	MOVF gbl_USB_protocol, W, 1
@@ -1940,6 +1952,9 @@ label98
 	MOVWF gbl_bd0cntie, 1
 	MOVLW 0xC8
 	MOVWF gbl_bd0statie, 1
+	RETURN
+label98
+	BSF gbl_uep0,0
 	RETURN
 label99
 	BSF gbl_uep0,0
@@ -1959,99 +1974,102 @@ label103
 label104
 	BSF gbl_uep0,0
 	RETURN
-label105
-	BSF gbl_uep0,0
-	RETURN
 ; } Process_Req function end
 
-	ORG 0x00000BCC
+	ORG 0x00000BF0
 Count_Erro_0000C
 ; { Count_Error ; function begin
 	BTFSS gbl_ueir,0
-	BRA	label106
+	BRA	label105
 	BTFSS gbl_ueie,0
-	BRA	label106
+	BRA	label105
 	MOVLB 0x00
 	INFSNZ gbl_USB_PID_ERR, F, 1
 	INCF gbl_USB_PID_ERR+D'1', F, 1
-label106
+label105
 	BTFSS gbl_ueir,1
-	BRA	label107
+	BRA	label106
 	BTFSS gbl_ueie,1
-	BRA	label107
+	BRA	label106
 	MOVLB 0x00
 	INFSNZ gbl_USB_CRC5_ERR, F, 1
 	INCF gbl_USB_CRC5_ERR+D'1', F, 1
-label107
+label106
 	BTFSS gbl_ueir,2
-	BRA	label108
+	BRA	label107
 	BTFSS gbl_ueie,2
-	BRA	label108
+	BRA	label107
 	MOVLB 0x00
 	INFSNZ gbl_USB_CRC16_ERR, F, 1
 	INCF gbl_USB_CRC16_ERR+D'1', F, 1
-label108
+label107
 	BTFSS gbl_ueir,3
-	BRA	label109
+	BRA	label108
 	BTFSS gbl_ueie,3
-	BRA	label109
+	BRA	label108
 	MOVLB 0x00
 	INFSNZ gbl_USB_DFN8_ERR, F, 1
 	INCF gbl_USB_DFN8_ERR+D'1', F, 1
-label109
+label108
 	BTFSS gbl_ueir,4
-	BRA	label110
+	BRA	label109
 	BTFSS gbl_ueie,4
-	BRA	label110
+	BRA	label109
 	MOVLB 0x00
 	INFSNZ gbl_USB_BTO_ERR, F, 1
 	INCF gbl_USB_BTO_ERR+D'1', F, 1
-label110
+label109
 	BTFSS gbl_ueir,7
-	BRA	label111
+	BRA	label110
 	BTFSS gbl_ueie,7
-	BRA	label111
+	BRA	label110
 	MOVLB 0x00
 	INFSNZ gbl_USB_BTS_ERR, F, 1
 	INCF gbl_USB_BTS_ERR+D'1', F, 1
-label111
+label110
 	CLRF gbl_ueir
 	BCF gbl_uir,1
 	RETURN
 ; } Count_Error function end
 
-	ORG 0x00000C26
+	ORG 0x00000C4A
+timer1Set_00000
+; { timer1Set ; function begin
+	CLRF gbl_iSec, 1
+	CLRF gbl_iMin, 1
+	CLRF gbl_bres, 1
+	CLRF gbl_bres+D'1', 1
+	BTFSC timer1Set_00000_arg_isOn,0, 1
+	BSF gbl_t1con,0
+	BTFSS timer1Set_00000_arg_isOn,0, 1
+	BCF gbl_t1con,0
+	RETURN
+; } timer1Set function end
+
+	ORG 0x00000C5C
 testButton_00000
 ; { testButton ; function begin
-	MOVLB 0x00
-	BTFSC CompGblVar48,1, 1
-	BRA	label112
-	CLRF testButton_00000_1_button__00010, 1
-	BSF CompGblVar48,1, 1
-label112
-	CLRF testButton_00000_1_pressed, 1
-	MOVF testButton_00000_1_button__00010, F, 1
 	BCF STATUS,C
-	RLCF testButton_00000_1_button__00010, F, 1
-	CALL read_butto_0000F
-	MOVF CompTempVarRet728, W, 1
-	IORWF testButton_00000_1_button__00010, F, 1
+	MOVLB 0x00
+	RLCF gbl_buttonState, F, 1
+	BTFSS gbl_portb,2
+	BSF gbl_buttonState,0, 1
 	MOVLW 0xC7
-	ANDWF testButton_00000_1_button__00010, W, 1
-	MOVWF CompTempVar730, 1
+	ANDWF gbl_buttonState, W, 1
+	MOVWF CompTempVar728, 1
 	MOVLW 0x07
-	CPFSEQ CompTempVar730, 1
-	BRA	label113
+	CPFSEQ CompTempVar728, 1
+	BRA	label111
+	SETF gbl_buttonState, 1
 	MOVLW 0x01
-	MOVWF testButton_00000_1_pressed, 1
-	SETF testButton_00000_1_button__00010, 1
-label113
-	MOVF testButton_00000_1_pressed, W, 1
-	MOVWF CompTempVarRet729, 1
+	MOVWF CompTempVarRet727, 1
+	RETURN
+label111
+	CLRF CompTempVarRet727, 1
 	RETURN
 ; } testButton function end
 
-	ORG 0x00000C58
+	ORG 0x00000C7E
 ServiceUSB_00000
 ; { ServiceUSB ; function begin
 	BTFSC gbl_uir,3
@@ -2065,66 +2083,63 @@ ServiceUSB_00000
 	RETURN
 ; } ServiceUSB function end
 
-	ORG 0x00000C72
+	ORG 0x00000C98
 PutEP1_00000
 ; { PutEP1 ; function begin
-	CLRF gbl_ddrb
 	MOVLW 0x80
 	MOVLB 0x04
 	ANDWF gbl_bd1statie, W, 1
+	MOVLB 0x01
+	MOVWF CompTempVar570, 1
+	MOVF CompTempVar570, F, 1
+	BNZ	label114
 	MOVLB 0x00
-	MOVWF CompTempVar571, 1
-	MOVF CompTempVar571, F, 1
-	BNZ	label116
 	MOVF PutEP1_00000_arg_bytes, W, 1
 	MOVLB 0x04
 	MOVWF gbl_bd1cntie, 1
 	MOVF gbl_bd1adrlie, W, 1
-	MOVLB 0x00
-	MOVWF PutEP1_00000_1_tobuffer, 1
 	MOVLB 0x01
-	CLRF CompTempVar574+D'1', 1
-	MOVLB 0x00
-	CLRF CompTempVar575, 1
+	MOVWF PutEP1_00000_1_tobuffer, 1
+	CLRF CompTempVar573+D'1', 1
+	CLRF CompTempVar574, 1
 	MOVLB 0x04
 	MOVF gbl_bd1adrhie, W, 1
-	MOVLB 0x00
-	MOVWF PutEP1_00000_1_tobuffer+D'1', 1
-	MOVF CompTempVar575, W, 1
-	ADDWF PutEP1_00000_1_tobuffer, F, 1
 	MOVLB 0x01
-	MOVF CompTempVar574+D'1', W, 1
-	MOVLB 0x00
+	MOVWF PutEP1_00000_1_tobuffer+D'1', 1
+	MOVF CompTempVar574, W, 1
+	ADDWF PutEP1_00000_1_tobuffer, F, 1
+	MOVF CompTempVar573+D'1', W, 1
 	ADDWFC PutEP1_00000_1_tobuffer+D'1', F, 1
+	MOVLB 0x00
 	CLRF PutEP1_00000_1_i, 1
-label114
+label112
 	MOVF PutEP1_00000_arg_bytes, W, 1
 	CPFSLT PutEP1_00000_1_i, 1
-	BRA	label115
+	BRA	label113
 	MOVF PutEP1_00000_arg_buffer+D'1', W, 1
 	MOVWF FSR0H
 	MOVF PutEP1_00000_arg_buffer, W, 1
 	MOVWF FSR0L
 	MOVF PutEP1_00000_1_i, W, 1
-	MOVWF CompTempVar579, 1
-	MOVF CompTempVar579, W, 1
+	MOVLB 0x01
+	MOVWF CompTempVar578, 1
+	MOVF CompTempVar578, W, 1
 	ADDWF FSR0L, F
 	MOVF INDF0, W
-	MOVLB 0x01
-	MOVWF CompTempVar580, 1
-	MOVLB 0x00
+	MOVWF CompTempVar579, 1
 	MOVF PutEP1_00000_1_tobuffer+D'1', W, 1
 	MOVWF FSR0H
 	MOVF PutEP1_00000_1_tobuffer, W, 1
+	MOVLB 0x00
 	ADDWF PutEP1_00000_1_i, W, 1
 	MOVWF FSR0L
 	MOVLB 0x01
-	MOVF CompTempVar580, W, 1
+	MOVF CompTempVar579, W, 1
 	MOVWF INDF0
 	MOVLB 0x00
 	INCF PutEP1_00000_1_i, F, 1
-	BRA	label114
-label115
+	BRA	label112
+label113
 	MOVLW 0x40
 	MOVLB 0x04
 	ANDWF gbl_bd1statie, F, 1
@@ -2133,15 +2148,15 @@ label115
 	MOVLW 0x88
 	XORWF gbl_bd1statie, F, 1
 	MOVLW 0x01
-	MOVLB 0x00
-	MOVWF CompTempVarRet570, 1
+	MOVLB 0x01
+	MOVWF CompTempVarRet569, 1
 	RETURN
-label116
-	CLRF CompTempVarRet570, 1
+label114
+	CLRF CompTempVarRet569, 1
 	RETURN
 ; } PutEP1 function end
 
-	ORG 0x00000CFA
+	ORG 0x00000D1A
 InitUSB_00000
 ; { InitUSB ; function begin
 	BSF gbl_ucfg,2
@@ -2171,25 +2186,20 @@ InitUSB_00000
 	CLRF gbl_USB_BTO_ERR+D'1', 1
 	CLRF gbl_USB_BTS_ERR, 1
 	CLRF gbl_USB_BTS_ERR+D'1', 1
-	BSF gbl_intcon,7
-	BSF gbl_intcon,6
 	RETURN
 ; } InitUSB function end
 
-	ORG 0x00000D36
+	ORG 0x00000D52
 main
 ; { main ; function begin
 	CLRF gbl_trisa
 	CLRF gbl_porta
-	MOVLW 0x04
+	MOVLW 0x05
 	MOVWF gbl_trisb
 	CLRF gbl_portb
 	CLRF gbl_trisc
 	CLRF gbl_portc
-	BCF gbl_intcon2,7
 	CLRF gbl_adcon0
-	MOVLW 0x0F
-	MOVWF gbl_adcon1
 	MOVLB 0x01
 	SETF main_1_tablex, 1
 	SETF main_1_tablex+D'1', 1
@@ -2218,7 +2228,6 @@ main
 	MOVWF main_1_tabley+D'9', 1
 	CLRF main_1_tabley+D'10', 1
 	SETF main_1_tabley+D'11', 1
-	CLRF gbl_ddrb
 	MOVLW 0x0E
 	MOVLB 0x00
 	MOVWF delay_ms_00000_arg_del, 1
@@ -2229,42 +2238,52 @@ main
 	MOVWF main_1_i, 1
 	CLRF main_1_j, 1
 	CLRF main_1_j+D'1', 1
-	MOVLW 0xC7
-	MOVWF gbl_t0con
-label117
-	BTFSS gbl_intcon,2
-	BRA	label121
+	BCF gbl_t0con,5
+	BCF gbl_t0con,3
+	BSF gbl_intcon,5
+	BSF gbl_t1con,5
+	BCF gbl_t1con,4
+	BSF gbl_pie1,0
+	BSF gbl_intcon,7
+	BSF gbl_intcon,6
+label115
+	MOVLB 0x00
+	BTFSS gbl_cTask,1, 1
+	BRA	label120
 	CALL testButton_00000
-	MOVF CompTempVarRet729, F, 1
-	BZ	label119
+	MOVF CompTempVarRet727, F, 1
+	BZ	label117
 	BTFSC gbl_isJiggling,0, 1
-	BRA	label118
+	BRA	label116
+	BSF timer1Set_00000_arg_isOn,0, 1
+	CALL timer1Set_00000
 	BSF gbl_isJiggling,0, 1
 	BSF gbl_portb,1
-	BRA	label119
-label118
+	BRA	label117
+label116
+	BCF timer1Set_00000_arg_isOn,0, 1
+	CALL timer1Set_00000
 	BCF gbl_isJiggling,0, 1
 	BCF gbl_portb,1
-label119
-	BCF gbl_intcon,2
+label117
 	CALL ServiceUSB_00000
 	MOVLB 0x00
 	BTFSS gbl_isJiggling,0, 1
-	BRA	label121
+	BRA	label119
 	MOVLW 0x09
 	CPFSGT main_1_i, 1
-	BRA	label120
+	BRA	label118
 	CLRF main_1_i, 1
 	INFSNZ main_1_j, F, 1
 	INCF main_1_j+D'1', F, 1
 	MOVLW 0x0C
 	CPFSEQ main_1_j, 1
-	BRA	label120
+	BRA	label118
 	MOVF main_1_j+D'1', W, 1
-	BNZ	label120
+	BNZ	label118
 	CLRF main_1_j, 1
 	CLRF main_1_j+D'1', 1
-label120
+label118
 	LFSR 0x00,  main_1_tablex
 	MOVF FSR0L, W
 	MOVF main_1_j, W, 1
@@ -2277,15 +2296,33 @@ label120
 	ADDWF FSR0L, F
 	MOVF INDF0, W
 	MOVWF main_1_buffer+D'2', 1
+label119
+	BCF gbl_cTask,1, 1
+label120
+	BTFSS gbl_cTask,2, 1
+	BRA	label123
+	MOVLW 0x1E
+	CPFSLT gbl_iMin, 1
+	BRA	label121
+	BRA	label122
 label121
+	BCF timer1Set_00000_arg_isOn,0, 1
+	CALL timer1Set_00000
+	BTFSS gbl_isJiggling,0, 1
+	BRA	label122
+	BCF gbl_isJiggling,0, 1
+	BCF gbl_portb,1
+label122
+	BCF gbl_cTask,2, 1
+label123
 	MOVLW 0x03
 	ANDWF gbl_USWSTAT, W, 1
-	MOVWF CompTempVar737, 1
+	MOVWF CompTempVar734, 1
 	MOVLW 0x03
-	CPFSEQ CompTempVar737, 1
-	BRA	label117
+	CPFSEQ CompTempVar734, 1
+	BRA	label115
 	BTFSS gbl_isJiggling,0, 1
-	BRA	label117
+	BRA	label115
 	MOVLW 0x03
 	MOVWF PutEP1_00000_arg_bytes, 1
 	MOVLW HIGH(main_1_buffer+D'0')
@@ -2293,18 +2330,23 @@ label121
 	MOVLW LOW(main_1_buffer+D'0')
 	MOVWF PutEP1_00000_arg_buffer, 1
 	CALL PutEP1_00000
-	MOVF CompTempVarRet570, F, 1
-	BTFSS STATUS,Z
+	MOVF CompTempVarRet569, F, 1
+	BZ	label124
+	MOVLB 0x00
 	INCF main_1_i, F, 1
-	BRA	label117
+label124
+	BRA	label115
 ; } main function end
 
-	ORG 0x00000E26
+	ORG 0x00000E72
 _startup
 	MOVLB 0x00
-	BCF CompGblVar48,1, 1
 	BCF gbl_isJiggling,0, 1
-	SETF gbl_buttonState, 1
+	CLRF gbl_buttonState, 1
+	CLRF gbl_bres, 1
+	CLRF gbl_bres+D'1', 1
+	CLRF gbl_iSec, 1
+	CLRF gbl_iMin, 1
 	MOVLW 0x08
 	MOVLB 0x04
 	MOVWF gbl_bd0cntoe, 1
@@ -2405,10 +2447,10 @@ _startup
 	MOVLW 0x50
 	MOVWF gbl_String2+D'2', 1
 	CLRF gbl_String2+D'3', 1
-	MOVLW 0x69
+	MOVLW 0x49
 	MOVWF gbl_String2+D'4', 1
 	CLRF gbl_String2+D'5', 1
-	MOVLW 0x63
+	MOVLW 0x43
 	MOVWF gbl_String2+D'6', 1
 	CLRF gbl_String2+D'7', 1
 	MOVLW 0x31
@@ -2679,37 +2721,34 @@ _startup
 	MOVWF gbl_HIDDescriptor+D'7', 1
 	CLRF gbl_HIDDescriptor+D'8', 1
 	GOTO	main
-	ORG 0x0000111C
+	ORG 0x0000116E
 interrupt
 ; { interrupt ; function begin
 	MOVFF FSR0H,  Int1Context
 	MOVFF FSR0L,  Int1Context+D'1'
 	MOVFF PRODH,  Int1Context+D'2'
 	MOVFF PRODL,  Int1Context+D'3'
-	BTFSS gbl_pie2,5
-	BRA	label128
 	BTFSS gbl_pir2,5
-	BRA	label128
+	BRA	label131
 	BTFSS gbl_uir,2
-	BRA	label123
-	BTFSS gbl_uie,2
-	BRA	label123
+	BRA	label126
+	BTFSC gbl_uie,2
 	CALL USBActivit_0000A
-label123
+label126
 	BTFSS gbl_uir,0
-	BRA	label124
+	BRA	label127
 	BTFSS gbl_uie,0
-	BRA	label124
+	BRA	label127
 	CALL USBReset_00000
-label124
+label127
 	BTFSS gbl_uir,3
-	BRA	label127
+	BRA	label130
 	BTFSS gbl_uie,3
-	BRA	label127
+	BRA	label130
 	MOVLW 0x05
 	MOVLB 0x00
 	CPFSEQ gbl_USB_dev_req, 1
-	BRA	label126
+	BRA	label129
 	CLRF gbl_USB_dev_req, 1
 	CLRF gbl_USB_Curr_Config, 1
 	MOVF gbl_USB_address_pending, W, 1
@@ -2718,18 +2757,54 @@ label124
 	MOVWF gbl_uie
 	MOVLW 0x00
 	CPFSGT gbl_USB_address_pending, 1
-	BRA	label125
+	BRA	label128
 	MOVLW 0x02
 	MOVWF gbl_USWSTAT, 1
-	BRA	label126
-label125
+	BRA	label129
+label128
 	MOVLW 0x01
 	MOVWF gbl_USWSTAT, 1
-label126
+label129
 	BCF gbl_uir,3
-label127
+label130
 	BCF gbl_pir2,5
-label128
+label131
+	BTFSS gbl_intcon,2
+	BRA	label132
+	MOVLB 0x00
+	BSF gbl_cTask,1, 1
+	BCF gbl_intcon,2
+label132
+	BTFSS gbl_pir1,0
+	BRA	label135
+	MOVLW 0xAB
+	MOVLB 0x00
+	ADDWF gbl_bres, F, 1
+	MOVLW 0x0A
+	ADDWFC gbl_bres+D'1', F, 1
+	MOVLW 0xF4
+	SUBWF gbl_bres+D'1', W, 1
+	BNZ	label133
+	MOVLW 0x24
+	CPFSLT gbl_bres, 1
+	BRA	label133
+	BRA	label134
+label133
+	BNC	label134
+	MOVLW 0x24
+	SUBWF gbl_bres, F, 1
+	MOVLW 0xF4
+	SUBWFB gbl_bres+D'1', F, 1
+	INCF gbl_iSec, F, 1
+	MOVLW 0x3C
+	CPFSEQ gbl_iSec, 1
+	BRA	label134
+	INCF gbl_iMin, F, 1
+	CLRF gbl_iSec, 1
+	BSF gbl_cTask,2, 1
+label134
+	BCF gbl_pir1,0
+label135
 	MOVFF Int1Context+D'3',  PRODL
 	MOVFF Int1Context+D'2',  PRODH
 	MOVFF Int1Context+D'1',  FSR0L

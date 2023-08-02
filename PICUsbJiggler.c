@@ -92,8 +92,8 @@ struct BufferStruct  BufferCopy;
 struct BufferDescriptorEntry BDTCopy; 
 
 //string descriptors in unicode format
-const char String0 []  = {4, STRING, 9, 4};
-const char String1 [] = {20, STRING,
+const char String0[] = {4, STRING, 9, 4};
+const char String1[] = {20, STRING,
 'M',0,
 'i',0,
 'c',0,
@@ -105,8 +105,8 @@ const char String1 [] = {20, STRING,
 'p',0};
 const char String2[] = {48,STRING,
 'P',0,
-'i',0,
-'c',0,
+'I',0,
+'C',0,
 '1',0,
 '8',0,
 'F',0,
@@ -226,7 +226,7 @@ unsigned char PutEP1(unsigned char bytes, signed char *buffer) {
 	signed char * tobuffer;
 	unsigned char i;
 
-	ddrb = 0; //setup b for output
+	//ddrb = 0; //setup b for output
 
 	if ((bd1statie & 0x80) == 0) { /* do we own the buffer? UOWN=0*/
 		bd1cntie = bytes;
@@ -353,8 +353,6 @@ void InitUSB() {
 	USB_DFN8_ERR = 0;
 	USB_BTO_ERR = 0;
 	USB_BTS_ERR = 0;
-	intcon.GIE = 1; // Enable GIE & PEIE
-	intcon.PEIE = 1;
 }
 
 /***********************************************************************************
@@ -833,7 +831,8 @@ void ServiceUSB() {
  Interrupt service routine. Branch off to different interrupts
 ***********************************************************************************/
 void interrupt(void) {
-    if (pie2.USBIE && pir2.USBIF) {
+    // Handle USB interrupt
+    if (pir2.USBIF) {
 		if (uir.ACTVIF && uie.ACTVIE) // WAS IT AN ACTIVITY WAKEUP?
 			USBActivity();
 		
@@ -856,26 +855,51 @@ void interrupt(void) {
 		}
 		pir2.USBIF = 0;	 // Clear USB interrupt flag
 	}
+	// Handle Timer0 interrupt
+	if (intcon.TMR0IF) {
+		cTask.TASK_TIMER0 = 1;
+		intcon.TMR0IF = 0; // Clear the timer interrupt flag
+	}
+	// Handle Timer1 interrupt
+	if (pir1.TMR1IF) {
+		// Bresenham's Algorithm zero-error
+		// uses 1 variable; unsigned 16 bit int bres
+        // gets here every TMR1 int
+        // TMR1 will interrupt every 43.691ms (43691us) with a 24MHz clock and prescaler of 1/4
+        // Count 1 second intervals
+        bres += 2731; // add (43691/16) ticks to bresenham total
+        if (bres >= 62500) { // if reached 1 second (1000000/16)
+            bres -= 62500; // subtract 1 second, retain error
+            // Tick 1 second
+            iSec++;
+            if (iSec == 60) {
+                // Tick minutes
+                iMin++;
+                iSec = 0;
+                cTask.TASK_TIMER1_MIN = 1;
+            }
+        }
+        pir1.TMR1IF = 0; // Clear the timer interrupt flag
+	}
 }
 
-char read_button() {
-	if (!BUTTON)
-		return 1;
-	else
-		return 0;
+void timer1Set(bit isOn) {
+	iSec = 0;
+	iMin = 0;
+	bres = 0;
+	t1con.TMR1ON = isOn;
 }
 
 char testButton() {
-    static char button_history = 0;
-    char pressed = 0;    
- 
-    button_history = button_history << 1;
-    button_history |= read_button();
-    if ((button_history & 0b11000111) == 0b00000111) { 
-        pressed = 1;
-        button_history = 0b11111111;
+    buttonState <<= 1;
+    if (!BUTTON)
+		buttonState.0 = 1; // Set the last bit
+    // Test if button state is set three times, ignoring the three times before (bouncing period)
+    if ((buttonState & 0b11000111) == 0b00000111) { 
+        buttonState = 0b11111111;
+        return 1;
     }
-    return pressed;
+    return 0;
 }
 
 /***********************************************************************************
@@ -886,16 +910,18 @@ void main() {
     // IO ports setup
     trisa = 0x00; // all ouptuts
     porta = 0x00; // set to off
-    trisb = 0x04; // RB2 input
+    trisb = 0x05; // RB0, RB2 input
     portb = 0x00; // set to off
     trisc = 0x00; // all ouptuts
     portc = 0x00; // set to off
 
-    intcon2.RBPU = 0; // Port B pull-ups enabled
+    //intcon2.RBPU = 0; // Port B pull-ups enabled
+    //intcon2.INTEDG2 = 0;
+    //intcon3.INT2IE = 1;
 
     // ADC setup
     adcon0 = 0x00; //  ADC off
-    adcon1 = 0x0F; // All digital I/O
+    //adcon1 = 0x0F; // All digital I/O - no need to set adcon1 if CONFIG3H<1> is cleared
 
 	unsigned char i;
 	unsigned short j;
@@ -905,7 +931,6 @@ void main() {
 	// The table array contains the directional data for simulated mouse movement to 
 	// form the infinity symbol (i.e. figure 8). Movements are relative to the 
 	// previous position. 
-	ddrb = 0;
 	delay_ms(14);
 
 	InitUSB(); // allow SIE to come online before beginning USB initialization
@@ -913,25 +938,50 @@ void main() {
 	i = 10;
 	j = 0;
     
-    //set up timer0 as 8 bit timer with prescaler of 256 and enable
+    // Set up timer0 as 8 bit timer with prescaler of 256 and enable
     // 4/24* 10^6 * 256 * 256 = 10.9 msec timer overflow
-    t0con = 11000111b; 
+    // t0con defaults to 1111 1111
+    //t0con.T0PS2 = 1;
+    //t0con.T0PS1 = 1;
+    //t0con.T0PS0 = 1;
+    //t0con.T08BIT = 1;
+    //t0con.TMR0ON = 1;
+    t0con.T0CS = 0; // internal source
+    t0con.PSA = 0; // timer0 clock comes from prescaler output
+    // Enable timer0 to interrupt
+    intcon.TMR0IE = 1;
+    
+    // Set up timer1 as a second/minute timer, used to timeout the jiggle function
+    // t1con defaults to 0000 0000
+	//t1con.T1SYNC = 1;    // bit 2 Timer1 External Clock Input Synchronization Control bit...1 = Do not synchronize external clock input
+	//t1con.TMR1CS = 0;    // bit 1 Timer1 Clock Source Select bit...0 = Internal clock (FOSC/4)
+	//t1con.TMR1ON = 1;    // bit 0 enables timer
+    // Prescaler 1/4
+    t1con.T1CKPS1 = 1;   // bits 5-4  Prescaler Rate Select bits
+	t1con.T1CKPS0 = 0;   // bit 4
+	// Enable timer1 to interrupt
+	pie1.TMR1IE = 1;
+	
+	// Enable GIE & PEIE
+	intcon.GIE = 1;
+	intcon.PEIE = 1;
     
     while (1) {
 		// Poll all functions every 10.9ms
-		if (intcon.TMR0IF) { 
+		if (cTask.TASK_TIMER0) { 
 			if (testButton()) {
 				if (!isJiggling) {
+					timer1Set(1); // Turn on timer
                     isJiggling = 1;
                     LED = 1;
                 } else {
+					timer1Set(0); // Turn off timer
                     isJiggling = 0;
                     LED = 0;
                 }
             }
 			
-			intcon.TMR0IF = 0;   // clear the timer flag
-			ServiceUSB();	// Service USB functions
+			ServiceUSB(); // Service USB functions
 			if (isJiggling) {
                 // send same data 10 times (100 msec)
                 if (i > 9) {
@@ -945,6 +995,18 @@ void main() {
                 buffer[1] = tablex[j];	// X vector 
                 buffer[2] = tabley[j];	// Y vector
             }
+            cTask.TASK_TIMER0 = 0;
+        }
+        if (cTask.TASK_TIMER1_MIN) { 
+			// See if minutes reached timeout
+			if (iMin >= JIGGLE_TIMEOUT) {
+				timer1Set(0); // Turn off timer
+				if (isJiggling) {
+					isJiggling = 0;
+					LED = 0;
+				}
+			}
+			cTask.TASK_TIMER1_MIN = 0;
         }
         if (ConfiguredUSB()) {
             // Wait until device is configured before using EP1.  If Endpoints 1 or 2 are used before

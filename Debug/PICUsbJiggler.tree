@@ -1,13 +1,14 @@
 // SourceBoost Linker Call Tree Dump
 
 _startup:"NoSourceFile",line = 0
-{  main:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 884
+{  main:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 908
   {    delay_ms:"NoSourceFile",line = 0
     {    }    InitUSB:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 330
-    {    }    testButton:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 868
-    {      read_button:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 861
-      {      }    }    ServiceUSB:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 818
-    {      Process_Req:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 400
+    {    }    testButton:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 893
+    {    }    timer1Set:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 886
+    {    }    timer1Set:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 886
+    {    }    ServiceUSB:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 816
+    {      Process_Req:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 398
       {        CopyDescriptorToEP0:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 307
         {        }        CopyDescriptorToEP0:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 307
         {        }        CopyDescriptorToEP0:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 307
@@ -16,11 +17,12 @@ _startup:"NoSourceFile",line = 0
         {        }        CopyDescriptorToEP0:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 307
         {        }        CopyDescriptorToEP0:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 307
         {        }        CopyDescriptorToEP0:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 307
-        {        }      }      USBStall:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 365
-      {      }      Count_Error:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 373
+        {        }      }      USBStall:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 363
+      {      }      Count_Error:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 371
       {      }      USBSleep:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 252
-      {      }    }    PutEP1:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 225
-    {    }  }}interrupt:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 835
+      {      }    }    timer1Set:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 886
+    {    }    PutEP1:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 225
+    {    }  }}interrupt:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 833
 {  USBActivity:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 264
   {  }  USBReset:"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 278
   {  }}
