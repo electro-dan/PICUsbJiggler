@@ -1,0 +1,4235 @@
+;/////////////////////////////////////////////////////////////////////////////////
+;// Code Generator: BoostC Compiler - http://www.sourceboost.com
+;// Version       : 8.01
+;// License Type  : Pro License
+;// Limitations   : PIC18 max code size:Unlimited, max RAM banks:Unlimited
+;/////////////////////////////////////////////////////////////////////////////////
+
+#ifndef _PICUSBJIGGLER_H_
+#define _PICUSBJIGGLER_H_
+
+#define LED (portb.1) // LED pin
+#define BUTTON (portb.2) // Button (switch) pin
+
+#define JIGGLE_TIMEOUT 30 // How many minutes to jiggle for
+
+bit isJiggling = 0; // When 0, device does nothing
+0E72  0100      	MOVLB 0x00
+0E74  91E7      	BCF gbl_isJiggling,0, 1
+
+char buttonState = 0; // Records state every 10.9ms
+0E76  6BE8      	CLRF gbl_buttonState, 1
+
+
+unsigned int bres = 0;
+0E78  6BCB      	CLRF gbl_bres, 1
+0E7A  6BCC      	CLRF gbl_bres+D'1', 1
+
+char iSec = 0;
+0E7C  6BE9      	CLRF gbl_iSec, 1
+
+char iMin = 0;
+0E7E  6BEA      	CLRF gbl_iMin, 1
+
+
+// Tasks
+char cTask;
+#define TASK_TIMER0 1
+#define TASK_TIMER1_MIN 2
+
+
+// Variables originally from usb_defs.h
+#define TRUE   1
+#define FALSE  0
+#define NULL   0
+
+#define DEBUG_SERIAL 	1
+#define NUM_CONFIGURATIONS      1
+#define NUM_INTERFACES          1
+
+#define ConfiguredUSB() ((USWSTAT&0x3) == CONFIG_STATE)
+#define STALL_EP0    	set_bit(uep0,EPSTALL)
+#define STALL_PID_EP0IN 	bd0statie = 0xCC  /* REQUEST ERROR */
+#define Send_0Len_pkt	bd0cntie = 0;	bd0statie = 0xc8;	USB_dev_req = NULL
+
+#define POWERED_STATE	        0x00
+#define DEFAULT_STATE	        0x01
+#define ADDRESS_STATE	        0x02
+#define CONFIG_STATE	        0x03
+#define ENDPT_DISABLED	        0x10  // For 18F2455 with handshaking
+#define ENDPT_IN_ONLY	        0x12
+#define ENDPT_OUT_ONLY	        0x14
+#define ENDPT_CONTROL	        0x16	/* enable for in, out and setup */
+#define ENDPT_NON_CONTROL		0x1E	/* enable for in, and out */
+#define TOKEN_OUT	(0x01<<2)
+#define TOKEN_ACK	(0x02<<2)
+#define TOKEN_IN	(0x09<<2)
+#define TOKEN_SETUP	(0x0D<<2)
+#define CLEAR_FEATURE	        0x01
+#define GET_CONFIGURATION	0x08
+#define GET_DESCRIPTOR	        0x06
+#define GET_INTERFACE	        0x0A
+#define GET_STATUS	        0x00
+#define SET_ADDRESS	        0x05
+#define SET_CONFIGURATION	0x09
+#define SET_FEATURE	        0x03
+#define SET_INTERFACE	        0x0B
+#define HID_GET_REPORT		0x01
+#define	HID_GET_IDLE		0x02
+#define	HID_GET_PROTOCOL	0x03
+#define HID_SET_REPORT		0x09
+#define HID_SET_IDLE		0x0A
+#define HID_SET_PROTOCOL	0x0B
+#define HID_REPORT_DESCRIPTOR 	0x22
+#define HID_DESCRIPTOR 			0x21
+#define VEND_SET_MEMORY	        0x80
+#define HOSTTODEVICE            0x00
+#define HOSTTOINTERFACE         0x01
+#define HOSTTOENDPOINT          0x02
+#define DEVICETOHOST            0x80
+#define INTERFACETOHOST         0x81
+#define ENDPOINTTOHOST          0x82
+#define EP0OUT                  0
+#define EP0IN                   1
+#define EP1OUT                  2
+#define EP1IN                   3
+#define EP2OUT                  4
+#define EP2IN                   5
+
+// Descriptor Types
+#define DEVICE                  1
+#define CONFIGURATION           2
+#define STRING                  3
+#define INTERFACE               4
+#define ENDPOINT                5
+#define CS_INTERFACE            0x24
+#define CS_ENDPOINT             0x25
+
+// BUFFER REGISTERS
+// NAMING CONVENTION bdNXXXXDP  where 
+// N is endpoint# = 0,1,2,3
+// XXXX is the type: stat, cnt, adrl or adrh
+// D is direction=i,o (in,out) 
+// P is pingpong=e,o  (even,odd)
+/* non-pingpong buffering, 8 byte buffers*/
+char bd0statoe@0x400;
+char bd0cntoe@0x401 = 8;
+0E80  0E08      	MOVLW 0x08
+0E82  0104      	MOVLB 0x04
+0E84  6F01      	MOVWF gbl_bd0cntoe, 1
+
+char bd0adrloe@0x402 = 0x00;
+0E86  6B02      	CLRF gbl_bd0adrloe, 1
+
+char bd0adrhoe@0x403 = 0x05;
+0E88  0E05      	MOVLW 0x05
+0E8A  6F03      	MOVWF gbl_bd0adrhoe, 1
+
+
+char bd0statie@0x404;
+char bd0cntie@0x405 = 8;
+0E8C  0E08      	MOVLW 0x08
+0E8E  6F05      	MOVWF gbl_bd0cntie, 1
+
+char bd0adrlie@0x406 = 0x80;
+0E90  0E80      	MOVLW 0x80
+0E92  6F06      	MOVWF gbl_bd0adrlie, 1
+
+char bd0adrhie@0x407 = 0x05;
+0E94  0E05      	MOVLW 0x05
+0E96  6F07      	MOVWF gbl_bd0adrhie, 1
+
+
+char bd1statoe@0x408;
+char bd1cntoe@0x409 = 8;
+0E98  0E08      	MOVLW 0x08
+0E9A  6F09      	MOVWF gbl_bd1cntoe, 1
+
+char bd1adrloe@0x40A = 0x00;
+0E9C  6B0A      	CLRF gbl_bd1adrloe, 1
+
+char bd1adrhoe@0x40B = 0x06;
+0E9E  0E06      	MOVLW 0x06
+0EA0  6F0B      	MOVWF gbl_bd1adrhoe, 1
+
+
+char bd1statie@0x40C;
+char bd1cntie@0x40D = 8;
+0EA2  0E08      	MOVLW 0x08
+0EA4  6F0D      	MOVWF gbl_bd1cntie, 1
+
+char bd1adrlie@0x40E = 0x80;
+0EA6  0E80      	MOVLW 0x80
+0EA8  6F0E      	MOVWF gbl_bd1adrlie, 1
+
+char bd1adrhie@0x40F = 0x06;
+0EAA  0E06      	MOVLW 0x06
+0EAC  6F0F      	MOVWF gbl_bd1adrhie, 1
+
+
+char bd2statoe@0x410;
+char bd2cntoe@0x411 = 8;
+0EAE  0E08      	MOVLW 0x08
+0EB0  6F11      	MOVWF gbl_bd2cntoe, 1
+
+char bd2adrloe@0x412 = 0x00;
+0EB2  6B12      	CLRF gbl_bd2adrloe, 1
+
+char bd2adrhoe@0x413 = 0x07;
+0EB4  0E07      	MOVLW 0x07
+0EB6  6F13      	MOVWF gbl_bd2adrhoe, 1
+
+
+char bd2statie@0x414;
+char bd2cntie@0x415 = 8;
+0EB8  0E08      	MOVLW 0x08
+0EBA  6F15      	MOVWF gbl_bd2cntie, 1
+
+char bd2adrlie@0x416 = 0x80;
+0EBC  0E80      	MOVLW 0x80
+0EBE  6F16      	MOVWF gbl_bd2adrlie, 1
+
+char bd2adrhie@0x417 = 0x07;
+0EC0  0E07      	MOVLW 0x07
+0EC2  6F17      	MOVWF gbl_bd2adrhie, 1
+
+
+
+#endif //_PICUSBJIGGLER_H_
+
+//###########################################################################
+// filename:		PICUsbJiggler.c
+//##########################################################################
+// The Jiggle Mouse - Program causes the mouse pointer to move in a figure 8
+//	(infinity) shape.
+// Modified by electro-dan to switch on/off.
+//	Also modified to work with PIC18F2550 with 4MHz crystal
+//	Serial debugging removed
+//  CC indicates changes from original Circuit Cellar source
+//
+// Author:	                Copyright 2005 by Robert Lang
+// Building on the work of: Reston Condit
+//                          Dan Butler
+//                          Andrew Smallridge
+//
+// Modified Version - electro-dan August 2023
+// ED indicates change from V1.1
+// Based on
+// Revision:		1.1
+// Date:		January 2005
+// Compiled using:	BOOSTC 1.93
+//
+// Revision History:
+//   1.0 Initial development and conversion to BOOSTC and PIC18F2455 based on
+//       program "Mouse in a circle" example
+//   1.1 Added serial port for debugging messages
+//
+// Comments:
+// usb buffers are defined in .h
+
+//################################################################################
+//
+// include files:
+#include <system.h>
+#include "PICUsbJiggler.h"
+
+// Configuration registers
+// FOSC3:FOSC0 = HSPLL PLLDIV2:PLLDIV0 = 0, CPUDIV1:CPUDIV0 = 10 (/4)
+// ED changed CONFIG1L, CONFIG1H, CONFIG2L to allow 4MHz crystal
+#pragma DATA    _CONFIG1L, 00110000b // USBDIV on, CPU divide by 4, PLL direct
+#pragma DATA    _CONFIG1H, 00001110b // disable oscillator switchover, disable failsafe clock monitor, HSPLL
+#pragma DATA    _CONFIG2L, 00111110b // USB voltage regulator enabled, brownout set for 2.1 volts, hardware brownout only, PWRT enabled
+#pragma DATA    _CONFIG2H, 00011110b // Watchdog timer disabled
+#pragma DATA    _CONFIG3H, 00000000b // MCLR disabled, RB4:RB0 digital on POR
+#pragma DATA    _CONFIG4L, 10000000b // Debug off, extended instructions disabled, LVP disabled, disable stack full/underflow reset
+#pragma DATA    _CONFIG5L, 00001111b // Read code protection off
+#pragma DATA    _CONFIG5H, 11000000b // Read EEPROM and boot block protection off
+#pragma DATA    _CONFIG6L, 00001111b // Write code protection off
+#pragma DATA    _CONFIG6H, 11100000b // Write EEPROM, boot block and config register protection off
+#pragma DATA    _CONFIG7L, 00001111b // Table read protection off
+#pragma DATA    _CONFIG7H, 01000000b // Boot block table read protection off
+
+// 4 MHz crystal but the system clock is 24MHz due to CPUDIV configuration
+#pragma CLOCK_FREQ 24000000
+
+unsigned char USB_IsIdle;
+unsigned char USB_status_device;
+unsigned char USB_Curr_Config;
+unsigned char USB_address_pending;
+unsigned char USB_dev_req;
+unsigned char USB_Interface [3];
+unsigned char USB_USTAT;
+unsigned char ACTIVE_BUF;
+unsigned char USB_protocol;
+unsigned char USWSTAT;
+unsigned int USB_PID_ERR   = 0; //error counters
+0EC4  0100      	MOVLB 0x00
+0EC6  6BCD      	CLRF gbl_USB_PID_ERR, 1
+0EC8  6BCE      	CLRF gbl_USB_PID_ERR+D'1', 1
+
+unsigned int USB_CRC5_ERR  = 0;
+0ECA  6BCF      	CLRF gbl_USB_CRC5_ERR, 1
+0ECC  6BD0      	CLRF gbl_USB_CRC5_ERR+D'1', 1
+
+unsigned int USB_CRC16_ERR = 0;
+0ECE  6BD1      	CLRF gbl_USB_CRC16_ERR, 1
+0ED0  6BD2      	CLRF gbl_USB_CRC16_ERR+D'1', 1
+
+unsigned int USB_DFN8_ERR  = 0;
+0ED2  6BD3      	CLRF gbl_USB_DFN8_ERR, 1
+0ED4  6BD4      	CLRF gbl_USB_DFN8_ERR+D'1', 1
+
+unsigned int USB_BTO_ERR   = 0;
+0ED6  6BD5      	CLRF gbl_USB_BTO_ERR, 1
+0ED8  6BD6      	CLRF gbl_USB_BTO_ERR+D'1', 1
+
+unsigned int USB_WRT_ERR   = 0;
+0EDA  6BD7      	CLRF gbl_USB_WRT_ERR, 1
+0EDC  6BD8      	CLRF gbl_USB_WRT_ERR+D'1', 1
+
+unsigned int USB_OWN_ERR   = 0;
+0EDE  6BD9      	CLRF gbl_USB_OWN_ERR, 1
+0EE0  6BDA      	CLRF gbl_USB_OWN_ERR+D'1', 1
+
+unsigned int USB_BTS_ERR   = 0;
+0EE2  6BDB      	CLRF gbl_USB_BTS_ERR, 1
+0EE4  6BDC      	CLRF gbl_USB_BTS_ERR+D'1', 1
+
+
+unsigned char * EP0_start;  //ep0 pointers modified from CC
+unsigned char * EP0_end;    // modified from CC
+unsigned char EP0_maxLength;
+
+struct BufferDescriptorEntry { // buffer descriptor
+    unsigned char EPStat;
+    unsigned char bytes;
+    unsigned int address;
+};
+
+struct BufferStruct { // buffer structure
+    unsigned char bmRequestType;
+    unsigned char bRequest;
+    unsigned int   wValue;
+    unsigned int   wIndex;
+    unsigned int   wLength;
+};
+
+struct BufferDescriptorEntry * BDT= (struct BufferDescriptorEntry *)0x400;
+0EE6  6BE1      	CLRF gbl_BDT, 1
+0EE8  0E04      	MOVLW 0x04
+0EEA  6FE2      	MOVWF gbl_BDT+D'1', 1
+
+struct BufferStruct *  Buffer;  //define Buffer as pointer to a BufferStruct
+struct BufferStruct  BufferCopy;
+struct BufferDescriptorEntry BDTCopy;
+
+//string descriptors in unicode format
+const char String0[] = {4, STRING, 9, 4};
+0EEC  0E04      	MOVLW 0x04
+0EEE  6FC7      	MOVWF gbl_String0, 1
+0EF0  0E03      	MOVLW 0x03
+0EF2  6FC8      	MOVWF gbl_String0+D'1', 1
+0EF4  0E09      	MOVLW 0x09
+0EF6  6FC9      	MOVWF gbl_String0+D'2', 1
+0EF8  0E04      	MOVLW 0x04
+0EFA  6FCA      	MOVWF gbl_String0+D'3', 1
+
+const char String1[] = {20, STRING,
+0EFC  0E14      	MOVLW 0x14
+0EFE  6F90      	MOVWF gbl_String1, 1
+0F00  0E03      	MOVLW 0x03
+0F02  6F91      	MOVWF gbl_String1+D'1', 1
+
+'M',0,
+0F04  0E4D      	MOVLW 0x4D
+0F06  6F92      	MOVWF gbl_String1+D'2', 1
+0F08  6B93      	CLRF gbl_String1+D'3', 1
+
+'i',0,
+0F0A  0E69      	MOVLW 0x69
+0F0C  6F94      	MOVWF gbl_String1+D'4', 1
+0F0E  6B95      	CLRF gbl_String1+D'5', 1
+
+'c',0,
+0F10  0E63      	MOVLW 0x63
+0F12  6F96      	MOVWF gbl_String1+D'6', 1
+0F14  6B97      	CLRF gbl_String1+D'7', 1
+
+'r',0,
+0F16  0E72      	MOVLW 0x72
+0F18  6F98      	MOVWF gbl_String1+D'8', 1
+0F1A  6B99      	CLRF gbl_String1+D'9', 1
+
+'o',0,
+0F1C  0E6F      	MOVLW 0x6F
+0F1E  6F9A      	MOVWF gbl_String1+D'10', 1
+0F20  6B9B      	CLRF gbl_String1+D'11', 1
+
+'c',0,
+0F22  0E63      	MOVLW 0x63
+0F24  6F9C      	MOVWF gbl_String1+D'12', 1
+0F26  6B9D      	CLRF gbl_String1+D'13', 1
+
+'h',0,
+0F28  0E68      	MOVLW 0x68
+0F2A  6F9E      	MOVWF gbl_String1+D'14', 1
+0F2C  6B9F      	CLRF gbl_String1+D'15', 1
+
+'i',0,
+0F2E  0E69      	MOVLW 0x69
+0F30  6FA0      	MOVWF gbl_String1+D'16', 1
+0F32  6BA1      	CLRF gbl_String1+D'17', 1
+
+'p',0};
+0F34  0E70      	MOVLW 0x70
+0F36  6FA2      	MOVWF gbl_String1+D'18', 1
+0F38  6BA3      	CLRF gbl_String1+D'19', 1
+
+// ED changed name
+const char String2[] = {48,STRING,
+0F3A  0E30      	MOVLW 0x30
+0F3C  6F60      	MOVWF gbl_String2, 1
+0F3E  0E03      	MOVLW 0x03
+0F40  6F61      	MOVWF gbl_String2+D'1', 1
+
+'P',0,
+0F42  0E50      	MOVLW 0x50
+0F44  6F62      	MOVWF gbl_String2+D'2', 1
+0F46  6B63      	CLRF gbl_String2+D'3', 1
+
+'I',0,
+0F48  0E49      	MOVLW 0x49
+0F4A  6F64      	MOVWF gbl_String2+D'4', 1
+0F4C  6B65      	CLRF gbl_String2+D'5', 1
+
+'C',0,
+0F4E  0E43      	MOVLW 0x43
+0F50  6F66      	MOVWF gbl_String2+D'6', 1
+0F52  6B67      	CLRF gbl_String2+D'7', 1
+
+'1',0,
+0F54  0E31      	MOVLW 0x31
+0F56  6F68      	MOVWF gbl_String2+D'8', 1
+0F58  6B69      	CLRF gbl_String2+D'9', 1
+
+'8',0,
+0F5A  0E38      	MOVLW 0x38
+0F5C  6F6A      	MOVWF gbl_String2+D'10', 1
+0F5E  6B6B      	CLRF gbl_String2+D'11', 1
+
+'F',0,
+0F60  0E46      	MOVLW 0x46
+0F62  6F6C      	MOVWF gbl_String2+D'12', 1
+0F64  6B6D      	CLRF gbl_String2+D'13', 1
+
+'2',0,
+0F66  0E32      	MOVLW 0x32
+0F68  6F6E      	MOVWF gbl_String2+D'14', 1
+0F6A  6B6F      	CLRF gbl_String2+D'15', 1
+
+'5',0,
+0F6C  0E35      	MOVLW 0x35
+0F6E  6F70      	MOVWF gbl_String2+D'16', 1
+0F70  6B71      	CLRF gbl_String2+D'17', 1
+
+'5',0,
+0F72  0E35      	MOVLW 0x35
+0F74  6F72      	MOVWF gbl_String2+D'18', 1
+0F76  6B73      	CLRF gbl_String2+D'19', 1
+
+'0',0,
+0F78  0E30      	MOVLW 0x30
+0F7A  6F74      	MOVWF gbl_String2+D'20', 1
+0F7C  6B75      	CLRF gbl_String2+D'21', 1
+
+' ',0,
+0F7E  0E20      	MOVLW 0x20
+0F80  6F76      	MOVWF gbl_String2+D'22', 1
+0F82  6B77      	CLRF gbl_String2+D'23', 1
+
+'J',0,
+0F84  0E4A      	MOVLW 0x4A
+0F86  6F78      	MOVWF gbl_String2+D'24', 1
+0F88  6B79      	CLRF gbl_String2+D'25', 1
+
+'i',0,
+0F8A  0E69      	MOVLW 0x69
+0F8C  6F7A      	MOVWF gbl_String2+D'26', 1
+0F8E  6B7B      	CLRF gbl_String2+D'27', 1
+
+'g',0,
+0F90  0E67      	MOVLW 0x67
+0F92  6F7C      	MOVWF gbl_String2+D'28', 1
+0F94  6B7D      	CLRF gbl_String2+D'29', 1
+
+'g',0,
+0F96  0E67      	MOVLW 0x67
+0F98  6F7E      	MOVWF gbl_String2+D'30', 1
+0F9A  6B7F      	CLRF gbl_String2+D'31', 1
+
+'l',0,
+0F9C  0E6C      	MOVLW 0x6C
+0F9E  6F80      	MOVWF gbl_String2+D'32', 1
+0FA0  6B81      	CLRF gbl_String2+D'33', 1
+
+'e',0,
+0FA2  0E65      	MOVLW 0x65
+0FA4  6F82      	MOVWF gbl_String2+D'34', 1
+0FA6  6B83      	CLRF gbl_String2+D'35', 1
+
+' ',0,
+0FA8  0E20      	MOVLW 0x20
+0FAA  6F84      	MOVWF gbl_String2+D'36', 1
+0FAC  6B85      	CLRF gbl_String2+D'37', 1
+
+'M',0,
+0FAE  0E4D      	MOVLW 0x4D
+0FB0  6F86      	MOVWF gbl_String2+D'38', 1
+0FB2  6B87      	CLRF gbl_String2+D'39', 1
+
+'o',0,
+0FB4  0E6F      	MOVLW 0x6F
+0FB6  6F88      	MOVWF gbl_String2+D'40', 1
+0FB8  6B89      	CLRF gbl_String2+D'41', 1
+
+'u',0,
+0FBA  0E75      	MOVLW 0x75
+0FBC  6F8A      	MOVWF gbl_String2+D'42', 1
+0FBE  6B8B      	CLRF gbl_String2+D'43', 1
+
+'s',0,
+0FC0  0E73      	MOVLW 0x73
+0FC2  6F8C      	MOVWF gbl_String2+D'44', 1
+0FC4  6B8D      	CLRF gbl_String2+D'45', 1
+
+'e',0};
+0FC6  0E65      	MOVLW 0x65
+0FC8  6F8E      	MOVWF gbl_String2+D'46', 1
+0FCA  6B8F      	CLRF gbl_String2+D'47', 1
+
+
+// Report descriptor prepared by USB DESCRIPTOR TOOL
+// http://www.usb.org/developers/hidpage/#Descriptor_Tool
+const char ReportDescriptor1[] = {
+   0x05, 0x01,                    //  USAGE_PAGE (Generic Desktop)
+0FCC  0E05      	MOVLW 0x05
+0FCE  6E05      	MOVWF gbl_ReportDescriptor1
+0FD0  0E01      	MOVLW 0x01
+0FD2  6E06      	MOVWF gbl_ReportDescriptor1+D'1'
+
+   0x09, 0x02,                    //  USAGE (Mouse)
+0FD4  0E09      	MOVLW 0x09
+0FD6  6E07      	MOVWF gbl_ReportDescriptor1+D'2'
+0FD8  0E02      	MOVLW 0x02
+0FDA  6E08      	MOVWF gbl_ReportDescriptor1+D'3'
+
+   0xa1, 0x01,                    //  COLLECTION (Application)
+0FDC  0EA1      	MOVLW 0xA1
+0FDE  6E09      	MOVWF gbl_ReportDescriptor1+D'4'
+0FE0  0E01      	MOVLW 0x01
+0FE2  6E0A      	MOVWF gbl_ReportDescriptor1+D'5'
+
+   0x09, 0x01,                    //  USAGE (Pointer)
+0FE4  0E09      	MOVLW 0x09
+0FE6  6E0B      	MOVWF gbl_ReportDescriptor1+D'6'
+0FE8  0E01      	MOVLW 0x01
+0FEA  6E0C      	MOVWF gbl_ReportDescriptor1+D'7'
+
+   0xa1, 0x00,                    //  COLLECTION (Physical)
+0FEC  0EA1      	MOVLW 0xA1
+0FEE  6E0D      	MOVWF gbl_ReportDescriptor1+D'8'
+0FF0  6A0E      	CLRF gbl_ReportDescriptor1+D'9'
+
+   0x05, 0x09,                    //  USAGE_PAGE (Button)
+0FF2  0E05      	MOVLW 0x05
+0FF4  6E0F      	MOVWF gbl_ReportDescriptor1+D'10'
+0FF6  0E09      	MOVLW 0x09
+0FF8  6E10      	MOVWF gbl_ReportDescriptor1+D'11'
+
+   0x19, 0x01,                    //  USAGE_MINIMUM (Button 1)
+0FFA  0E19      	MOVLW 0x19
+0FFC  6E11      	MOVWF gbl_ReportDescriptor1+D'12'
+0FFE  0E01      	MOVLW 0x01
+1000  6E12      	MOVWF gbl_ReportDescriptor1+D'13'
+
+   0x29, 0x03,                    //  USAGE_MAXIMUM (Button 3)
+1002  0E29      	MOVLW 0x29
+1004  6E13      	MOVWF gbl_ReportDescriptor1+D'14'
+1006  0E03      	MOVLW 0x03
+1008  6E14      	MOVWF gbl_ReportDescriptor1+D'15'
+
+   0x15, 0x00,                    //  LOGICAL_MINIMUM (0)
+100A  0E15      	MOVLW 0x15
+100C  6E15      	MOVWF gbl_ReportDescriptor1+D'16'
+100E  6A16      	CLRF gbl_ReportDescriptor1+D'17'
+
+   0x25, 0x01,                    //  LOGICAL_MAXIMUM (1)
+1010  0E25      	MOVLW 0x25
+1012  6E17      	MOVWF gbl_ReportDescriptor1+D'18'
+1014  0E01      	MOVLW 0x01
+1016  6E18      	MOVWF gbl_ReportDescriptor1+D'19'
+
+   0x95, 0x03,                    //  REPORT_COUNT (3)
+1018  0E95      	MOVLW 0x95
+101A  6E19      	MOVWF gbl_ReportDescriptor1+D'20'
+101C  0E03      	MOVLW 0x03
+101E  6E1A      	MOVWF gbl_ReportDescriptor1+D'21'
+
+   0x75, 0x01,                    //  REPORT_SIZE (1)
+1020  0E75      	MOVLW 0x75
+1022  6E1B      	MOVWF gbl_ReportDescriptor1+D'22'
+1024  0E01      	MOVLW 0x01
+1026  6E1C      	MOVWF gbl_ReportDescriptor1+D'23'
+
+   0x81, 0x02,                    //  INPUT (Data,Var,Abs)
+1028  0E81      	MOVLW 0x81
+102A  6E1D      	MOVWF gbl_ReportDescriptor1+D'24'
+102C  0E02      	MOVLW 0x02
+102E  6E1E      	MOVWF gbl_ReportDescriptor1+D'25'
+
+   0x95, 0x01,                    //  REPORT_COUNT (1)
+1030  0E95      	MOVLW 0x95
+1032  6E1F      	MOVWF gbl_ReportDescriptor1+D'26'
+1034  0E01      	MOVLW 0x01
+1036  6E20      	MOVWF gbl_ReportDescriptor1+D'27'
+
+   0x75, 0x05,                    //  REPORT_SIZE (5)
+1038  0E75      	MOVLW 0x75
+103A  6E21      	MOVWF gbl_ReportDescriptor1+D'28'
+103C  0E05      	MOVLW 0x05
+103E  6E22      	MOVWF gbl_ReportDescriptor1+D'29'
+
+   0x81, 0x01,                    //  INPUT (Cnst,Ary,Abs)
+1040  0E81      	MOVLW 0x81
+1042  6E23      	MOVWF gbl_ReportDescriptor1+D'30'
+1044  0E01      	MOVLW 0x01
+1046  6E24      	MOVWF gbl_ReportDescriptor1+D'31'
+
+   0x05, 0x01,                    //  USAGE_PAGE (Generic Desktop)
+1048  0E05      	MOVLW 0x05
+104A  6E25      	MOVWF gbl_ReportDescriptor1+D'32'
+104C  0E01      	MOVLW 0x01
+104E  6E26      	MOVWF gbl_ReportDescriptor1+D'33'
+
+   0x09, 0x30,                    //  USAGE (X)
+1050  0E09      	MOVLW 0x09
+1052  6E27      	MOVWF gbl_ReportDescriptor1+D'34'
+1054  0E30      	MOVLW 0x30
+1056  6E28      	MOVWF gbl_ReportDescriptor1+D'35'
+
+   0x09, 0x31,                    //  USAGE (Y)
+1058  0E09      	MOVLW 0x09
+105A  6E29      	MOVWF gbl_ReportDescriptor1+D'36'
+105C  0E31      	MOVLW 0x31
+105E  6E2A      	MOVWF gbl_ReportDescriptor1+D'37'
+
+   0x15, 0x81,                    //  LOGICAL_MINIMUM (-127)
+1060  0E15      	MOVLW 0x15
+1062  6E2B      	MOVWF gbl_ReportDescriptor1+D'38'
+1064  0E81      	MOVLW 0x81
+1066  6E2C      	MOVWF gbl_ReportDescriptor1+D'39'
+
+   0x25, 0x7f,                    //  LOGICAL_MAXIMUM (127)
+1068  0E25      	MOVLW 0x25
+106A  6E2D      	MOVWF gbl_ReportDescriptor1+D'40'
+106C  0E7F      	MOVLW 0x7F
+106E  6E2E      	MOVWF gbl_ReportDescriptor1+D'41'
+
+   0x75, 0x08,                    //  REPORT_SIZE (8)
+1070  0E75      	MOVLW 0x75
+1072  6E2F      	MOVWF gbl_ReportDescriptor1+D'42'
+1074  0E08      	MOVLW 0x08
+1076  6E30      	MOVWF gbl_ReportDescriptor1+D'43'
+
+   0x95, 0x02,                    //  REPORT_COUNT (2)
+1078  0E95      	MOVLW 0x95
+107A  6E31      	MOVWF gbl_ReportDescriptor1+D'44'
+107C  0E02      	MOVLW 0x02
+107E  6E32      	MOVWF gbl_ReportDescriptor1+D'45'
+
+   0x81, 0x06,                    //  INPUT (Data,Var,Rel)
+1080  0E81      	MOVLW 0x81
+1082  6E33      	MOVWF gbl_ReportDescriptor1+D'46'
+1084  0E06      	MOVLW 0x06
+1086  6E34      	MOVWF gbl_ReportDescriptor1+D'47'
+
+   0xc0,                          //  END_COLLECTION
+1088  0EC0      	MOVLW 0xC0
+108A  6E35      	MOVWF gbl_ReportDescriptor1+D'48'
+
+   0xc0                           //  END_COLLECTION
+108C  0EC0      	MOVLW 0xC0
+108E  6E36      	MOVWF gbl_ReportDescriptor1+D'49'
+
+};
+
+const char DeviceDescriptor [] = {
+    0x12, // 18 bytes long
+1090  0E12      	MOVLW 0x12
+1092  6FA4      	MOVWF gbl_DeviceDescriptor, 1
+
+    DEVICE, // descriptor type
+1094  0E01      	MOVLW 0x01
+1096  6FA5      	MOVWF gbl_DeviceDescriptor+D'1', 1
+
+    0x10, 0x01, // USB specification release (1.10)
+1098  0E10      	MOVLW 0x10
+109A  6FA6      	MOVWF gbl_DeviceDescriptor+D'2', 1
+109C  0E01      	MOVLW 0x01
+109E  6FA7      	MOVWF gbl_DeviceDescriptor+D'3', 1
+
+    0x00, // class code
+10A0  6BA8      	CLRF gbl_DeviceDescriptor+D'4', 1
+
+    0x00, // subclass code
+10A2  6BA9      	CLRF gbl_DeviceDescriptor+D'5', 1
+
+    0x00, // protocol code
+10A4  6BAA      	CLRF gbl_DeviceDescriptor+D'6', 1
+
+    0x08, // maximum packet size
+10A6  0E08      	MOVLW 0x08
+10A8  6FAB      	MOVWF gbl_DeviceDescriptor+D'7', 1
+
+    0xD8,0x04, // vendor id (04d8) microchip
+10AA  0ED8      	MOVLW 0xD8
+10AC  6FAC      	MOVWF gbl_DeviceDescriptor+D'8', 1
+10AE  0E04      	MOVLW 0x04
+10B0  6FAD      	MOVWF gbl_DeviceDescriptor+D'9', 1
+
+    0x09,0x00, //product id (0009)
+10B2  0E09      	MOVLW 0x09
+10B4  6FAE      	MOVWF gbl_DeviceDescriptor+D'10', 1
+10B6  6BAF      	CLRF gbl_DeviceDescriptor+D'11', 1
+
+    0x00,0x02, // device release number 2.00
+10B8  6BB0      	CLRF gbl_DeviceDescriptor+D'12', 1
+10BA  0E02      	MOVLW 0x02
+10BC  6FB1      	MOVWF gbl_DeviceDescriptor+D'13', 1
+
+    0x01, // index to string that describes vendor
+10BE  0E01      	MOVLW 0x01
+10C0  6FB2      	MOVWF gbl_DeviceDescriptor+D'14', 1
+
+    0x02, // index to string that describes product
+10C2  0E02      	MOVLW 0x02
+10C4  6FB3      	MOVWF gbl_DeviceDescriptor+D'15', 1
+
+    0x00, // index to string that describes serial number (none)
+10C6  6BB4      	CLRF gbl_DeviceDescriptor+D'16', 1
+
+    0x01  // number of possible configurations
+10C8  0E01      	MOVLW 0x01
+10CA  6FB5      	MOVWF gbl_DeviceDescriptor+D'17', 1
+
+};
+
+//CONFIG DESCRIPTOR ORDER CORRESPONDS TO HID 1.0 OR LATER
+const char ConfigDescriptor [] = {
+    0x09, // 9 bytes long
+10CC  0E09      	MOVLW 0x09
+10CE  6E37      	MOVWF gbl_ConfigDescriptor
+
+    CONFIGURATION, // descriptor type
+10D0  0E02      	MOVLW 0x02
+10D2  6E38      	MOVWF gbl_ConfigDescriptor+D'1'
+
+    0x22, 0x00, // total length of config, interface, HID and endpoint descriptors
+10D4  0E22      	MOVLW 0x22
+10D6  6E39      	MOVWF gbl_ConfigDescriptor+D'2'
+10D8  6A3A      	CLRF gbl_ConfigDescriptor+D'3'
+
+    0x01, // number of interfaces
+10DA  0E01      	MOVLW 0x01
+10DC  6E3B      	MOVWF gbl_ConfigDescriptor+D'4'
+
+    0x01, // configuration number
+10DE  0E01      	MOVLW 0x01
+10E0  6E3C      	MOVWF gbl_ConfigDescriptor+D'5'
+
+    0x00, // index to string that describes configuration (none)
+10E2  6A3D      	CLRF gbl_ConfigDescriptor+D'6'
+
+    0xA0, // configuration attributes , remote wakeup
+10E4  0EA0      	MOVLW 0xA0
+10E6  6E3E      	MOVWF gbl_ConfigDescriptor+D'7'
+
+    0x32, // current consumption in 2mA units (100 mA)
+10E8  0E32      	MOVLW 0x32
+10EA  6E3F      	MOVWF gbl_ConfigDescriptor+D'8'
+
+    /* Interface Descriptor  */      0x09,// 9 bytes long
+10EC  0E09      	MOVLW 0x09
+10EE  6E40      	MOVWF gbl_ConfigDescriptor+D'9'
+
+    INTERFACE, // descriptor type
+10F0  0E04      	MOVLW 0x04
+10F2  6E41      	MOVWF gbl_ConfigDescriptor+D'10'
+
+    0x00, // number of this interface (zerp based)
+10F4  6A42      	CLRF gbl_ConfigDescriptor+D'11'
+
+    0x00, // alternate setting (none)
+10F6  6A43      	CLRF gbl_ConfigDescriptor+D'12'
+
+    0x01, // number of endpoints used by interface
+10F8  0E01      	MOVLW 0x01
+10FA  6E44      	MOVWF gbl_ConfigDescriptor+D'13'
+
+    0x03, // class code
+10FC  0E03      	MOVLW 0x03
+10FE  6E45      	MOVWF gbl_ConfigDescriptor+D'14'
+
+    0x01, // subclass code
+1100  0E01      	MOVLW 0x01
+1102  6E46      	MOVWF gbl_ConfigDescriptor+D'15'
+
+    0x02, // protocol
+1104  0E02      	MOVLW 0x02
+1106  6E47      	MOVWF gbl_ConfigDescriptor+D'16'
+
+    0x00, // index to string that describes endpoint (none)
+1108  6A48      	CLRF gbl_ConfigDescriptor+D'17'
+
+    /* HID descriptor described above */
+    0x09, 0x21, 0x10, 0x01, 0x00, 0x01, 0x22, sizeof(ReportDescriptor1), sizeof(ReportDescriptor1)>>8,
+110A  0E09      	MOVLW 0x09
+110C  6E49      	MOVWF gbl_ConfigDescriptor+D'18'
+110E  0E21      	MOVLW 0x21
+1110  6E4A      	MOVWF gbl_ConfigDescriptor+D'19'
+1112  0E10      	MOVLW 0x10
+1114  6E4B      	MOVWF gbl_ConfigDescriptor+D'20'
+1116  0E01      	MOVLW 0x01
+1118  6E4C      	MOVWF gbl_ConfigDescriptor+D'21'
+111A  6A4D      	CLRF gbl_ConfigDescriptor+D'22'
+111C  0E01      	MOVLW 0x01
+111E  6E4E      	MOVWF gbl_ConfigDescriptor+D'23'
+1120  0E22      	MOVLW 0x22
+1122  6E4F      	MOVWF gbl_ConfigDescriptor+D'24'
+1124  0E32      	MOVLW 0x32
+1126  6E50      	MOVWF gbl_ConfigDescriptor+D'25'
+1128  6A51      	CLRF gbl_ConfigDescriptor+D'26'
+
+    /* Endpoint 1 descriptor */       0x07, // 7 bytes long
+112A  0E07      	MOVLW 0x07
+112C  6E52      	MOVWF gbl_ConfigDescriptor+D'27'
+
+    ENDPOINT, // descriptor type
+112E  0E05      	MOVLW 0x05
+1130  6E53      	MOVWF gbl_ConfigDescriptor+D'28'
+
+    0x81, // endpoint characteristics (IN endpoint)
+1132  0E81      	MOVLW 0x81
+1134  6E54      	MOVWF gbl_ConfigDescriptor+D'29'
+
+    0x03, // endpoint attributes  (interrupt)
+1136  0E03      	MOVLW 0x03
+1138  6E55      	MOVWF gbl_ConfigDescriptor+D'30'
+
+    0x03, 0x00, // max packet size (HID 3 byte report)
+113A  0E03      	MOVLW 0x03
+113C  6E56      	MOVWF gbl_ConfigDescriptor+D'31'
+113E  6A57      	CLRF gbl_ConfigDescriptor+D'32'
+
+    0x0A //polling interval in 1 msec increments (10)
+1140  0E0A      	MOVLW 0x0A
+1142  6E58      	MOVWF gbl_ConfigDescriptor+D'33'
+
+};
+
+const unsigned int ReportDescrSize = sizeof(ReportDescriptor1);
+1144  0E32      	MOVLW 0x32
+1146  6FE5      	MOVWF gbl_ReportDescrSize, 1
+1148  6BE6      	CLRF gbl_ReportDescrSize+D'1', 1
+
+const char  HIDDescriptor [] =    {
+    0x09, // 9 bytes long
+114A  0E09      	MOVLW 0x09
+114C  6FB6      	MOVWF gbl_HIDDescriptor, 1
+
+    0x21, // descriptor type, HID=21
+114E  0E21      	MOVLW 0x21
+1150  6FB7      	MOVWF gbl_HIDDescriptor+D'1', 1
+
+    0x10, 0x01,  // HUD class version 1.10
+1152  0E10      	MOVLW 0x10
+1154  6FB8      	MOVWF gbl_HIDDescriptor+D'2', 1
+1156  0E01      	MOVLW 0x01
+1158  6FB9      	MOVWF gbl_HIDDescriptor+D'3', 1
+
+    0x00, // country code (none)
+115A  6BBA      	CLRF gbl_HIDDescriptor+D'4', 1
+
+    0x01, // Number of HID class descriptors
+115C  0E01      	MOVLW 0x01
+115E  6FBB      	MOVWF gbl_HIDDescriptor+D'5', 1
+
+    0x22, // Type of class descriptor (report)
+1160  0E22      	MOVLW 0x22
+1162  6FBC      	MOVWF gbl_HIDDescriptor+D'6', 1
+
+    sizeof(ReportDescriptor1), sizeof(ReportDescriptor1)>>8  // Size of report descriptor
+1164  0E32      	MOVLW 0x32
+1166  6FBD      	MOVWF gbl_HIDDescriptor+D'7', 1
+1168  6BBE      	CLRF gbl_HIDDescriptor+D'8', 1
+
+};
+
+/***********************************************************************************
+ PutEP1
+ Tests the EP1 IN OWNS bit.  If there is a buffer available to us, your buffer is
+ copied and turned over to the SIE for transmission on the next IN transfer and
+ returns TRUE (1).  If the buffer is not available, FALSE is returned (0).
+***********************************************************************************/
+unsigned char PutEP1(unsigned char bytes, signed char *buffer) {
+
+    signed char * tobuffer;
+    unsigned char i;
+
+    // ED: Removed this as I want a pin on portb to stay as an input
+    //ddrb = 0; //setup b for output
+
+    if ((bd1statie & 0x80) == 0) { /* do we own the buffer? UOWN=0*/
+0C98  0E80      	MOVLW 0x80
+0C9A  0104      	MOVLB 0x04
+0C9C  150C      	ANDWF gbl_bd1statie, W, 1
+0C9E  0101      	MOVLB 0x01
+0CA0  6F1A      	MOVWF CompTempVar570, 1
+0CA2  531A      	MOVF CompTempVar570, F, 1
+0CA4  E138      	BNZ	label114
+0D16            label114
+
+        bd1cntie = bytes;
+0CA6  0100      	MOVLB 0x00
+0CA8  51FC      	MOVF PutEP1_00000_arg_bytes, W, 1
+0CAA  0104      	MOVLB 0x04
+0CAC  6F0D      	MOVWF gbl_bd1cntie, 1
+
+        tobuffer = (signed char *) ((unsigned int)bd1adrlie + (unsigned int)(bd1adrhie <<8));
+0CAE  510E      	MOVF gbl_bd1adrlie, W, 1
+0CB0  0101      	MOVLB 0x01
+0CB2  6F18      	MOVWF PutEP1_00000_1_tobuffer, 1
+0CB4  6B1C      	CLRF CompTempVar573+D'1', 1
+0CB6  6B1D      	CLRF CompTempVar574, 1
+0CB8  0104      	MOVLB 0x04
+0CBA  510F      	MOVF gbl_bd1adrhie, W, 1
+0CBC  0101      	MOVLB 0x01
+0CBE  6F19      	MOVWF PutEP1_00000_1_tobuffer+D'1', 1
+0CC0  511D      	MOVF CompTempVar574, W, 1
+0CC2  2718      	ADDWF PutEP1_00000_1_tobuffer, F, 1
+0CC4  511C      	MOVF CompTempVar573+D'1', W, 1
+0CC6  2319      	ADDWFC PutEP1_00000_1_tobuffer+D'1', F, 1
+
+
+        for (i = 0; i < bytes; i++) {
+0CC8  0100      	MOVLB 0x00
+0CCA  6BFF      	CLRF PutEP1_00000_1_i, 1
+0CCC            label112
+0CCC  51FC      	MOVF PutEP1_00000_arg_bytes, W, 1
+0CCE  61FF      	CPFSLT PutEP1_00000_1_i, 1
+0CD0  D017      	BRA	label113
+0CFA  0100      	MOVLB 0x00
+0CFC  2BFF      	INCF PutEP1_00000_1_i, F, 1
+0CFE  D7E6      	BRA	label112
+0D00            label113
+
+            tobuffer[i] = buffer[i];
+0CD2  51FE      	MOVF PutEP1_00000_arg_buffer+D'1', W, 1
+0CD4  6EEA      	MOVWF FSR0H
+0CD6  51FD      	MOVF PutEP1_00000_arg_buffer, W, 1
+0CD8  6EE9      	MOVWF FSR0L
+0CDA  51FF      	MOVF PutEP1_00000_1_i, W, 1
+0CDC  0101      	MOVLB 0x01
+0CDE  6F1B      	MOVWF CompTempVar578, 1
+0CE0  511B      	MOVF CompTempVar578, W, 1
+0CE2  26E9      	ADDWF FSR0L, F
+0CE4  50EF      	MOVF INDF0, W
+0CE6  6F1C      	MOVWF CompTempVar579, 1
+0CE8  5119      	MOVF PutEP1_00000_1_tobuffer+D'1', W, 1
+0CEA  6EEA      	MOVWF FSR0H
+0CEC  5118      	MOVF PutEP1_00000_1_tobuffer, W, 1
+0CEE  0100      	MOVLB 0x00
+0CF0  25FF      	ADDWF PutEP1_00000_1_i, W, 1
+0CF2  6EE9      	MOVWF FSR0L
+0CF4  0101      	MOVLB 0x01
+0CF6  511C      	MOVF CompTempVar579, W, 1
+0CF8  6EEF      	MOVWF INDF0
+
+        }
+
+        bd1statie &= 0x40; /* save only the Data 1/0 bit */
+0D00  0E40      	MOVLW 0x40
+0D02  0104      	MOVLB 0x04
+0D04  170C      	ANDWF gbl_bd1statie, F, 1
+
+        bd1statie ^= 0x40; /* toggle Data 0/1 bit */
+0D06  0E40      	MOVLW 0x40
+0D08  1B0C      	XORWF gbl_bd1statie, F, 1
+
+        bd1statie ^= 0x88; /* release buffer */
+0D0A  0E88      	MOVLW 0x88
+0D0C  1B0C      	XORWF gbl_bd1statie, F, 1
+
+        return TRUE;
+0D0E  0E01      	MOVLW 0x01
+0D10  0101      	MOVLB 0x01
+0D12  6F1B      	MOVWF CompTempVarRet569, 1
+
+    }
+    return FALSE;	/* Buffer not available, return false */
+0D16  6B1B      	CLRF CompTempVarRet569, 1
+
+}
+0D14  0012      	RETURN
+0D18  0012      	RETURN
+
+
+/***********************************************************************************
+ Enable Wakeup on interupt and Activity interrupt then put the device to sleep to
+ save power.  Activity on the D+/D- lines will set the ACTIVITY interrupt, waking up
+ the part.
+***********************************************************************************/
+void USBSleep() {
+
+    uie.ACTVIE = 1; // enable activity interrupt
+0138  8469      	BSF gbl_uie,2
+
+    uie.IDLEIE = 0; //disable idle interrupt
+013A  9869      	BCF gbl_uie,4
+
+    ucon.SUSPND	= 1; // put in suspend mode
+013C  826D      	BSF gbl_ucon,1
+
+    USB_IsIdle = 1; // mark device as idle
+013E  0E01      	MOVLW 0x01
+0140  0100      	MOVLB 0x00
+0142  6FEC      	MOVWF gbl_USB_IsIdle, 1
+
+}
+0144  0012      	RETURN
+
+
+/***********************************************************************************
+ Service the Activity Interrupt.  This is only enabled when the device is put to
+ sleep as a result of inactivity on the bus.  This code wakes up the part, disables
+ the activity interrupt and reenables the idle interrupt.
+***********************************************************************************/
+void USBActivity() {
+
+    uir.ACTVIF = 0;
+00A6  9468      	BCF gbl_uir,2
+
+    uie.ACTVIE = 0;
+00A8  9469      	BCF gbl_uie,2
+
+    ucon.SUSPND = 0; //normal operation
+00AA  926D      	BCF gbl_ucon,1
+
+    USB_IsIdle = 0;
+00AC  0100      	MOVLB 0x00
+00AE  6BEC      	CLRF gbl_USB_IsIdle, 1
+
+}
+00B0  0012      	RETURN
+
+
+/***********************************************************************************
+ USB Reset interrupt triggered (SE0)
+ initialize the Buffer Descriptor Table,
+ Transition to the DEFAULT state,
+ Set address to 0
+ Enable the USB
+***********************************************************************************/
+void USBReset() {
+
+    // ED changed how register bits are set for my own clarity
+    USB_Curr_Config = 0;
+0074  0100      	MOVLB 0x00
+0076  6BEE      	CLRF gbl_USB_Curr_Config, 1
+
+    USB_IsIdle = 0;
+0078  6BEC      	CLRF gbl_USB_IsIdle, 1
+
+    uir.TRNIF = 0; // clear TOK_DNE bit in uir 4 times to
+007A  9668      	BCF gbl_uir,3
+
+    uir.TRNIF = 0; // clear out the USTAT FIFO.  See Microchip
+007C  9668      	BCF gbl_uir,3
+
+    uir.TRNIF = 0; // 18F2455 data sheet.
+007E  9668      	BCF gbl_uir,3
+
+    uir.TRNIF = 0;
+0080  9668      	BCF gbl_uir,3
+
+    bd0cntoe = 8; //set up for 8 byte buffer
+0082  0E08      	MOVLW 0x08
+0084  0104      	MOVLB 0x04
+0086  6F01      	MOVWF gbl_bd0cntoe, 1
+
+    bd0statoe = 0x88;	// EP0 Out buffer (USB OWNS)
+0088  0E88      	MOVLW 0x88
+008A  6F00      	MOVWF gbl_bd0statoe, 1
+
+    bd0statie = 0x08;    // EP0 In buffer (MCU OWNS)
+008C  0E08      	MOVLW 0x08
+008E  6F04      	MOVWF gbl_bd0statie, 1
+
+    uaddr = 0; // clear address
+0090  6A6E      	CLRF gbl_uaddr
+
+    uir = 0; // clear USB interrupt flag
+0092  6A68      	CLRF gbl_uir
+
+    uie	= 00000101b; // enable reset and activity interrupt
+0094  0E05      	MOVLW 0x05
+0096  6E69      	MOVWF gbl_uie
+
+    uep0 = ENDPT_CONTROL;
+0098  0E16      	MOVLW 0x16
+009A  6E70      	MOVWF gbl_uep0
+
+    USWSTAT = DEFAULT_STATE;
+009C  0E01      	MOVLW 0x01
+009E  0100      	MOVLB 0x00
+00A0  6FF4      	MOVWF gbl_USWSTAT, 1
+
+    USB_status_device = 1;
+00A2  6FED      	MOVWF gbl_USB_status_device, 1
+
+}
+00A4  0012      	RETURN
+
+
+/***********************************************************************************
+ CopyDescriptorToEP0
+ copies the next chunk of buffer descriptor over to the EP0 In buffer.
+ Inputs:
+    EP0_start - points to first byte of configuration table to transfer
+    EP0_end - total number of bytes to transfer
+    EP0_maxLength - maximum number of bytes that can be sent during
+    a single transfer
+
+ toggles the data0/1 bit before setting the UOWN bit over to SIE.
+***********************************************************************************/
+void CopyDescriptorToEP0() {
+
+    unsigned char *  USBbuffer;  /* pointer to the USB Buffers */
+    unsigned char bufindex;
+    USBbuffer =  (unsigned char *) ((unsigned int)bd0adrlie + (unsigned int)(bd0adrhie <<8));
+00B2  0104      	MOVLB 0x04
+00B4  5106      	MOVF gbl_bd0adrlie, W, 1
+00B6  0101      	MOVLB 0x01
+00B8  6F28      	MOVWF CopyDescri_0000B_1_USBbuffer, 1
+00BA  6B2C      	CLRF CompTempVar582+D'1', 1
+00BC  6B2D      	CLRF CompTempVar583, 1
+00BE  0104      	MOVLB 0x04
+00C0  5107      	MOVF gbl_bd0adrhie, W, 1
+00C2  0101      	MOVLB 0x01
+00C4  6F29      	MOVWF CopyDescri_0000B_1_USBbuffer+D'1', 1
+00C6  512D      	MOVF CompTempVar583, W, 1
+00C8  2728      	ADDWF CopyDescri_0000B_1_USBbuffer, F, 1
+00CA  512C      	MOVF CompTempVar582+D'1', W, 1
+00CC  2329      	ADDWFC CopyDescri_0000B_1_USBbuffer+D'1', F, 1
+
+    bufindex  = 0;
+00CE  6B2A      	CLRF CopyDescri_0000B_1_bufindex, 1
+
+    while ((bufindex < EP0_maxLength) && ((unsigned short)EP0_start <(unsigned short) EP0_end)) {
+00D0            label3
+00D0  0100      	MOVLB 0x00
+00D2  51F5      	MOVF gbl_EP0_maxLength, W, 1
+00D4  0101      	MOVLB 0x01
+00D6  612A      	CPFSLT CopyDescri_0000B_1_bufindex, 1
+00D8  D01B      	BRA	label5
+00DA  0100      	MOVLB 0x00
+00DC  51E0      	MOVF gbl_EP0_end+D'1', W, 1
+00DE  5DDE      	SUBWF gbl_EP0_start+D'1', W, 1
+00E0  E102      	BNZ	label4
+00E2  51DF      	MOVF gbl_EP0_end, W, 1
+00E4  5DDD      	SUBWF gbl_EP0_start, W, 1
+00E6            label4
+00E6  E214      	BC	label5
+010E  D7E0      	BRA	label3
+0110            label5
+
+        USBbuffer [bufindex] = *EP0_start;
+00E8  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+00EA  6EEA      	MOVWF FSR0H
+00EC  51DD      	MOVF gbl_EP0_start, W, 1
+00EE  6EE9      	MOVWF FSR0L
+00F0  50EF      	MOVF INDF0, W
+00F2  0101      	MOVLB 0x01
+00F4  6F2B      	MOVWF CompTempVar586, 1
+00F6  5129      	MOVF CopyDescri_0000B_1_USBbuffer+D'1', W, 1
+00F8  6EEA      	MOVWF FSR0H
+00FA  5128      	MOVF CopyDescri_0000B_1_USBbuffer, W, 1
+00FC  252A      	ADDWF CopyDescri_0000B_1_bufindex, W, 1
+00FE  6EE9      	MOVWF FSR0L
+0100  512B      	MOVF CompTempVar586, W, 1
+0102  6EEF      	MOVWF INDF0
+
+        ++ EP0_start;
+0104  0100      	MOVLB 0x00
+0106  4BDD      	INFSNZ gbl_EP0_start, F, 1
+0108  2BDE      	INCF gbl_EP0_start+D'1', F, 1
+
+        ++ bufindex;
+010A  0101      	MOVLB 0x01
+010C  2B2A      	INCF CopyDescri_0000B_1_bufindex, F, 1
+
+    }
+    if (bufindex < EP0_maxLength)	/* are we sending a short packet? */
+0110  0100      	MOVLB 0x00
+0112  51F5      	MOVF gbl_EP0_maxLength, W, 1
+0114  0101      	MOVLB 0x01
+0116  612A      	CPFSLT CopyDescri_0000B_1_bufindex, 1
+0118  D002      	BRA	label6
+011E            label6
+
+        USB_dev_req = 0;	/* Yes, clear the device reqest */
+011A  0100      	MOVLB 0x00
+011C  6BF0      	CLRF gbl_USB_dev_req, 1
+
+
+    bd0cntie  = bufindex;
+011E  0101      	MOVLB 0x01
+0120  512A      	MOVF CopyDescri_0000B_1_bufindex, W, 1
+0122  0104      	MOVLB 0x04
+0124  6F05      	MOVWF gbl_bd0cntie, 1
+
+    bd0statie &= 0x40;		/* save only the DTS bit */
+0126  0E40      	MOVLW 0x40
+0128  1704      	ANDWF gbl_bd0statie, F, 1
+
+    bd0statie ^= 0x40;		/* toggle data DTS bit */
+012A  0E40      	MOVLW 0x40
+012C  1B04      	XORWF gbl_bd0statie, F, 1
+
+    bd0statie |= 0x88;		/* set OWN and DTSEN bits */
+012E  0E88      	MOVLW 0x88
+0130  1304      	IORWF gbl_bd0statie, F, 1
+
+}
+0132  0012      	RETURN
+
+
+/***********************************************************************************
+ Init USB
+ Initializes the USB peripheral, sets up the interrupts
+***********************************************************************************/
+void InitUSB() {
+
+    // ED changed how register bits are set for my own clarity, commented out things set by default
+    //ucfg.UTRDIS = 0; // enable internal transceiver
+    ucfg.FSEN = 1; // Full speed enable
+0D1A  846F      	BSF gbl_ucfg,2
+
+    ucfg.UPUEN = 1; // Enable on-chip pull-ups
+0D1C  886F      	BSF gbl_ucfg,4
+
+    //ucfg.PPB1 = 0; // Disable ping-pong buffering
+    //ucfg.PPB0 = 0; // Disable ping-pong buffering
+    //uie.STALLIE = 1; // interrupt on stall
+    //uie.TRNIE = 1; //   on transaction complete
+    uie.URSTIE = 1; //   on reset
+0D1E  8069      	BSF gbl_uie,0
+
+    pie2.USBIE = 1; // general USB interrupts
+0D20  8AA0      	BSF gbl_pie2,5
+
+
+    ucon.PPBRST = 1; // reset pingpong buffers
+0D22  8C6D      	BSF gbl_ucon,6
+
+    ucon.PPBRST = 0; // unlock pingpong buffers
+0D24  9C6D      	BCF gbl_ucon,6
+
+    ucon.USBEN = 1;	// enable usb
+0D26  866D      	BSF gbl_ucon,3
+
+
+    USB_Curr_Config = 0;
+0D28  0100      	MOVLB 0x00
+0D2A  6BEE      	CLRF gbl_USB_Curr_Config, 1
+
+    USB_status_device = 1;
+0D2C  0E01      	MOVLW 0x01
+0D2E  6FED      	MOVWF gbl_USB_status_device, 1
+
+    char USB_Interface[] = {0,0,0};
+0D30  6BFC      	CLRF InitUSB_00000_1_USB_Interface, 1
+0D32  6BFD      	CLRF InitUSB_00000_1_USB_Interface+D'1', 1
+0D34  6BFE      	CLRF InitUSB_00000_1_USB_Interface+D'2', 1
+
+    USB_dev_req = NULL;
+0D36  6BF0      	CLRF gbl_USB_dev_req, 1
+
+    // clear all error counters
+    USB_PID_ERR = 0;
+0D38  6BCD      	CLRF gbl_USB_PID_ERR, 1
+0D3A  6BCE      	CLRF gbl_USB_PID_ERR+D'1', 1
+
+    USB_CRC5_ERR = 0;
+0D3C  6BCF      	CLRF gbl_USB_CRC5_ERR, 1
+0D3E  6BD0      	CLRF gbl_USB_CRC5_ERR+D'1', 1
+
+    USB_CRC16_ERR = 0;
+0D40  6BD1      	CLRF gbl_USB_CRC16_ERR, 1
+0D42  6BD2      	CLRF gbl_USB_CRC16_ERR+D'1', 1
+
+    USB_DFN8_ERR = 0;
+0D44  6BD3      	CLRF gbl_USB_DFN8_ERR, 1
+0D46  6BD4      	CLRF gbl_USB_DFN8_ERR+D'1', 1
+
+    USB_BTO_ERR = 0;
+0D48  6BD5      	CLRF gbl_USB_BTO_ERR, 1
+0D4A  6BD6      	CLRF gbl_USB_BTO_ERR+D'1', 1
+
+    USB_BTS_ERR = 0;
+0D4C  6BDB      	CLRF gbl_USB_BTS_ERR, 1
+0D4E  6BDC      	CLRF gbl_USB_BTS_ERR+D'1', 1
+
+}
+0D50  0012      	RETURN
+
+
+/***********************************************************************************
+ This is activated by the STALL bit in the UIR register. It really just tells us
+ that the SIE sent a STALL handshake.  So far, Don't see that any action is
+ required.  Clear the bit and move on.
+***********************************************************************************/
+void USBStall() {
+
+    uir.STALLIF = 0;
+0134  9A68      	BCF gbl_uir,5
+
+}
+0136  0012      	RETURN
+
+
+/***********************************************************************************
+ The SIE detected an error.  This code increments the appropriate error counter
+ and clears the flag.
+***********************************************************************************/
+void Count_Error() {
+
+    if (ueir.PIDEF && ueie.PIDEE) {
+0BF0  A06A      	BTFSS gbl_ueir,0
+0BF2  D005      	BRA	label105
+0BF4  A06B      	BTFSS gbl_ueie,0
+0BF6  D003      	BRA	label105
+
+        ++USB_PID_ERR;
+0BF8  0100      	MOVLB 0x00
+0BFA  4BCD      	INFSNZ gbl_USB_PID_ERR, F, 1
+0BFC  2BCE      	INCF gbl_USB_PID_ERR+D'1', F, 1
+0BFE            label105
+
+    }
+    if (ueir.CRC5EF && ueie.CRC5EE) {
+0BFE  A26A      	BTFSS gbl_ueir,1
+0C00  D005      	BRA	label106
+0C02  A26B      	BTFSS gbl_ueie,1
+0C04  D003      	BRA	label106
+
+        ++USB_CRC5_ERR;
+0C06  0100      	MOVLB 0x00
+0C08  4BCF      	INFSNZ gbl_USB_CRC5_ERR, F, 1
+0C0A  2BD0      	INCF gbl_USB_CRC5_ERR+D'1', F, 1
+0C0C            label106
+
+    }
+    if (ueir.CRC16EF && ueie.CRC16EE) {
+0C0C  A46A      	BTFSS gbl_ueir,2
+0C0E  D005      	BRA	label107
+0C10  A46B      	BTFSS gbl_ueie,2
+0C12  D003      	BRA	label107
+
+        ++USB_CRC16_ERR;
+0C14  0100      	MOVLB 0x00
+0C16  4BD1      	INFSNZ gbl_USB_CRC16_ERR, F, 1
+0C18  2BD2      	INCF gbl_USB_CRC16_ERR+D'1', F, 1
+0C1A            label107
+
+    }
+    if (ueir.DFN8EF && ueie.DFN8EE) {
+0C1A  A66A      	BTFSS gbl_ueir,3
+0C1C  D005      	BRA	label108
+0C1E  A66B      	BTFSS gbl_ueie,3
+0C20  D003      	BRA	label108
+
+        ++USB_DFN8_ERR;
+0C22  0100      	MOVLB 0x00
+0C24  4BD3      	INFSNZ gbl_USB_DFN8_ERR, F, 1
+0C26  2BD4      	INCF gbl_USB_DFN8_ERR+D'1', F, 1
+0C28            label108
+
+    }
+    if (ueir.BTOEF && ueie.BTOEE) {
+0C28  A86A      	BTFSS gbl_ueir,4
+0C2A  D005      	BRA	label109
+0C2C  A86B      	BTFSS gbl_ueie,4
+0C2E  D003      	BRA	label109
+
+        ++USB_BTO_ERR;
+0C30  0100      	MOVLB 0x00
+0C32  4BD5      	INFSNZ gbl_USB_BTO_ERR, F, 1
+0C34  2BD6      	INCF gbl_USB_BTO_ERR+D'1', F, 1
+0C36            label109
+
+    }
+    if (ueir.BTSEF && ueie.BTSEE) {
+0C36  AE6A      	BTFSS gbl_ueir,7
+0C38  D005      	BRA	label110
+0C3A  AE6B      	BTFSS gbl_ueie,7
+0C3C  D003      	BRA	label110
+
+        ++USB_BTS_ERR;
+0C3E  0100      	MOVLB 0x00
+0C40  4BDB      	INFSNZ gbl_USB_BTS_ERR, F, 1
+0C42  2BDC      	INCF gbl_USB_BTS_ERR+D'1', F, 1
+0C44            label110
+
+    }
+    ueir = 0; // Clear all USB error flag bits
+0C44  6A6A      	CLRF gbl_ueir
+
+    uir.UERRIF = 0; // Clear master USB error flag bit
+0C46  9268      	BCF gbl_uir,1
+
+}
+0C48  0012      	RETURN
+
+
+/***********************************************************************************
+ Process token done interrupt...  Most of the work gets done through this interrupt.
+ Token Done is signaled in response to an In, Out, or Setup transaction.
+***********************************************************************************/
+void Process_Req() {
+
+    // ED formatted this somewhat
+    unsigned char *OutBuffer;
+    unsigned char *UEPArray;
+    unsigned char DescriptorType;
+    unsigned char Endpoint;
+    unsigned char Interface;
+    unsigned char DescriptorID;
+    unsigned char StringID;
+    USB_USTAT = ustat;
+0146  506C      	MOVF gbl_ustat, W
+0148  0100      	MOVLB 0x00
+014A  6FF1      	MOVWF gbl_USB_USTAT, 1
+
+    ACTIVE_BUF = (USB_USTAT >> 3) * 2; //EP*2 (IF OUTPUT)
+014C  31F1      	RRCF gbl_USB_USTAT, W, 1
+014E  6FF2      	MOVWF gbl_ACTIVE_BUF, 1
+0150  33F2      	RRCF gbl_ACTIVE_BUF, F, 1
+0152  33F2      	RRCF gbl_ACTIVE_BUF, F, 1
+0154  0E1F      	MOVLW 0x1F
+0156  17F2      	ANDWF gbl_ACTIVE_BUF, F, 1
+0158  90D8      	BCF STATUS,C
+015A  37F2      	RLCF gbl_ACTIVE_BUF, F, 1
+
+    ACTIVE_BUF = (ACTIVE_BUF + (USB_USTAT & 0x4) >> 2);  //=EP*2 + 1 (IF INPUT)
+015C  0E04      	MOVLW 0x04
+015E  15F1      	ANDWF gbl_USB_USTAT, W, 1
+0160  0101      	MOVLB 0x01
+0162  6F20      	MOVWF CompTempVar593, 1
+0164  6B21      	CLRF CompTempVar596, 1
+0166  5120      	MOVF CompTempVar593, W, 1
+0168  0100      	MOVLB 0x00
+016A  27F2      	ADDWF gbl_ACTIVE_BUF, F, 1
+016C  E302      	BNC	label7
+016E  0101      	MOVLB 0x01
+0170  2B21      	INCF CompTempVar596, F, 1
+0172  0101      	MOVLB 0x01
+0174  3321      	RRCF CompTempVar596, F, 1
+0176  0100      	MOVLB 0x00
+0178  33F2      	RRCF gbl_ACTIVE_BUF, F, 1
+017A  0101      	MOVLB 0x01
+017C  3321      	RRCF CompTempVar596, F, 1
+017E  0100      	MOVLB 0x00
+0180  33F2      	RRCF gbl_ACTIVE_BUF, F, 1
+
+    // save data in buffer descriptor table
+    BDTCopy.EPStat = BDT[ACTIVE_BUF].EPStat;
+0182  51E2      	MOVF gbl_BDT+D'1', W, 1
+0184  6EEA      	MOVWF FSR0H
+0186  51E1      	MOVF gbl_BDT, W, 1
+0188  6EE9      	MOVWF FSR0L
+018A  51F2      	MOVF gbl_ACTIVE_BUF, W, 1
+018C  0101      	MOVLB 0x01
+018E  6F20      	MOVWF CompTempVar597, 1
+0190  3720      	RLCF CompTempVar597, F, 1
+0192  3720      	RLCF CompTempVar597, F, 1
+0194  0EFC      	MOVLW 0xFC
+0196  1520      	ANDWF CompTempVar597, W, 1
+0198  26E9      	ADDWF FSR0L, F
+019A  50EF      	MOVF INDF0, W
+019C  6E59      	MOVWF gbl_BDTCopy
+
+    BDTCopy.bytes = BDT[ACTIVE_BUF].bytes;
+019E  0100      	MOVLB 0x00
+01A0  51E1      	MOVF gbl_BDT, W, 1
+01A2  6EE9      	MOVWF FSR0L
+01A4  51F2      	MOVF gbl_ACTIVE_BUF, W, 1
+01A6  0101      	MOVLB 0x01
+01A8  6F20      	MOVWF CompTempVar598, 1
+01AA  3720      	RLCF CompTempVar598, F, 1
+01AC  3720      	RLCF CompTempVar598, F, 1
+01AE  0EFC      	MOVLW 0xFC
+01B0  1520      	ANDWF CompTempVar598, W, 1
+01B2  26E9      	ADDWF FSR0L, F
+01B4  50EC      	MOVF PREINC0, W
+01B6  6E5A      	MOVWF gbl_BDTCopy+D'1'
+
+    BDTCopy.address = BDT[ACTIVE_BUF].address;
+01B8  0100      	MOVLB 0x00
+01BA  51E1      	MOVF gbl_BDT, W, 1
+01BC  6EE9      	MOVWF FSR0L
+01BE  51F2      	MOVF gbl_ACTIVE_BUF, W, 1
+01C0  0101      	MOVLB 0x01
+01C2  6F20      	MOVWF CompTempVar599, 1
+01C4  3720      	RLCF CompTempVar599, F, 1
+01C6  3720      	RLCF CompTempVar599, F, 1
+01C8  0EFC      	MOVLW 0xFC
+01CA  1520      	ANDWF CompTempVar599, W, 1
+01CC  26E9      	ADDWF FSR0L, F
+01CE  0E02      	MOVLW 0x02
+01D0  26E9      	ADDWF FSR0L, F
+01D2  50EE      	MOVF POSTINC0, W
+01D4  6E5B      	MOVWF gbl_BDTCopy+D'2'
+01D6  50EF      	MOVF INDF0, W
+01D8  6E5C      	MOVWF gbl_BDTCopy+D'3'
+
+    uir.TRNIF = 0;
+01DA  9668      	BCF gbl_uir,3
+
+    if ((BDTCopy.EPStat & 0x3C) == TOKEN_IN) {
+01DC  0E3C      	MOVLW 0x3C
+01DE  1459      	ANDWF gbl_BDTCopy, W
+01E0  6F1D      	MOVWF CompTempVar587, 1
+01E2  0E24      	MOVLW 0x24
+01E4  631D      	CPFSEQ CompTempVar587, 1
+01E6  D00E      	BRA	label9
+0204            label9
+
+        // TOKEN IN
+        if (USB_USTAT == 0x04) {
+01E8  0E04      	MOVLW 0x04
+01EA  0100      	MOVLB 0x00
+01EC  63F1      	CPFSEQ gbl_USB_USTAT, 1
+01EE  D006      	BRA	label8
+01FC            label8
+
+            /* Process EP0 In's */
+            if (USB_dev_req == GET_DESCRIPTOR) {
+01F0  0E06      	MOVLW 0x06
+01F2  63F0      	CPFSEQ gbl_USB_dev_req, 1
+
+                CopyDescriptorToEP0 ();
+01F6  EC59F000  	CALL CopyDescri_0000B
+
+            }
+        } else if (USB_USTAT == 0x0C) {
+01FC  0E0C      	MOVLW 0x0C
+01FE  63F1      	CPFSEQ gbl_USB_USTAT, 1
+
+            /* process EP1 In's */
+        } else {
+            /* process EP2 In's */
+        }
+    } else if ((BDTCopy.EPStat & 0x3C) == TOKEN_OUT) {
+0204  0E3C      	MOVLW 0x3C
+0206  1459      	ANDWF gbl_BDTCopy, W
+0208  6F1E      	MOVWF CompTempVar588, 1
+020A  0E04      	MOVLW 0x04
+020C  631E      	CPFSEQ CompTempVar588, 1
+020E  D008      	BRA	label10
+0220            label10
+
+        //TOKEN OUT
+        if (USB_USTAT == 0x00) {
+0210  0100      	MOVLB 0x00
+0212  53F1      	MOVF gbl_USB_USTAT, F, 1
+0214  B4D8      	BTFSC STATUS,Z
+
+            /* process EP1 Out's */
+        } else if (USB_USTAT == 0x08) {
+0218  0E08      	MOVLW 0x08
+021A  63F1      	CPFSEQ gbl_USB_USTAT, 1
+
+            /* process EP1 Out's */
+        } else {
+            /* process EP2 Out's */
+        }
+    } else if ((BDTCopy.EPStat & 0x3C) == TOKEN_SETUP) {
+0220  0E3C      	MOVLW 0x3C
+0222  1459      	ANDWF gbl_BDTCopy, W
+0224  6F1F      	MOVWF CompTempVar589, 1
+0226  0E34      	MOVLW 0x34
+0228  631F      	CPFSEQ CompTempVar589, 1
+
+        // TOKEN SETUP
+        Buffer = (struct BufferStruct*) ((unsigned int)bd0adrloe + (unsigned int)(bd0adrhoe << 8));
+022C  0104      	MOVLB 0x04
+022E  5102      	MOVF gbl_bd0adrloe, W, 1
+0230  0100      	MOVLB 0x00
+0232  6FE3      	MOVWF gbl_Buffer, 1
+0234  0101      	MOVLB 0x01
+0236  6B23      	CLRF CompTempVar605+D'1', 1
+0238  6B24      	CLRF CompTempVar606, 1
+023A  0104      	MOVLB 0x04
+023C  5103      	MOVF gbl_bd0adrhoe, W, 1
+023E  0100      	MOVLB 0x00
+0240  6FE4      	MOVWF gbl_Buffer+D'1', 1
+0242  0101      	MOVLB 0x01
+0244  5124      	MOVF CompTempVar606, W, 1
+0246  0100      	MOVLB 0x00
+0248  27E3      	ADDWF gbl_Buffer, F, 1
+024A  0101      	MOVLB 0x01
+024C  5123      	MOVF CompTempVar605+D'1', W, 1
+024E  0100      	MOVLB 0x00
+0250  23E4      	ADDWFC gbl_Buffer+D'1', F, 1
+
+        BufferCopy.bmRequestType = Buffer->bmRequestType;
+0252  51E4      	MOVF gbl_Buffer+D'1', W, 1
+0254  6EEA      	MOVWF FSR0H
+0256  51E3      	MOVF gbl_Buffer, W, 1
+0258  6EE9      	MOVWF FSR0L
+025A  50EF      	MOVF INDF0, W
+025C  6FBF      	MOVWF gbl_BufferCopy, 1
+
+        BufferCopy.bRequest = Buffer->bRequest;
+025E  50EC      	MOVF PREINC0, W
+0260  6FC0      	MOVWF gbl_BufferCopy+D'1', 1
+
+        BufferCopy.wValue = Buffer->wValue;
+0262  06E9      	DECF FSR0L, F
+0264  0E02      	MOVLW 0x02
+0266  26E9      	ADDWF FSR0L, F
+0268  50EE      	MOVF POSTINC0, W
+026A  6FC1      	MOVWF gbl_BufferCopy+D'2', 1
+026C  50EF      	MOVF INDF0, W
+026E  6FC2      	MOVWF gbl_BufferCopy+D'3', 1
+
+        BufferCopy.wIndex = Buffer->wIndex;
+0270  51E3      	MOVF gbl_Buffer, W, 1
+0272  6EE9      	MOVWF FSR0L
+0274  0E04      	MOVLW 0x04
+0276  26E9      	ADDWF FSR0L, F
+0278  50EE      	MOVF POSTINC0, W
+027A  6FC3      	MOVWF gbl_BufferCopy+D'4', 1
+027C  50EF      	MOVF INDF0, W
+027E  6FC4      	MOVWF gbl_BufferCopy+D'5', 1
+
+        BufferCopy.wLength = Buffer->wLength;
+0280  51E3      	MOVF gbl_Buffer, W, 1
+0282  6EE9      	MOVWF FSR0L
+0284  0E06      	MOVLW 0x06
+0286  26E9      	ADDWF FSR0L, F
+0288  50EE      	MOVF POSTINC0, W
+028A  6FC5      	MOVWF gbl_BufferCopy+D'6', 1
+028C  50EF      	MOVF INDF0, W
+028E  6FC6      	MOVWF gbl_BufferCopy+D'7', 1
+
+        ueir.PIDEF = 0;  // Clear REQUEST ERROR
+0290  906A      	BCF gbl_ueir,0
+
+        bd0cntoe = 0x08;
+0292  0E08      	MOVLW 0x08
+0294  0104      	MOVLB 0x04
+0296  6F01      	MOVWF gbl_bd0cntoe, 1
+
+        if (BufferCopy.bmRequestType == 0x21)
+0298  0E21      	MOVLW 0x21
+029A  0100      	MOVLB 0x00
+029C  63BF      	CPFSEQ gbl_BufferCopy, 1
+029E  D004      	BRA	label11
+02A8            label11
+
+            bd0statoe = 0xC8;
+02A0  0EC8      	MOVLW 0xC8
+02A2  0104      	MOVLB 0x04
+02A4  6F00      	MOVWF gbl_bd0statoe, 1
+
+        else
+02A6  D003      	BRA	label12
+02AE            label12
+02E2  D3C4      	BRA	label81
+02FE  D035      	BRA	label25
+03B6  D017      	BRA	label34
+03F4  D043      	BRA	label40
+06A2  D074      	BRA	label62
+0B68  D03F      	BRA	label103
+0B80  D009      	BRA	label93
+0BB0  D011      	BRA	label98
+
+            bd0statoe = 0x88;/* Turn the buffer around, make it available for the SIE */
+02A8  0E88      	MOVLW 0x88
+02AA  0104      	MOVLB 0x04
+02AC  6F00      	MOVWF gbl_bd0statoe, 1
+
+        bd0statie = 0x08;
+02AE  0E08      	MOVLW 0x08
+02B0  6F04      	MOVWF gbl_bd0statie, 1
+
+        ucon.PKTDIS = 0;
+02B2  986D      	BCF gbl_ucon,4
+
+        USB_dev_req = 0;
+02B4  0100      	MOVLB 0x00
+02B6  6BF0      	CLRF gbl_USB_dev_req, 1
+
+        switch (BufferCopy.bmRequestType) {
+            // First bmRequestType ************************************
+            case HOSTTODEVICE:
+02B8  53BF      	MOVF gbl_BufferCopy, F, 1
+02BA  E014      	BZ	label16
+02E4            label16
+
+                // 00
+                switch (BufferCopy.bRequest) {
+                    case CLEAR_FEATURE:
+02E4  05C0      	DECF gbl_BufferCopy+D'1', W, 1
+02E6  E00C      	BZ	label19
+0300            label19
+
+                        //01
+                        /* Remote wakeup is only valid device feature */
+                        if (BufferCopy.wValue == 1)	{
+0300  0E01      	MOVLW 0x01
+0302  63C1      	CPFSEQ gbl_BufferCopy+D'2', 1
+0304  D00A      	BRA	label20
+0306  51C2      	MOVF gbl_BufferCopy+D'3', W, 1
+0308  E108      	BNZ	label20
+031A            label20
+
+                            USB_status_device &= 0xFD;
+030A  93ED      	BCF gbl_USB_status_device,1, 1
+
+                            Send_0Len_pkt;
+030C  0104      	MOVLB 0x04
+030E  6B05      	CLRF gbl_bd0cntie, 1
+0310  0EC8      	MOVLW 0xC8
+0312  6F04      	MOVWF gbl_bd0statie, 1
+0314  0100      	MOVLB 0x00
+0316  6BF0      	CLRF gbl_USB_dev_req, 1
+
+                        } else {
+                            STALL_EP0;
+031A  8070      	BSF gbl_uep0,0
+
+                        }
+                        break;
+
+                    case SET_FEATURE:
+02E8  0E03      	MOVLW 0x03
+02EA  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+02EC  D001      	BRA	label17
+02EE  D017      	BRA	label21
+02F0            label17
+031E            label21
+
+                        //03
+                        /* Set Device Feature.  Only valid device */
+                        if ((BufferCopy.wValue & 0xff) == 1) {
+031E  51C1      	MOVF gbl_BufferCopy+D'2', W, 1
+0320  0101      	MOVLB 0x01
+0322  6F20      	MOVWF CompTempVar600, 1
+0324  6B21      	CLRF CompTempVar601, 1
+0326  0E01      	MOVLW 0x01
+0328  6320      	CPFSEQ CompTempVar600, 1
+032A  D00B      	BRA	label22
+032C  5121      	MOVF CompTempVar601, W, 1
+032E  E109      	BNZ	label22
+0342            label22
+
+                            USB_status_device |= 0x02;	/* feature is remote wakeup */
+0330  0100      	MOVLB 0x00
+0332  83ED      	BSF gbl_USB_status_device,1, 1
+
+                            Send_0Len_pkt;
+0334  0104      	MOVLB 0x04
+0336  6B05      	CLRF gbl_bd0cntie, 1
+0338  0EC8      	MOVLW 0xC8
+033A  6F04      	MOVWF gbl_bd0statie, 1
+033C  0100      	MOVLB 0x00
+033E  6BF0      	CLRF gbl_USB_dev_req, 1
+
+                        } else {
+                            STALL_EP0;
+0342  8070      	BSF gbl_uep0,0
+
+                        }
+                        break;
+                    case SET_ADDRESS:
+02F0  0E05      	MOVLW 0x05
+02F2  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+02F4  D001      	BRA	label18
+02F6  D027      	BRA	label23
+02F8            label18
+0346            label23
+
+                        //05
+                        USB_address_pending = BufferCopy.wValue;
+0346  51C1      	MOVF gbl_BufferCopy+D'2', W, 1
+0348  6FEF      	MOVWF gbl_USB_address_pending, 1
+
+                        if (USB_address_pending < 0x80) {
+034A  0E80      	MOVLW 0x80
+034C  61EF      	CPFSLT gbl_USB_address_pending, 1
+034E  D00B      	BRA	label24
+0366            label24
+
+                            Send_0Len_pkt;
+0350  0104      	MOVLB 0x04
+0352  6B05      	CLRF gbl_bd0cntie, 1
+0354  0EC8      	MOVLW 0xC8
+0356  6F04      	MOVWF gbl_bd0statie, 1
+0358  0100      	MOVLB 0x00
+035A  6BF0      	CLRF gbl_USB_dev_req, 1
+
+                            USB_dev_req = SET_ADDRESS;
+035C  0E05      	MOVLW 0x05
+035E  6FF0      	MOVWF gbl_USB_dev_req, 1
+
+                            uie = 00001001b; //enable transaction complete and reset interrupts
+0360  0E09      	MOVLW 0x09
+0362  6E69      	MOVWF gbl_uie
+
+                        } else {
+                            STALL_EP0;
+0366  8070      	BSF gbl_uep0,0
+
+                        }
+                        break;
+                    case SET_CONFIGURATION:
+02F8  0E09      	MOVLW 0x09
+02FA  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+02FC  D051      	BRA	label29
+036A            label25
+
+                        //09
+                        if (BufferCopy.wValue <= NUM_CONFIGURATIONS)
+036A  0E01      	MOVLW 0x01
+036C  65C1      	CPFSGT gbl_BufferCopy+D'2', 1
+036E  67C2      	TSTFSZ gbl_BufferCopy+D'3', 1
+0370  D002      	BRA	label26
+0376            label26
+
+                            USB_Curr_Config = BufferCopy.wValue;
+0372  51C1      	MOVF gbl_BufferCopy+D'2', W, 1
+0374  6FEE      	MOVWF gbl_USB_Curr_Config, 1
+
+
+                        if (BufferCopy.wValue == 0) {
+0376  53C1      	MOVF gbl_BufferCopy+D'2', F, 1
+0378  E105      	BNZ	label27
+037A  53C2      	MOVF gbl_BufferCopy+D'3', F, 1
+037C  E103      	BNZ	label27
+0384            label27
+
+                            USWSTAT = ADDRESS_STATE;
+037E  0E02      	MOVLW 0x02
+0380  6FF4      	MOVWF gbl_USWSTAT, 1
+
+                        } else {
+0382  D002      	BRA	label28
+0388            label28
+
+                            USWSTAT = CONFIG_STATE;
+0384  0E03      	MOVLW 0x03
+0386  6FF4      	MOVWF gbl_USWSTAT, 1
+
+                        }
+                        Send_0Len_pkt;
+0388  0104      	MOVLB 0x04
+038A  6B05      	CLRF gbl_bd0cntie, 1
+038C  0EC8      	MOVLW 0xC8
+038E  6F04      	MOVWF gbl_bd0statie, 1
+0390  0100      	MOVLB 0x00
+0392  6BF0      	CLRF gbl_USB_dev_req, 1
+
+                        bd1statie = 0x48; //SET MCU AS OWNER OF THIS BUFFER, ENABLE DATA TOGGLE SYNC
+0394  0E48      	MOVLW 0x48
+0396  0104      	MOVLB 0x04
+0398  6F0C      	MOVWF gbl_bd1statie, 1
+
+                        uep1 = ENDPT_NON_CONTROL;
+039A  0E1E      	MOVLW 0x1E
+039C  6E71      	MOVWF gbl_uep1
+
+                          break;
+                    default:
+03A0            label29
+
+                        STALL_EP0;
+03A0  8070      	BSF gbl_uep0,0
+
+                        break;
+                }
+                break;
+            // Second bmRequestType ************************************
+            case HOSTTOINTERFACE:
+02BC  05BF      	DECF gbl_BufferCopy, W, 1
+02BE  B4D8      	BTFSC STATUS,Z
+02C0  D071      	BRA	label30
+03A4            label30
+
+                //01
+                switch (BufferCopy.bRequest) {
+                    case SET_INTERFACE:
+03A4  0E0B      	MOVLW 0x0B
+03A6  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+03A8  D001      	BRA	label31
+03AA  D006      	BRA	label32
+03AC            label31
+03B8            label32
+
+                        //0B
+                        if (USWSTAT == CONFIG_STATE) {
+03B8  0E03      	MOVLW 0x03
+03BA  63F4      	CPFSEQ gbl_USWSTAT, 1
+03BC  D012      	BRA	label33
+03E2            label33
+
+                            Interface = BufferCopy.wIndex;
+03BE  51C3      	MOVF gbl_BufferCopy+D'4', W, 1
+03C0  0101      	MOVLB 0x01
+03C2  6F1A      	MOVWF Process_Re_0000D_1_Interface, 1
+
+                            USB_Interface[Interface] = BufferCopy.wValue;
+03C4  EE00F05D  	LFSR 0x00,  gbl_USB_Interface
+03C8  50E9      	MOVF FSR0L, W
+03CA  511A      	MOVF Process_Re_0000D_1_Interface, W, 1
+03CC  26E9      	ADDWF FSR0L, F
+03CE  0100      	MOVLB 0x00
+03D0  51C1      	MOVF gbl_BufferCopy+D'2', W, 1
+03D2  6EEF      	MOVWF INDF0
+
+                            Send_0Len_pkt;
+03D4  0104      	MOVLB 0x04
+03D6  6B05      	CLRF gbl_bd0cntie, 1
+03D8  0EC8      	MOVLW 0xC8
+03DA  6F04      	MOVWF gbl_bd0statie, 1
+03DC  0100      	MOVLB 0x00
+03DE  6BF0      	CLRF gbl_USB_dev_req, 1
+
+                        } else {
+                            STALL_EP0;
+03E2  8070      	BSF gbl_uep0,0
+
+                        }
+                        break;
+                    case CLEAR_FEATURE:
+03AC  05C0      	DECF gbl_BufferCopy+D'1', W, 1
+03AE  E01B      	BZ	label34
+03E6            label34
+
+                        //01
+                    case SET_FEATURE:
+03B0  0E03      	MOVLW 0x03
+03B2  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+03B4  D018      	BRA	label34
+
+                        //03
+                        /* Set Interface feature - Not Valid */
+                    default:
+                        STALL_EP0;
+03E6  8070      	BSF gbl_uep0,0
+
+                        break;
+                }
+                break;
+            // Third bmRequestType ************************************
+            case HOSTTOENDPOINT:
+02C2  0E02      	MOVLW 0x02
+02C4  63BF      	CPFSEQ gbl_BufferCopy, 1
+02C6  D001      	BRA	label13
+02C8  D090      	BRA	label35
+02CA            label13
+03EA            label35
+
+                switch (BufferCopy.bRequest) {
+                    case CLEAR_FEATURE:
+03EA  05C0      	DECF gbl_BufferCopy+D'1', W, 1
+03EC  E004      	BZ	label36
+03F6            label36
+
+                        //01
+                        UEPArray = (unsigned char *) &uep0;
+03F6  0E0F      	MOVLW HIGH(gbl_uep0+D'0')
+03F8  6FFF      	MOVWF Process_Re_0000D_1_UEPArray+D'1', 1
+03FA  0E70      	MOVLW LOW(gbl_uep0+D'0')
+03FC  6FFE      	MOVWF Process_Re_0000D_1_UEPArray, 1
+
+                        Endpoint = BufferCopy.wIndex & 0x0F;
+03FE  0E0F      	MOVLW 0x0F
+0400  15C3      	ANDWF gbl_BufferCopy+D'4', W, 1
+0402  0101      	MOVLB 0x01
+0404  6F19      	MOVWF Process_Re_0000D_1_Endpoint, 1
+
+                        if (BufferCopy.wValue == 0) {
+0406  0100      	MOVLB 0x00
+0408  53C1      	MOVF gbl_BufferCopy+D'2', F, 1
+040A  E136      	BNZ	label39
+040C  53C2      	MOVF gbl_BufferCopy+D'3', F, 1
+040E  E134      	BNZ	label39
+0478            label39
+
+                            /* Only valid feature is 0 (Remote Wakeup) */
+                            if (((USWSTAT & 0x03) == ADDRESS_STATE) && (Endpoint == 0)) {
+0410  0E03      	MOVLW 0x03
+0412  15F4      	ANDWF gbl_USWSTAT, W, 1
+0414  0101      	MOVLB 0x01
+0416  6F22      	MOVWF CompTempVar610, 1
+0418  0E02      	MOVLW 0x02
+041A  6322      	CPFSEQ CompTempVar610, 1
+041C  D011      	BRA	label37
+041E  5319      	MOVF Process_Re_0000D_1_Endpoint, F, 1
+0420  E10F      	BNZ	label37
+0440            label37
+
+                                UEPArray [Endpoint] &= 0xFE;
+0422  0100      	MOVLB 0x00
+0424  51FF      	MOVF Process_Re_0000D_1_UEPArray+D'1', W, 1
+0426  6EEA      	MOVWF FSR0H
+0428  51FE      	MOVF Process_Re_0000D_1_UEPArray, W, 1
+042A  0101      	MOVLB 0x01
+042C  2519      	ADDWF Process_Re_0000D_1_Endpoint, W, 1
+042E  6EE9      	MOVWF FSR0L
+0430  90EF      	BCF INDF0,0
+
+                                Send_0Len_pkt;
+0432  0104      	MOVLB 0x04
+0434  6B05      	CLRF gbl_bd0cntie, 1
+0436  0EC8      	MOVLW 0xC8
+0438  6F04      	MOVWF gbl_bd0statie, 1
+043A  0100      	MOVLB 0x00
+043C  6BF0      	CLRF gbl_USB_dev_req, 1
+
+                            } else if (((USWSTAT& 0x03) == CONFIG_STATE) && (Endpoint < 3)) {
+0440  0E03      	MOVLW 0x03
+0442  0100      	MOVLB 0x00
+0444  15F4      	ANDWF gbl_USWSTAT, W, 1
+0446  0101      	MOVLB 0x01
+0448  6F22      	MOVWF CompTempVar612, 1
+044A  0E03      	MOVLW 0x03
+044C  6322      	CPFSEQ CompTempVar612, 1
+044E  D012      	BRA	label38
+0450  0E03      	MOVLW 0x03
+0452  6119      	CPFSLT Process_Re_0000D_1_Endpoint, 1
+0454  D00F      	BRA	label38
+0474            label38
+
+                                UEPArray [Endpoint] &= 0xFE;
+0456  0100      	MOVLB 0x00
+0458  51FF      	MOVF Process_Re_0000D_1_UEPArray+D'1', W, 1
+045A  6EEA      	MOVWF FSR0H
+045C  51FE      	MOVF Process_Re_0000D_1_UEPArray, W, 1
+045E  0101      	MOVLB 0x01
+0460  2519      	ADDWF Process_Re_0000D_1_Endpoint, W, 1
+0462  6EE9      	MOVWF FSR0L
+0464  90EF      	BCF INDF0,0
+
+                                Send_0Len_pkt;
+0466  0104      	MOVLB 0x04
+0468  6B05      	CLRF gbl_bd0cntie, 1
+046A  0EC8      	MOVLW 0xC8
+046C  6F04      	MOVWF gbl_bd0statie, 1
+046E  0100      	MOVLB 0x00
+0470  6BF0      	CLRF gbl_USB_dev_req, 1
+
+                            } else {
+                                STALL_EP0;
+0474  8070      	BSF gbl_uep0,0
+
+                            }
+                        } else {
+                            STALL_EP0;
+0478  8070      	BSF gbl_uep0,0
+
+                        }
+                        break;
+
+                    case SET_FEATURE:
+03EE  0E03      	MOVLW 0x03
+03F0  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+03F2  D08D      	BRA	label44
+047C            label40
+
+                        //03
+                        UEPArray = (unsigned char *) &uep0;
+047C  0E0F      	MOVLW HIGH(gbl_uep0+D'0')
+047E  0101      	MOVLB 0x01
+0480  6F22      	MOVWF CompTempVar614, 1
+0482  0E70      	MOVLW LOW(gbl_uep0+D'0')
+0484  0100      	MOVLB 0x00
+0486  6FFE      	MOVWF Process_Re_0000D_1_UEPArray, 1
+0488  0101      	MOVLB 0x01
+048A  5122      	MOVF CompTempVar614, W, 1
+048C  0100      	MOVLB 0x00
+048E  6FFF      	MOVWF Process_Re_0000D_1_UEPArray+D'1', 1
+
+                        Endpoint = BufferCopy.wIndex & 0x0F;
+0490  0E0F      	MOVLW 0x0F
+0492  15C3      	ANDWF gbl_BufferCopy+D'4', W, 1
+0494  0101      	MOVLB 0x01
+0496  6F19      	MOVWF Process_Re_0000D_1_Endpoint, 1
+
+                        if (BufferCopy.wValue == 0) {
+0498  0100      	MOVLB 0x00
+049A  53C1      	MOVF gbl_BufferCopy+D'2', F, 1
+049C  E136      	BNZ	label43
+049E  53C2      	MOVF gbl_BufferCopy+D'3', F, 1
+04A0  E134      	BNZ	label43
+050A            label43
+
+                            /* Only valid feature is 0 (Remote Wakeup) */
+                            if (((USWSTAT& 0x03) == ADDRESS_STATE) && (Endpoint == 0)) {
+04A2  0E03      	MOVLW 0x03
+04A4  15F4      	ANDWF gbl_USWSTAT, W, 1
+04A6  0101      	MOVLB 0x01
+04A8  6F22      	MOVWF CompTempVar615, 1
+04AA  0E02      	MOVLW 0x02
+04AC  6322      	CPFSEQ CompTempVar615, 1
+04AE  D011      	BRA	label41
+04B0  5319      	MOVF Process_Re_0000D_1_Endpoint, F, 1
+04B2  E10F      	BNZ	label41
+04D2            label41
+
+                                UEPArray [Endpoint] |= 1;
+04B4  0100      	MOVLB 0x00
+04B6  51FF      	MOVF Process_Re_0000D_1_UEPArray+D'1', W, 1
+04B8  6EEA      	MOVWF FSR0H
+04BA  51FE      	MOVF Process_Re_0000D_1_UEPArray, W, 1
+04BC  0101      	MOVLB 0x01
+04BE  2519      	ADDWF Process_Re_0000D_1_Endpoint, W, 1
+04C0  6EE9      	MOVWF FSR0L
+04C2  80EF      	BSF INDF0,0
+
+                                Send_0Len_pkt;
+04C4  0104      	MOVLB 0x04
+04C6  6B05      	CLRF gbl_bd0cntie, 1
+04C8  0EC8      	MOVLW 0xC8
+04CA  6F04      	MOVWF gbl_bd0statie, 1
+04CC  0100      	MOVLB 0x00
+04CE  6BF0      	CLRF gbl_USB_dev_req, 1
+
+                            } else if (((USWSTAT& 0x03) == CONFIG_STATE) && (Endpoint < 3)) {
+04D2  0E03      	MOVLW 0x03
+04D4  0100      	MOVLB 0x00
+04D6  15F4      	ANDWF gbl_USWSTAT, W, 1
+04D8  0101      	MOVLB 0x01
+04DA  6F22      	MOVWF CompTempVar617, 1
+04DC  0E03      	MOVLW 0x03
+04DE  6322      	CPFSEQ CompTempVar617, 1
+04E0  D012      	BRA	label42
+04E2  0E03      	MOVLW 0x03
+04E4  6119      	CPFSLT Process_Re_0000D_1_Endpoint, 1
+04E6  D00F      	BRA	label42
+0506            label42
+
+                                UEPArray [Endpoint] |= 1;
+04E8  0100      	MOVLB 0x00
+04EA  51FF      	MOVF Process_Re_0000D_1_UEPArray+D'1', W, 1
+04EC  6EEA      	MOVWF FSR0H
+04EE  51FE      	MOVF Process_Re_0000D_1_UEPArray, W, 1
+04F0  0101      	MOVLB 0x01
+04F2  2519      	ADDWF Process_Re_0000D_1_Endpoint, W, 1
+04F4  6EE9      	MOVWF FSR0L
+04F6  80EF      	BSF INDF0,0
+
+                                Send_0Len_pkt;
+04F8  0104      	MOVLB 0x04
+04FA  6B05      	CLRF gbl_bd0cntie, 1
+04FC  0EC8      	MOVLW 0xC8
+04FE  6F04      	MOVWF gbl_bd0statie, 1
+0500  0100      	MOVLB 0x00
+0502  6BF0      	CLRF gbl_USB_dev_req, 1
+
+                            } else {
+                                STALL_EP0;
+0506  8070      	BSF gbl_uep0,0
+
+                            }
+                        } else {
+                              STALL_EP0;
+050A  8070      	BSF gbl_uep0,0
+
+                        }
+                        break;
+                    default:
+050E            label44
+
+                        STALL_EP0;
+050E  8070      	BSF gbl_uep0,0
+
+                }
+                break;
+
+            // Fourth bmRequestType ************************************
+            case DEVICETOHOST:
+02CA  0E80      	MOVLW 0x80
+02CC  63BF      	CPFSEQ gbl_BufferCopy, 1
+02CE  D001      	BRA	label14
+02D0  D120      	BRA	label45
+02D2            label14
+0512            label45
+
+                //80
+                switch (BufferCopy.bRequest) {
+                    case GET_CONFIGURATION:
+0512  0E08      	MOVLW 0x08
+0514  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+0516  D001      	BRA	label46
+0518  D008      	BRA	label48
+051A            label46
+052A            label48
+
+                        OutBuffer =  (unsigned char *) ((unsigned int)bd0adrlie + (unsigned int)(bd0adrhie <<8));
+052A  0104      	MOVLB 0x04
+052C  5106      	MOVF gbl_bd0adrlie, W, 1
+052E  0100      	MOVLB 0x00
+0530  6FFC      	MOVWF Process_Re_0000D_1_OutBuffer, 1
+0532  0101      	MOVLB 0x01
+0534  6B23      	CLRF CompTempVar621+D'1', 1
+0536  6B24      	CLRF CompTempVar622, 1
+0538  0104      	MOVLB 0x04
+053A  5107      	MOVF gbl_bd0adrhie, W, 1
+053C  0100      	MOVLB 0x00
+053E  6FFD      	MOVWF Process_Re_0000D_1_OutBuffer+D'1', 1
+0540  0101      	MOVLB 0x01
+0542  5124      	MOVF CompTempVar622, W, 1
+0544  0100      	MOVLB 0x00
+0546  27FC      	ADDWF Process_Re_0000D_1_OutBuffer, F, 1
+0548  0101      	MOVLB 0x01
+054A  5123      	MOVF CompTempVar621+D'1', W, 1
+054C  0100      	MOVLB 0x00
+054E  23FD      	ADDWFC Process_Re_0000D_1_OutBuffer+D'1', F, 1
+
+                        OutBuffer [0] = USB_Curr_Config;
+0550  51FD      	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
+0552  6EEA      	MOVWF FSR0H
+0554  51FC      	MOVF Process_Re_0000D_1_OutBuffer, W, 1
+0556  6EE9      	MOVWF FSR0L
+0558  0101      	MOVLB 0x01
+055A  6B22      	CLRF CompTempVar625, 1
+055C  5122      	MOVF CompTempVar625, W, 1
+055E  26E9      	ADDWF FSR0L, F
+0560  0100      	MOVLB 0x00
+0562  51EE      	MOVF gbl_USB_Curr_Config, W, 1
+0564  6EEF      	MOVWF INDF0
+
+                        bd0cntie = 1;
+0566  0E01      	MOVLW 0x01
+0568  0104      	MOVLB 0x04
+056A  6F05      	MOVWF gbl_bd0cntie, 1
+
+                        bd0statie = 0xc8;
+056C  0EC8      	MOVLW 0xC8
+056E  6F04      	MOVWF gbl_bd0statie, 1
+
+                        break;
+                    case GET_DESCRIPTOR:
+051A  0E06      	MOVLW 0x06
+051C  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+051E  D001      	BRA	label47
+0520  D028      	BRA	label49
+0522            label47
+0572            label49
+
+                        DescriptorID = (unsigned char) (BufferCopy.wValue >> 8);
+0572  51C2      	MOVF gbl_BufferCopy+D'3', W, 1
+0574  0101      	MOVLB 0x01
+0576  6F1B      	MOVWF Process_Re_0000D_1_DescriptorID, 1
+
+                        if (DescriptorID == DEVICE) {
+0578  051B      	DECF Process_Re_0000D_1_DescriptorID, W, 1
+057A  E13E      	BNZ	label52
+05F8            label52
+
+                            USB_dev_req = GET_DESCRIPTOR;
+057C  0E06      	MOVLW 0x06
+057E  0100      	MOVLB 0x00
+0580  6FF0      	MOVWF gbl_USB_dev_req, 1
+
+                            EP0_start = DeviceDescriptor;
+0582  0E00      	MOVLW HIGH(gbl_DeviceDescriptor+D'0')
+0584  6FDE      	MOVWF gbl_EP0_start+D'1', 1
+0586  0EA4      	MOVLW LOW(gbl_DeviceDescriptor+D'0')
+0588  6FDD      	MOVWF gbl_EP0_start, 1
+
+                            EP0_end = DeviceDescriptor + sizeof(DeviceDescriptor);
+058A  0E00      	MOVLW HIGH(gbl_DeviceDescriptor+D'0')
+058C  0101      	MOVLB 0x01
+058E  6F24      	MOVWF CompTempVar631, 1
+0590  0EA4      	MOVLW LOW(gbl_DeviceDescriptor+D'0')
+0592  0100      	MOVLB 0x00
+0594  6FDF      	MOVWF gbl_EP0_end, 1
+0596  6BE0      	CLRF gbl_EP0_end+D'1', 1
+0598  0E12      	MOVLW 0x12
+059A  27DF      	ADDWF gbl_EP0_end, F, 1
+059C  0101      	MOVLB 0x01
+059E  5124      	MOVF CompTempVar631, W, 1
+05A0  0100      	MOVLB 0x00
+05A2  23E0      	ADDWFC gbl_EP0_end+D'1', F, 1
+
+                            if (BufferCopy.wLength < ((unsigned short)EP0_end - (unsigned short)EP0_start))
+05A4  51DD      	MOVF gbl_EP0_start, W, 1
+05A6  5DDF      	SUBWF gbl_EP0_end, W, 1
+05A8  0101      	MOVLB 0x01
+05AA  6F22      	MOVWF CompTempVar627, 1
+05AC  0100      	MOVLB 0x00
+05AE  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+05B0  59E0      	SUBWFB gbl_EP0_end+D'1', W, 1
+05B2  0101      	MOVLB 0x01
+05B4  6F23      	MOVWF CompTempVar628, 1
+05B6  5123      	MOVF CompTempVar628, W, 1
+05B8  0100      	MOVLB 0x00
+05BA  5DC6      	SUBWF gbl_BufferCopy+D'7', W, 1
+05BC  E104      	BNZ	label50
+05BE  0101      	MOVLB 0x01
+05C0  5122      	MOVF CompTempVar627, W, 1
+05C2  0100      	MOVLB 0x00
+05C4  5DC5      	SUBWF gbl_BufferCopy+D'6', W, 1
+05C6            label50
+05C6  E213      	BC	label51
+05EE            label51
+
+                                EP0_end = EP0_start + BufferCopy.wLength;
+05C8  51C5      	MOVF gbl_BufferCopy+D'6', W, 1
+05CA  25DD      	ADDWF gbl_EP0_start, W, 1
+05CC  0101      	MOVLB 0x01
+05CE  6F24      	MOVWF CompTempVar634, 1
+05D0  0100      	MOVLB 0x00
+05D2  51C6      	MOVF gbl_BufferCopy+D'7', W, 1
+05D4  0101      	MOVLB 0x01
+05D6  6F25      	MOVWF CompTempVar635, 1
+05D8  0100      	MOVLB 0x00
+05DA  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+05DC  0101      	MOVLB 0x01
+05DE  2325      	ADDWFC CompTempVar635, F, 1
+05E0  5124      	MOVF CompTempVar634, W, 1
+05E2  0100      	MOVLB 0x00
+05E4  6FDF      	MOVWF gbl_EP0_end, 1
+05E6  0101      	MOVLB 0x01
+05E8  5125      	MOVF CompTempVar635, W, 1
+05EA  0100      	MOVLB 0x00
+05EC  6FE0      	MOVWF gbl_EP0_end+D'1', 1
+
+                            EP0_maxLength = 8;
+05EE  0E08      	MOVLW 0x08
+05F0  6FF5      	MOVWF gbl_EP0_maxLength, 1
+
+                            CopyDescriptorToEP0();
+05F2  EC59F000  	CALL CopyDescri_0000B
+
+                        } else if (DescriptorID == CONFIGURATION) {
+05F8  0E02      	MOVLW 0x02
+05FA  631B      	CPFSEQ Process_Re_0000D_1_DescriptorID, 1
+05FC  D03E      	BRA	label55
+067A            label55
+
+                            USB_dev_req = GET_DESCRIPTOR;
+05FE  0E06      	MOVLW 0x06
+0600  0100      	MOVLB 0x00
+0602  6FF0      	MOVWF gbl_USB_dev_req, 1
+
+                            EP0_start = ConfigDescriptor;
+0604  0E00      	MOVLW HIGH(gbl_ConfigDescriptor+D'0')
+0606  6FDE      	MOVWF gbl_EP0_start+D'1', 1
+0608  0E37      	MOVLW LOW(gbl_ConfigDescriptor+D'0')
+060A  6FDD      	MOVWF gbl_EP0_start, 1
+
+                            EP0_end = ConfigDescriptor + sizeof(ConfigDescriptor);
+060C  0E00      	MOVLW HIGH(gbl_ConfigDescriptor+D'0')
+060E  0101      	MOVLB 0x01
+0610  6F24      	MOVWF CompTempVar640, 1
+0612  0E37      	MOVLW LOW(gbl_ConfigDescriptor+D'0')
+0614  0100      	MOVLB 0x00
+0616  6FDF      	MOVWF gbl_EP0_end, 1
+0618  6BE0      	CLRF gbl_EP0_end+D'1', 1
+061A  0E22      	MOVLW 0x22
+061C  27DF      	ADDWF gbl_EP0_end, F, 1
+061E  0101      	MOVLB 0x01
+0620  5124      	MOVF CompTempVar640, W, 1
+0622  0100      	MOVLB 0x00
+0624  23E0      	ADDWFC gbl_EP0_end+D'1', F, 1
+
+                            if (BufferCopy.wLength < ((unsigned short)EP0_end - (unsigned short)EP0_start))
+0626  51DD      	MOVF gbl_EP0_start, W, 1
+0628  5DDF      	SUBWF gbl_EP0_end, W, 1
+062A  0101      	MOVLB 0x01
+062C  6F22      	MOVWF CompTempVar636, 1
+062E  0100      	MOVLB 0x00
+0630  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+0632  59E0      	SUBWFB gbl_EP0_end+D'1', W, 1
+0634  0101      	MOVLB 0x01
+0636  6F23      	MOVWF CompTempVar637, 1
+0638  5123      	MOVF CompTempVar637, W, 1
+063A  0100      	MOVLB 0x00
+063C  5DC6      	SUBWF gbl_BufferCopy+D'7', W, 1
+063E  E104      	BNZ	label53
+0640  0101      	MOVLB 0x01
+0642  5122      	MOVF CompTempVar636, W, 1
+0644  0100      	MOVLB 0x00
+0646  5DC5      	SUBWF gbl_BufferCopy+D'6', W, 1
+0648            label53
+0648  E213      	BC	label54
+0670            label54
+
+                                EP0_end = EP0_start + BufferCopy.wLength;
+064A  51C5      	MOVF gbl_BufferCopy+D'6', W, 1
+064C  25DD      	ADDWF gbl_EP0_start, W, 1
+064E  0101      	MOVLB 0x01
+0650  6F24      	MOVWF CompTempVar643, 1
+0652  0100      	MOVLB 0x00
+0654  51C6      	MOVF gbl_BufferCopy+D'7', W, 1
+0656  0101      	MOVLB 0x01
+0658  6F25      	MOVWF CompTempVar644, 1
+065A  0100      	MOVLB 0x00
+065C  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+065E  0101      	MOVLB 0x01
+0660  2325      	ADDWFC CompTempVar644, F, 1
+0662  5124      	MOVF CompTempVar643, W, 1
+0664  0100      	MOVLB 0x00
+0666  6FDF      	MOVWF gbl_EP0_end, 1
+0668  0101      	MOVLB 0x01
+066A  5125      	MOVF CompTempVar644, W, 1
+066C  0100      	MOVLB 0x00
+066E  6FE0      	MOVWF gbl_EP0_end+D'1', 1
+
+                            EP0_maxLength = 8;
+0670  0E08      	MOVLW 0x08
+0672  6FF5      	MOVWF gbl_EP0_maxLength, 1
+
+                            CopyDescriptorToEP0();
+0674  EC59F000  	CALL CopyDescri_0000B
+
+                        } else if (DescriptorID == STRING) {
+067A  0E03      	MOVLW 0x03
+067C  631B      	CPFSEQ Process_Re_0000D_1_DescriptorID, 1
+067E  D0C4      	BRA	label66
+0808            label66
+
+                            StringID = (unsigned char) BufferCopy.wValue;
+0680  0100      	MOVLB 0x00
+0682  51C1      	MOVF gbl_BufferCopy+D'2', W, 1
+0684  0101      	MOVLB 0x01
+0686  6F1C      	MOVWF Process_Re_0000D_1_StringID, 1
+
+                            USB_dev_req = GET_DESCRIPTOR;
+0688  0E06      	MOVLW 0x06
+068A  0100      	MOVLB 0x00
+068C  6FF0      	MOVWF gbl_USB_dev_req, 1
+
+                            EP0_maxLength = 8;
+068E  0E08      	MOVLW 0x08
+0690  6FF5      	MOVWF gbl_EP0_maxLength, 1
+
+                            switch (StringID) {
+                                case 0:
+0692  0101      	MOVLB 0x01
+0694  531C      	MOVF Process_Re_0000D_1_StringID, F, 1
+0696  E006      	BZ	label56
+06A4            label56
+
+                                    EP0_start = String0;  // String0 is start of string0
+06A4  0E00      	MOVLW HIGH(gbl_String0+D'0')
+06A6  0100      	MOVLB 0x00
+06A8  6FDE      	MOVWF gbl_EP0_start+D'1', 1
+06AA  0EC7      	MOVLW LOW(gbl_String0+D'0')
+06AC  6FDD      	MOVWF gbl_EP0_start, 1
+
+                                    EP0_end = String0 + String0[0]; // String[0] is length of String0
+06AE  0E00      	MOVLW HIGH(gbl_String0+D'0')
+06B0  0101      	MOVLB 0x01
+06B2  6F28      	MOVWF CompTempVar654, 1
+06B4  0EC7      	MOVLW LOW(gbl_String0+D'0')
+06B6  0100      	MOVLB 0x00
+06B8  6FDF      	MOVWF gbl_EP0_end, 1
+06BA  6BE0      	CLRF gbl_EP0_end+D'1', 1
+06BC  51C7      	MOVF gbl_String0, W, 1
+06BE  27DF      	ADDWF gbl_EP0_end, F, 1
+06C0  0101      	MOVLB 0x01
+06C2  5128      	MOVF CompTempVar654, W, 1
+06C4  0100      	MOVLB 0x00
+06C6  23E0      	ADDWFC gbl_EP0_end+D'1', F, 1
+
+                                    if (BufferCopy.wLength < ((unsigned short)EP0_end - (unsigned short)EP0_start))
+06C8  51DD      	MOVF gbl_EP0_start, W, 1
+06CA  5DDF      	SUBWF gbl_EP0_end, W, 1
+06CC  0101      	MOVLB 0x01
+06CE  6F22      	MOVWF CompTempVar645, 1
+06D0  0100      	MOVLB 0x00
+06D2  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+06D4  59E0      	SUBWFB gbl_EP0_end+D'1', W, 1
+06D6  0101      	MOVLB 0x01
+06D8  6F23      	MOVWF CompTempVar646, 1
+06DA  5123      	MOVF CompTempVar646, W, 1
+06DC  0100      	MOVLB 0x00
+06DE  5DC6      	SUBWF gbl_BufferCopy+D'7', W, 1
+06E0  E104      	BNZ	label57
+06E2  0101      	MOVLB 0x01
+06E4  5122      	MOVF CompTempVar645, W, 1
+06E6  0100      	MOVLB 0x00
+06E8  5DC5      	SUBWF gbl_BufferCopy+D'6', W, 1
+06EA            label57
+06EA  E213      	BC	label58
+0712            label58
+
+                                        EP0_end = EP0_start + BufferCopy.wLength;
+06EC  51C5      	MOVF gbl_BufferCopy+D'6', W, 1
+06EE  25DD      	ADDWF gbl_EP0_start, W, 1
+06F0  0101      	MOVLB 0x01
+06F2  6F28      	MOVWF CompTempVar657, 1
+06F4  0100      	MOVLB 0x00
+06F6  51C6      	MOVF gbl_BufferCopy+D'7', W, 1
+06F8  0101      	MOVLB 0x01
+06FA  6F29      	MOVWF CompTempVar658, 1
+06FC  0100      	MOVLB 0x00
+06FE  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+0700  0101      	MOVLB 0x01
+0702  2329      	ADDWFC CompTempVar658, F, 1
+0704  5128      	MOVF CompTempVar657, W, 1
+0706  0100      	MOVLB 0x00
+0708  6FDF      	MOVWF gbl_EP0_end, 1
+070A  0101      	MOVLB 0x01
+070C  5129      	MOVF CompTempVar658, W, 1
+070E  0100      	MOVLB 0x00
+0710  6FE0      	MOVWF gbl_EP0_end+D'1', 1
+
+                                    CopyDescriptorToEP0(); // this copies the whole string in 8 byte pieces
+0712  EC59F000  	CALL CopyDescri_0000B
+
+                                    break;
+                                case 1:
+0698  051C      	DECF Process_Re_0000D_1_StringID, W, 1
+069A  E03E      	BZ	label59
+0718            label59
+
+                                    EP0_start = String1;
+0718  0E00      	MOVLW HIGH(gbl_String1+D'0')
+071A  0100      	MOVLB 0x00
+071C  6FDE      	MOVWF gbl_EP0_start+D'1', 1
+071E  0E90      	MOVLW LOW(gbl_String1+D'0')
+0720  6FDD      	MOVWF gbl_EP0_start, 1
+
+                                    EP0_end = String1 + String1[0];
+0722  0E00      	MOVLW HIGH(gbl_String1+D'0')
+0724  0101      	MOVLB 0x01
+0726  6F28      	MOVWF CompTempVar662, 1
+0728  0E90      	MOVLW LOW(gbl_String1+D'0')
+072A  0100      	MOVLB 0x00
+072C  6FDF      	MOVWF gbl_EP0_end, 1
+072E  6BE0      	CLRF gbl_EP0_end+D'1', 1
+0730  5190      	MOVF gbl_String1, W, 1
+0732  27DF      	ADDWF gbl_EP0_end, F, 1
+0734  0101      	MOVLB 0x01
+0736  5128      	MOVF CompTempVar662, W, 1
+0738  0100      	MOVLB 0x00
+073A  23E0      	ADDWFC gbl_EP0_end+D'1', F, 1
+
+                                    if (BufferCopy.wLength < ((unsigned short)EP0_end - (unsigned short)EP0_start))
+073C  51DD      	MOVF gbl_EP0_start, W, 1
+073E  5DDF      	SUBWF gbl_EP0_end, W, 1
+0740  0101      	MOVLB 0x01
+0742  6F24      	MOVWF CompTempVar647, 1
+0744  0100      	MOVLB 0x00
+0746  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+0748  59E0      	SUBWFB gbl_EP0_end+D'1', W, 1
+074A  0101      	MOVLB 0x01
+074C  6F25      	MOVWF CompTempVar648, 1
+074E  5125      	MOVF CompTempVar648, W, 1
+0750  0100      	MOVLB 0x00
+0752  5DC6      	SUBWF gbl_BufferCopy+D'7', W, 1
+0754  E104      	BNZ	label60
+0756  0101      	MOVLB 0x01
+0758  5124      	MOVF CompTempVar647, W, 1
+075A  0100      	MOVLB 0x00
+075C  5DC5      	SUBWF gbl_BufferCopy+D'6', W, 1
+075E            label60
+075E  E213      	BC	label61
+0786            label61
+
+                                        EP0_end = EP0_start + BufferCopy.wLength;
+0760  51C5      	MOVF gbl_BufferCopy+D'6', W, 1
+0762  25DD      	ADDWF gbl_EP0_start, W, 1
+0764  0101      	MOVLB 0x01
+0766  6F28      	MOVWF CompTempVar665, 1
+0768  0100      	MOVLB 0x00
+076A  51C6      	MOVF gbl_BufferCopy+D'7', W, 1
+076C  0101      	MOVLB 0x01
+076E  6F29      	MOVWF CompTempVar666, 1
+0770  0100      	MOVLB 0x00
+0772  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+0774  0101      	MOVLB 0x01
+0776  2329      	ADDWFC CompTempVar666, F, 1
+0778  5128      	MOVF CompTempVar665, W, 1
+077A  0100      	MOVLB 0x00
+077C  6FDF      	MOVWF gbl_EP0_end, 1
+077E  0101      	MOVLB 0x01
+0780  5129      	MOVF CompTempVar666, W, 1
+0782  0100      	MOVLB 0x00
+0784  6FE0      	MOVWF gbl_EP0_end+D'1', 1
+
+                                    CopyDescriptorToEP0 ();
+0786  EC59F000  	CALL CopyDescri_0000B
+
+                                    break;
+                                case 2:
+069C  0E02      	MOVLW 0x02
+069E  631C      	CPFSEQ Process_Re_0000D_1_StringID, 1
+06A0  D0AF      	BRA	label65
+078C            label62
+
+                                    EP0_start = String2;
+078C  0E00      	MOVLW HIGH(gbl_String2+D'0')
+078E  0100      	MOVLB 0x00
+0790  6FDE      	MOVWF gbl_EP0_start+D'1', 1
+0792  0E60      	MOVLW LOW(gbl_String2+D'0')
+0794  6FDD      	MOVWF gbl_EP0_start, 1
+
+                                    EP0_end = String2 + String2[0];
+0796  0E00      	MOVLW HIGH(gbl_String2+D'0')
+0798  0101      	MOVLB 0x01
+079A  6F28      	MOVWF CompTempVar670, 1
+079C  0E60      	MOVLW LOW(gbl_String2+D'0')
+079E  0100      	MOVLB 0x00
+07A0  6FDF      	MOVWF gbl_EP0_end, 1
+07A2  6BE0      	CLRF gbl_EP0_end+D'1', 1
+07A4  5160      	MOVF gbl_String2, W, 1
+07A6  27DF      	ADDWF gbl_EP0_end, F, 1
+07A8  0101      	MOVLB 0x01
+07AA  5128      	MOVF CompTempVar670, W, 1
+07AC  0100      	MOVLB 0x00
+07AE  23E0      	ADDWFC gbl_EP0_end+D'1', F, 1
+
+                                    if (BufferCopy.wLength < ((unsigned short)EP0_end - (unsigned short)EP0_start))
+07B0  51DD      	MOVF gbl_EP0_start, W, 1
+07B2  5DDF      	SUBWF gbl_EP0_end, W, 1
+07B4  0101      	MOVLB 0x01
+07B6  6F26      	MOVWF CompTempVar649, 1
+07B8  0100      	MOVLB 0x00
+07BA  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+07BC  59E0      	SUBWFB gbl_EP0_end+D'1', W, 1
+07BE  0101      	MOVLB 0x01
+07C0  6F27      	MOVWF CompTempVar650, 1
+07C2  5127      	MOVF CompTempVar650, W, 1
+07C4  0100      	MOVLB 0x00
+07C6  5DC6      	SUBWF gbl_BufferCopy+D'7', W, 1
+07C8  E104      	BNZ	label63
+07CA  0101      	MOVLB 0x01
+07CC  5126      	MOVF CompTempVar649, W, 1
+07CE  0100      	MOVLB 0x00
+07D0  5DC5      	SUBWF gbl_BufferCopy+D'6', W, 1
+07D2            label63
+07D2  E213      	BC	label64
+07FA            label64
+
+                                        EP0_end = EP0_start + BufferCopy.wLength;
+07D4  51C5      	MOVF gbl_BufferCopy+D'6', W, 1
+07D6  25DD      	ADDWF gbl_EP0_start, W, 1
+07D8  0101      	MOVLB 0x01
+07DA  6F28      	MOVWF CompTempVar673, 1
+07DC  0100      	MOVLB 0x00
+07DE  51C6      	MOVF gbl_BufferCopy+D'7', W, 1
+07E0  0101      	MOVLB 0x01
+07E2  6F29      	MOVWF CompTempVar674, 1
+07E4  0100      	MOVLB 0x00
+07E6  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+07E8  0101      	MOVLB 0x01
+07EA  2329      	ADDWFC CompTempVar674, F, 1
+07EC  5128      	MOVF CompTempVar673, W, 1
+07EE  0100      	MOVLB 0x00
+07F0  6FDF      	MOVWF gbl_EP0_end, 1
+07F2  0101      	MOVLB 0x01
+07F4  5129      	MOVF CompTempVar674, W, 1
+07F6  0100      	MOVLB 0x00
+07F8  6FE0      	MOVWF gbl_EP0_end+D'1', 1
+
+                                    CopyDescriptorToEP0();
+07FA  EC59F000  	CALL CopyDescri_0000B
+
+                                    break;
+                                // Additional string processing can be added here
+                                default:
+0800            label65
+
+                                    /* REQUEST ERROR */
+                                    STALL_PID_EP0IN;
+0800  0ECC      	MOVLW 0xCC
+0802  0104      	MOVLB 0x04
+0804  6F04      	MOVWF gbl_bd0statie, 1
+
+                            }
+                        } else  {
+                            /* REQUEST ERROR */
+                            STALL_PID_EP0IN;
+0808  0ECC      	MOVLW 0xCC
+080A  0104      	MOVLB 0x04
+080C  6F04      	MOVWF gbl_bd0statie, 1
+
+                        }
+                        break;
+                    case GET_STATUS:
+0522  53C0      	MOVF gbl_BufferCopy+D'1', F, 1
+0524  B4D8      	BTFSC STATUS,Z
+0526  D174      	BRA	label67
+0810            label67
+
+                        OutBuffer = (unsigned char *)BDT[EP0IN].address;
+0810  51E2      	MOVF gbl_BDT+D'1', W, 1
+0812  6EEA      	MOVWF FSR0H
+0814  51E1      	MOVF gbl_BDT, W, 1
+0816  6EE9      	MOVWF FSR0L
+0818  0E04      	MOVLW 0x04
+081A  26E9      	ADDWF FSR0L, F
+081C  0E02      	MOVLW 0x02
+081E  26E9      	ADDWF FSR0L, F
+0820  50EE      	MOVF POSTINC0, W
+0822  6FFC      	MOVWF Process_Re_0000D_1_OutBuffer, 1
+0824  50EF      	MOVF INDF0, W
+0826  6FFD      	MOVWF Process_Re_0000D_1_OutBuffer+D'1', 1
+
+                        OutBuffer[0] = USB_status_device;
+0828  51FD      	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
+082A  6EEA      	MOVWF FSR0H
+082C  51FC      	MOVF Process_Re_0000D_1_OutBuffer, W, 1
+082E  6EE9      	MOVWF FSR0L
+0830  0101      	MOVLB 0x01
+0832  6B22      	CLRF CompTempVar677, 1
+0834  5122      	MOVF CompTempVar677, W, 1
+0836  26E9      	ADDWF FSR0L, F
+0838  0100      	MOVLB 0x00
+083A  51ED      	MOVF gbl_USB_status_device, W, 1
+083C  6EEF      	MOVWF INDF0
+
+                        OutBuffer[1] = 0;
+083E  51FC      	MOVF Process_Re_0000D_1_OutBuffer, W, 1
+0840  6EE9      	MOVWF FSR0L
+0842  0E01      	MOVLW 0x01
+0844  26E9      	ADDWF FSR0L, F
+0846  0E00      	MOVLW 0x00
+0848  6EEF      	MOVWF INDF0
+
+                        bd0cntie = 2;
+084A  0E02      	MOVLW 0x02
+084C  0104      	MOVLB 0x04
+084E  6F05      	MOVWF gbl_bd0cntie, 1
+
+                        bd0statie = 0xc8;
+0850  0EC8      	MOVLW 0xC8
+0852  6F04      	MOVWF gbl_bd0statie, 1
+
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            // Fifth bmRequestType ************************************
+            case INTERFACETOHOST:
+02D2  0E81      	MOVLW 0x81
+02D4  63BF      	CPFSEQ gbl_BufferCopy, 1
+02D6  D001      	BRA	label15
+02D8  D2BE      	BRA	label68
+02DA            label15
+0856            label68
+
+                switch (BufferCopy.bRequest) {
+                    case GET_INTERFACE:
+0856  0E0A      	MOVLW 0x0A
+0858  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+085A  D001      	BRA	label69
+085C  D006      	BRA	label70
+085E            label69
+086A            label70
+
+                        Interface = BufferCopy.wIndex;
+086A  51C3      	MOVF gbl_BufferCopy+D'4', W, 1
+086C  0101      	MOVLB 0x01
+086E  6F1A      	MOVWF Process_Re_0000D_1_Interface, 1
+
+                        if ((USWSTAT== CONFIG_STATE) && (Interface < NUM_INTERFACES)) {
+0870  0E03      	MOVLW 0x03
+0872  0100      	MOVLB 0x00
+0874  63F4      	CPFSEQ gbl_USWSTAT, 1
+0876  D02C      	BRA	label71
+0878  0E01      	MOVLW 0x01
+087A  0101      	MOVLB 0x01
+087C  611A      	CPFSLT Process_Re_0000D_1_Interface, 1
+087E  D028      	BRA	label71
+08D0            label71
+
+                            OutBuffer = (unsigned char *) BDT [EP0IN].address;
+0880  0100      	MOVLB 0x00
+0882  51E2      	MOVF gbl_BDT+D'1', W, 1
+0884  6EEA      	MOVWF FSR0H
+0886  51E1      	MOVF gbl_BDT, W, 1
+0888  6EE9      	MOVWF FSR0L
+088A  0E04      	MOVLW 0x04
+088C  26E9      	ADDWF FSR0L, F
+088E  0E02      	MOVLW 0x02
+0890  26E9      	ADDWF FSR0L, F
+0892  50EE      	MOVF POSTINC0, W
+0894  6FFC      	MOVWF Process_Re_0000D_1_OutBuffer, 1
+0896  50EF      	MOVF INDF0, W
+0898  6FFD      	MOVWF Process_Re_0000D_1_OutBuffer+D'1', 1
+
+                            OutBuffer[0] = USB_Interface[Interface];
+089A  EE00F05D  	LFSR 0x00,  gbl_USB_Interface
+089E  50E9      	MOVF FSR0L, W
+08A0  0101      	MOVLB 0x01
+08A2  511A      	MOVF Process_Re_0000D_1_Interface, W, 1
+08A4  6F23      	MOVWF CompTempVar683, 1
+08A6  5123      	MOVF CompTempVar683, W, 1
+08A8  26E9      	ADDWF FSR0L, F
+08AA  50EF      	MOVF INDF0, W
+08AC  6F24      	MOVWF CompTempVar684, 1
+08AE  0100      	MOVLB 0x00
+08B0  51FD      	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
+08B2  6EEA      	MOVWF FSR0H
+08B4  51FC      	MOVF Process_Re_0000D_1_OutBuffer, W, 1
+08B6  6EE9      	MOVWF FSR0L
+08B8  0101      	MOVLB 0x01
+08BA  6B22      	CLRF CompTempVar681, 1
+08BC  5122      	MOVF CompTempVar681, W, 1
+08BE  26E9      	ADDWF FSR0L, F
+08C0  5124      	MOVF CompTempVar684, W, 1
+08C2  6EEF      	MOVWF INDF0
+
+                            bd0cntie = 1;
+08C4  0E01      	MOVLW 0x01
+08C6  0104      	MOVLB 0x04
+08C8  6F05      	MOVWF gbl_bd0cntie, 1
+
+                            bd0statie = 0xc8;
+08CA  0EC8      	MOVLW 0xC8
+08CC  6F04      	MOVWF gbl_bd0statie, 1
+
+                        } else {
+                            STALL_EP0;
+08D0  8070      	BSF gbl_uep0,0
+
+                        }
+                        break;
+                    case GET_STATUS:
+085E  53C0      	MOVF gbl_BufferCopy+D'1', F, 1
+0860  E039      	BZ	label72
+08D4            label72
+
+                        OutBuffer = (unsigned char *) BDT [EP0IN].address;
+08D4  51E2      	MOVF gbl_BDT+D'1', W, 1
+08D6  6EEA      	MOVWF FSR0H
+08D8  51E1      	MOVF gbl_BDT, W, 1
+08DA  6EE9      	MOVWF FSR0L
+08DC  0E04      	MOVLW 0x04
+08DE  26E9      	ADDWF FSR0L, F
+08E0  0E02      	MOVLW 0x02
+08E2  26E9      	ADDWF FSR0L, F
+08E4  50EE      	MOVF POSTINC0, W
+08E6  6FFC      	MOVWF Process_Re_0000D_1_OutBuffer, 1
+08E8  50EF      	MOVF INDF0, W
+08EA  6FFD      	MOVWF Process_Re_0000D_1_OutBuffer+D'1', 1
+
+                        OutBuffer[1] = 0;
+08EC  51FD      	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
+08EE  6EEA      	MOVWF FSR0H
+08F0  51FC      	MOVF Process_Re_0000D_1_OutBuffer, W, 1
+08F2  6EE9      	MOVWF FSR0L
+08F4  0E01      	MOVLW 0x01
+08F6  26E9      	ADDWF FSR0L, F
+08F8  0E00      	MOVLW 0x00
+08FA  6EEF      	MOVWF INDF0
+
+                        bd0cntie = 2;
+08FC  0E02      	MOVLW 0x02
+08FE  0104      	MOVLB 0x04
+0900  6F05      	MOVWF gbl_bd0cntie, 1
+
+                        Interface = BufferCopy.wIndex;
+0902  0100      	MOVLB 0x00
+0904  51C3      	MOVF gbl_BufferCopy+D'4', W, 1
+0906  0101      	MOVLB 0x01
+0908  6F1A      	MOVWF Process_Re_0000D_1_Interface, 1
+
+                        if ((USWSTAT == ADDRESS_STATE) && (Interface == 0))	{
+090A  0E02      	MOVLW 0x02
+090C  0100      	MOVLB 0x00
+090E  63F4      	CPFSEQ gbl_USWSTAT, 1
+0910  D01B      	BRA	label73
+0912  0101      	MOVLB 0x01
+0914  531A      	MOVF Process_Re_0000D_1_Interface, F, 1
+0916  E118      	BNZ	label73
+0948            label73
+
+                            OutBuffer[0] = USB_Interface[Interface];
+0918  EE00F05D  	LFSR 0x00,  gbl_USB_Interface
+091C  50E9      	MOVF FSR0L, W
+091E  511A      	MOVF Process_Re_0000D_1_Interface, W, 1
+0920  6F23      	MOVWF CompTempVar690, 1
+0922  5123      	MOVF CompTempVar690, W, 1
+0924  26E9      	ADDWF FSR0L, F
+0926  50EF      	MOVF INDF0, W
+0928  6F24      	MOVWF CompTempVar691, 1
+092A  0100      	MOVLB 0x00
+092C  51FD      	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
+092E  6EEA      	MOVWF FSR0H
+0930  51FC      	MOVF Process_Re_0000D_1_OutBuffer, W, 1
+0932  6EE9      	MOVWF FSR0L
+0934  0101      	MOVLB 0x01
+0936  6B22      	CLRF CompTempVar688, 1
+0938  5122      	MOVF CompTempVar688, W, 1
+093A  26E9      	ADDWF FSR0L, F
+093C  5124      	MOVF CompTempVar691, W, 1
+093E  6EEF      	MOVWF INDF0
+
+                            bd0statie = 0xc8;
+0940  0EC8      	MOVLW 0xC8
+0942  0104      	MOVLB 0x04
+0944  6F04      	MOVWF gbl_bd0statie, 1
+
+                        } else if ((USWSTAT == CONFIG_STATE) && (Interface < NUM_INTERFACES)) {
+0948  0E03      	MOVLW 0x03
+094A  0100      	MOVLB 0x00
+094C  63F4      	CPFSEQ gbl_USWSTAT, 1
+094E  D01C      	BRA	label74
+0950  0E01      	MOVLW 0x01
+0952  0101      	MOVLB 0x01
+0954  611A      	CPFSLT Process_Re_0000D_1_Interface, 1
+0956  D018      	BRA	label74
+0988            label74
+
+                            OutBuffer[0] = USB_Interface[Interface];
+0958  EE00F05D  	LFSR 0x00,  gbl_USB_Interface
+095C  50E9      	MOVF FSR0L, W
+095E  511A      	MOVF Process_Re_0000D_1_Interface, W, 1
+0960  6F23      	MOVWF CompTempVar695, 1
+0962  5123      	MOVF CompTempVar695, W, 1
+0964  26E9      	ADDWF FSR0L, F
+0966  50EF      	MOVF INDF0, W
+0968  6F24      	MOVWF CompTempVar696, 1
+096A  0100      	MOVLB 0x00
+096C  51FD      	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
+096E  6EEA      	MOVWF FSR0H
+0970  51FC      	MOVF Process_Re_0000D_1_OutBuffer, W, 1
+0972  6EE9      	MOVWF FSR0L
+0974  0101      	MOVLB 0x01
+0976  6B22      	CLRF CompTempVar693, 1
+0978  5122      	MOVF CompTempVar693, W, 1
+097A  26E9      	ADDWF FSR0L, F
+097C  5124      	MOVF CompTempVar696, W, 1
+097E  6EEF      	MOVWF INDF0
+
+                            bd0statie = 0xc8;
+0980  0EC8      	MOVLW 0xC8
+0982  0104      	MOVLB 0x04
+0984  6F04      	MOVWF gbl_bd0statie, 1
+
+                        } else {
+                            STALL_EP0;
+0988  8070      	BSF gbl_uep0,0
+
+                        }
+                        break;
+                    case GET_DESCRIPTOR:
+0862  0E06      	MOVLW 0x06
+0864  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+0868  D091      	BRA	label75
+098C            label75
+
+                        DescriptorType = BufferCopy.wValue >> 8;
+098C  51C2      	MOVF gbl_BufferCopy+D'3', W, 1
+098E  0101      	MOVLB 0x01
+0990  6F18      	MOVWF Process_Re_0000D_1_Descrip_0000E, 1
+
+                        if (DescriptorType == HID_REPORT_DESCRIPTOR) {
+0992  0E22      	MOVLW 0x22
+0994  6318      	CPFSEQ Process_Re_0000D_1_Descrip_0000E, 1
+0996  D032      	BRA	label77
+09FC            label77
+
+                            /* 22 special HID request to return report descriptor */
+                            USB_dev_req = GET_DESCRIPTOR;
+0998  0E06      	MOVLW 0x06
+099A  0100      	MOVLB 0x00
+099C  6FF0      	MOVWF gbl_USB_dev_req, 1
+
+                            if (BufferCopy.wIndex == 0);
+099E  53C3      	MOVF gbl_BufferCopy+D'4', F, 1
+09A0  B4D8      	BTFSC STATUS,Z
+09A2  53C4      	MOVF gbl_BufferCopy+D'5', F, 1
+
+                            {
+                                EP0_start = ReportDescriptor1;
+09A4  0E00      	MOVLW HIGH(gbl_ReportDescriptor1+D'0')
+09A6  6FDE      	MOVWF gbl_EP0_start+D'1', 1
+09A8  0E05      	MOVLW LOW(gbl_ReportDescriptor1+D'0')
+09AA  6FDD      	MOVWF gbl_EP0_start, 1
+
+                                EP0_end = EP0_start + sizeof(ReportDescriptor1);
+09AC  6BE0      	CLRF gbl_EP0_end+D'1', 1
+09AE  0E32      	MOVLW 0x32
+09B0  25DD      	ADDWF gbl_EP0_start, W, 1
+09B2  6FDF      	MOVWF gbl_EP0_end, 1
+09B4  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+09B6  23E0      	ADDWFC gbl_EP0_end+D'1', F, 1
+
+                                EP0_maxLength = 8;
+09B8  0E08      	MOVLW 0x08
+09BA  6FF5      	MOVWF gbl_EP0_maxLength, 1
+
+                                if (BufferCopy.wLength < sizeof (ReportDescriptor1))
+09BC  0E32      	MOVLW 0x32
+09BE  5DC5      	SUBWF gbl_BufferCopy+D'6', W, 1
+09C0  E215      	BC	label76
+09C2  67C6      	TSTFSZ gbl_BufferCopy+D'7', 1
+09C4  D013      	BRA	label76
+09EC            label76
+
+                                    EP0_end = EP0_start + BufferCopy.wLength;
+09C6  51C5      	MOVF gbl_BufferCopy+D'6', W, 1
+09C8  25DD      	ADDWF gbl_EP0_start, W, 1
+09CA  0101      	MOVLB 0x01
+09CC  6F22      	MOVWF CompTempVar700, 1
+09CE  0100      	MOVLB 0x00
+09D0  51C6      	MOVF gbl_BufferCopy+D'7', W, 1
+09D2  0101      	MOVLB 0x01
+09D4  6F23      	MOVWF CompTempVar701, 1
+09D6  0100      	MOVLB 0x00
+09D8  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+09DA  0101      	MOVLB 0x01
+09DC  2323      	ADDWFC CompTempVar701, F, 1
+09DE  5122      	MOVF CompTempVar700, W, 1
+09E0  0100      	MOVLB 0x00
+09E2  6FDF      	MOVWF gbl_EP0_end, 1
+09E4  0101      	MOVLB 0x01
+09E6  5123      	MOVF CompTempVar701, W, 1
+09E8  0100      	MOVLB 0x00
+09EA  6FE0      	MOVWF gbl_EP0_end+D'1', 1
+
+                                CopyDescriptorToEP0();
+09EC  EC59F000  	CALL CopyDescri_0000B
+
+                            }
+                            if (BufferCopy.wIndex == 1);
+09F0  0E01      	MOVLW 0x01
+09F2  0100      	MOVLB 0x00
+09F4  63C3      	CPFSEQ gbl_BufferCopy+D'4', 1
+09F8  51C4      	MOVF gbl_BufferCopy+D'5', W, 1
+
+                            {
+                                /* Repeat above code for another Report Descriptor. */
+                            }
+                        } else if (DescriptorType == HID_DESCRIPTOR) {
+09FC  0E21      	MOVLW 0x21
+09FE  6318      	CPFSEQ Process_Re_0000D_1_Descrip_0000E, 1
+0A00  D033      	BRA	label80
+0A68            label80
+
+                            /* 21 HID descriptor */
+                            USB_dev_req = GET_DESCRIPTOR;
+0A02  0E06      	MOVLW 0x06
+0A04  0100      	MOVLB 0x00
+0A06  6FF0      	MOVWF gbl_USB_dev_req, 1
+
+                            if (BufferCopy.wIndex == 0) {
+0A08  53C3      	MOVF gbl_BufferCopy+D'4', F, 1
+0A0A  E128      	BNZ	label79
+0A0C  53C4      	MOVF gbl_BufferCopy+D'5', F, 1
+0A0E  E126      	BNZ	label79
+0A5C            label79
+
+                                EP0_start = HIDDescriptor;
+0A10  0E00      	MOVLW HIGH(gbl_HIDDescriptor+D'0')
+0A12  6FDE      	MOVWF gbl_EP0_start+D'1', 1
+0A14  0EB6      	MOVLW LOW(gbl_HIDDescriptor+D'0')
+0A16  6FDD      	MOVWF gbl_EP0_start, 1
+
+                                EP0_end   = EP0_start + sizeof (HIDDescriptor);
+0A18  6BE0      	CLRF gbl_EP0_end+D'1', 1
+0A1A  0E09      	MOVLW 0x09
+0A1C  25DD      	ADDWF gbl_EP0_start, W, 1
+0A1E  6FDF      	MOVWF gbl_EP0_end, 1
+0A20  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+0A22  23E0      	ADDWFC gbl_EP0_end+D'1', F, 1
+
+                                EP0_maxLength = 8;
+0A24  0E08      	MOVLW 0x08
+0A26  6FF5      	MOVWF gbl_EP0_maxLength, 1
+
+                                if (BufferCopy.wLength < sizeof (HIDDescriptor))
+0A28  0E09      	MOVLW 0x09
+0A2A  5DC5      	SUBWF gbl_BufferCopy+D'6', W, 1
+0A2C  E215      	BC	label78
+0A2E  67C6      	TSTFSZ gbl_BufferCopy+D'7', 1
+0A30  D013      	BRA	label78
+0A58            label78
+
+                                    EP0_end = EP0_start + BufferCopy.wLength;
+0A32  51C5      	MOVF gbl_BufferCopy+D'6', W, 1
+0A34  25DD      	ADDWF gbl_EP0_start, W, 1
+0A36  0101      	MOVLB 0x01
+0A38  6F22      	MOVWF CompTempVar705, 1
+0A3A  0100      	MOVLB 0x00
+0A3C  51C6      	MOVF gbl_BufferCopy+D'7', W, 1
+0A3E  0101      	MOVLB 0x01
+0A40  6F23      	MOVWF CompTempVar706, 1
+0A42  0100      	MOVLB 0x00
+0A44  51DE      	MOVF gbl_EP0_start+D'1', W, 1
+0A46  0101      	MOVLB 0x01
+0A48  2323      	ADDWFC CompTempVar706, F, 1
+0A4A  5122      	MOVF CompTempVar705, W, 1
+0A4C  0100      	MOVLB 0x00
+0A4E  6FDF      	MOVWF gbl_EP0_end, 1
+0A50  0101      	MOVLB 0x01
+0A52  5123      	MOVF CompTempVar706, W, 1
+0A54  0100      	MOVLB 0x00
+0A56  6FE0      	MOVWF gbl_EP0_end+D'1', 1
+
+                                CopyDescriptorToEP0();
+0A58  EC59F000  	CALL CopyDescri_0000B
+
+                            }
+                            if (BufferCopy.wIndex == 1) {
+0A5C  0E01      	MOVLW 0x01
+0A5E  0100      	MOVLB 0x00
+0A60  63C3      	CPFSEQ gbl_BufferCopy+D'4', 1
+0A64  51C4      	MOVF gbl_BufferCopy+D'5', W, 1
+
+                                /* Repeat above code for another HID Descriptor. */
+                            }
+                        } else {
+                            /* unrecognised request */
+                            STALL_EP0;
+0A68  8070      	BSF gbl_uep0,0
+
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            // Sixth bmRequestType ************************************
+            case ENDPOINTTOHOST:
+02DA  0E82      	MOVLW 0x82
+02DC  63BF      	CPFSEQ gbl_BufferCopy, 1
+02DE  EF86F005  	GOTO	label83
+0A6C            label81
+
+                if (BufferCopy.bRequest == GET_STATUS) {
+0A6C  53C0      	MOVF gbl_BufferCopy+D'1', F, 1
+0A6E  A4D8      	BTFSS STATUS,Z
+
+                    UEPArray = (unsigned char *) &uep0;
+0A72  0E0F      	MOVLW HIGH(gbl_uep0+D'0')
+0A74  0101      	MOVLB 0x01
+0A76  6F22      	MOVWF CompTempVar707, 1
+0A78  0E70      	MOVLW LOW(gbl_uep0+D'0')
+0A7A  0100      	MOVLB 0x00
+0A7C  6FFE      	MOVWF Process_Re_0000D_1_UEPArray, 1
+0A7E  0101      	MOVLB 0x01
+0A80  5122      	MOVF CompTempVar707, W, 1
+0A82  0100      	MOVLB 0x00
+0A84  6FFF      	MOVWF Process_Re_0000D_1_UEPArray+D'1', 1
+
+                    Endpoint = BufferCopy.wIndex & 0x0F;
+0A86  0E0F      	MOVLW 0x0F
+0A88  15C3      	ANDWF gbl_BufferCopy+D'4', W, 1
+0A8A  0101      	MOVLB 0x01
+0A8C  6F19      	MOVWF Process_Re_0000D_1_Endpoint, 1
+
+                    OutBuffer = (unsigned char *) ((unsigned int)bd0adrlie + (unsigned int)(bd0adrhie << 8));
+0A8E  0104      	MOVLB 0x04
+0A90  5106      	MOVF gbl_bd0adrlie, W, 1
+0A92  0101      	MOVLB 0x01
+0A94  6F22      	MOVWF CompTempVar708, 1
+0A96  6B25      	CLRF CompTempVar710+D'1', 1
+0A98  6B26      	CLRF CompTempVar711, 1
+0A9A  0104      	MOVLB 0x04
+0A9C  5107      	MOVF gbl_bd0adrhie, W, 1
+0A9E  0101      	MOVLB 0x01
+0AA0  6F23      	MOVWF CompTempVar709, 1
+0AA2  5126      	MOVF CompTempVar711, W, 1
+0AA4  2722      	ADDWF CompTempVar708, F, 1
+0AA6  5125      	MOVF CompTempVar710+D'1', W, 1
+0AA8  2323      	ADDWFC CompTempVar709, F, 1
+0AAA  5122      	MOVF CompTempVar708, W, 1
+0AAC  0100      	MOVLB 0x00
+0AAE  6FFC      	MOVWF Process_Re_0000D_1_OutBuffer, 1
+0AB0  0101      	MOVLB 0x01
+0AB2  5123      	MOVF CompTempVar709, W, 1
+0AB4  0100      	MOVLB 0x00
+0AB6  6FFD      	MOVWF Process_Re_0000D_1_OutBuffer+D'1', 1
+
+                    //		OutBuffer = (unsigned char * ) bd0adrlie;
+                    OutBuffer[1] = 0;
+0AB8  51FD      	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
+0ABA  6EEA      	MOVWF FSR0H
+0ABC  51FC      	MOVF Process_Re_0000D_1_OutBuffer, W, 1
+0ABE  6EE9      	MOVWF FSR0L
+0AC0  0E01      	MOVLW 0x01
+0AC2  26E9      	ADDWF FSR0L, F
+0AC4  0E00      	MOVLW 0x00
+0AC6  6EEF      	MOVWF INDF0
+
+                    bd0cntie = 2;
+0AC8  0E02      	MOVLW 0x02
+0ACA  0104      	MOVLB 0x04
+0ACC  6F05      	MOVWF gbl_bd0cntie, 1
+
+
+                    if (Endpoint < 3) {
+0ACE  0E03      	MOVLW 0x03
+0AD0  0101      	MOVLB 0x01
+0AD2  6119      	CPFSLT Process_Re_0000D_1_Endpoint, 1
+0AD4  D019      	BRA	label82
+0B08            label82
+
+                        OutBuffer[0] = UEPArray [Endpoint] & 0x01;
+0AD6  0100      	MOVLB 0x00
+0AD8  51FF      	MOVF Process_Re_0000D_1_UEPArray+D'1', W, 1
+0ADA  6EEA      	MOVWF FSR0H
+0ADC  51FE      	MOVF Process_Re_0000D_1_UEPArray, W, 1
+0ADE  0101      	MOVLB 0x01
+0AE0  2519      	ADDWF Process_Re_0000D_1_Endpoint, W, 1
+0AE2  6EE9      	MOVWF FSR0L
+0AE4  0E01      	MOVLW 0x01
+0AE6  14EF      	ANDWF INDF0, W
+0AE8  6F23      	MOVWF CompTempVar719, 1
+0AEA  0100      	MOVLB 0x00
+0AEC  51FD      	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
+0AEE  6EEA      	MOVWF FSR0H
+0AF0  51FC      	MOVF Process_Re_0000D_1_OutBuffer, W, 1
+0AF2  6EE9      	MOVWF FSR0L
+0AF4  0101      	MOVLB 0x01
+0AF6  6B22      	CLRF CompTempVar715, 1
+0AF8  5122      	MOVF CompTempVar715, W, 1
+0AFA  26E9      	ADDWF FSR0L, F
+0AFC  5123      	MOVF CompTempVar719, W, 1
+0AFE  6EEF      	MOVWF INDF0
+
+                        bd0statie = 0xc8;
+0B00  0EC8      	MOVLW 0xC8
+0B02  0104      	MOVLB 0x04
+0B04  6F04      	MOVWF gbl_bd0statie, 1
+
+                    } else {
+                        STALL_EP0;
+0B08  8070      	BSF gbl_uep0,0
+
+                    }
+                }
+                break;
+            // Seventh bmRequestType (others) ************************************
+            default:
+0B0C            label83
+
+                if (BufferCopy.bmRequestType & 0x20) {
+0B0C  ABBF      	BTFSS gbl_BufferCopy,5, 1
+
+                    OutBuffer =  (unsigned char *) ((unsigned int)bd0adrlie + (unsigned int)(bd0adrhie <<8));
+0B10  0104      	MOVLB 0x04
+0B12  5106      	MOVF gbl_bd0adrlie, W, 1
+0B14  0101      	MOVLB 0x01
+0B16  6F22      	MOVWF CompTempVar720, 1
+0B18  6B25      	CLRF CompTempVar722+D'1', 1
+0B1A  6B26      	CLRF CompTempVar723, 1
+0B1C  0104      	MOVLB 0x04
+0B1E  5107      	MOVF gbl_bd0adrhie, W, 1
+0B20  0101      	MOVLB 0x01
+0B22  6F23      	MOVWF CompTempVar721, 1
+0B24  5126      	MOVF CompTempVar723, W, 1
+0B26  2722      	ADDWF CompTempVar720, F, 1
+0B28  5125      	MOVF CompTempVar722+D'1', W, 1
+0B2A  2323      	ADDWFC CompTempVar721, F, 1
+0B2C  5122      	MOVF CompTempVar720, W, 1
+0B2E  0100      	MOVLB 0x00
+0B30  6FFC      	MOVWF Process_Re_0000D_1_OutBuffer, 1
+0B32  0101      	MOVLB 0x01
+0B34  5123      	MOVF CompTempVar721, W, 1
+0B36  0100      	MOVLB 0x00
+0B38  6FFD      	MOVWF Process_Re_0000D_1_OutBuffer+D'1', 1
+
+                    switch (BufferCopy.bmRequestType) {
+                        case 0x21:
+0B3A  0E21      	MOVLW 0x21
+0B3C  63BF      	CPFSEQ gbl_BufferCopy, 1
+0B3E  D001      	BRA	label84
+0B40  D014      	BRA	label89
+0B42            label84
+0B6A            label89
+
+                            /* Host to Device HID request */
+                            switch (BufferCopy.bRequest) {
+                                case HID_SET_PROTOCOL:
+0B6A  0E0B      	MOVLW 0x0B
+0B6C  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+0B6E  D001      	BRA	label90
+0B70  D008      	BRA	label92
+0B72            label90
+0B82            label92
+
+                                    /* Set Protocol */
+                                    USB_protocol = BufferCopy.wValue;
+0B82  51C1      	MOVF gbl_BufferCopy+D'2', W, 1
+0B84  6FF3      	MOVWF gbl_USB_protocol, 1
+
+                                    Send_0Len_pkt;
+0B86  0104      	MOVLB 0x04
+0B88  6B05      	CLRF gbl_bd0cntie, 1
+0B8A  0EC8      	MOVLW 0xC8
+0B8C  6F04      	MOVWF gbl_bd0statie, 1
+0B8E  0100      	MOVLB 0x00
+0B90  6BF0      	CLRF gbl_USB_dev_req, 1
+
+                                    break;
+                                case HID_SET_REPORT:
+0B72  0E09      	MOVLW 0x09
+0B74  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+0B76  D001      	BRA	label91
+0B7A            label91
+
+                                    /* Set HID Report */
+                                    // Add Set_Report Function above for OUT TOKEN and uncomment following two lines
+                                    //	USB_dev_req = HID_SET_REPORT;
+                                    break;
+                                case HID_SET_IDLE:
+0B7A  0E0A      	MOVLW 0x0A
+0B7C  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+0B7E  D00C      	BRA	label94
+0B94            label93
+
+                                    /* Set Idle */
+                                    STALL_EP0;
+0B94  8070      	BSF gbl_uep0,0
+
+                                    break;
+                                default:
+0B98            label94
+
+                                    STALL_EP0;
+0B98  8070      	BSF gbl_uep0,0
+
+                            }
+                            break;
+                    case 0xA1:
+0B42  0EA1      	MOVLW 0xA1
+0B44  63BF      	CPFSEQ gbl_BufferCopy, 1
+0B46  D001      	BRA	label85
+0B48  D029      	BRA	label95
+0B4A            label85
+0B9C            label95
+
+                        /* Dev2HostHIDRequest */
+                        switch (BufferCopy.bRequest) {
+                            case HID_GET_PROTOCOL:	/* Get Protocol */
+0B9C  0E03      	MOVLW 0x03
+0B9E  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+0BA0  D001      	BRA	label96
+0BA2  D007      	BRA	label97
+0BA4            label96
+0BB2            label97
+
+                                OutBuffer[0] = USB_protocol;
+0BB2  51FD      	MOVF Process_Re_0000D_1_OutBuffer+D'1', W, 1
+0BB4  6EEA      	MOVWF FSR0H
+0BB6  51FC      	MOVF Process_Re_0000D_1_OutBuffer, W, 1
+0BB8  6EE9      	MOVWF FSR0L
+0BBA  0101      	MOVLB 0x01
+0BBC  6B22      	CLRF CompTempVar726, 1
+0BBE  5122      	MOVF CompTempVar726, W, 1
+0BC0  26E9      	ADDWF FSR0L, F
+0BC2  0100      	MOVLB 0x00
+0BC4  51F3      	MOVF gbl_USB_protocol, W, 1
+0BC6  6EEF      	MOVWF INDF0
+
+                                bd0cntie = 1;
+0BC8  0E01      	MOVLW 0x01
+0BCA  0104      	MOVLB 0x04
+0BCC  6F05      	MOVWF gbl_bd0cntie, 1
+
+                                bd0statie = 0xC8;
+0BCE  0EC8      	MOVLW 0xC8
+0BD0  6F04      	MOVWF gbl_bd0statie, 1
+
+                                break;
+                            case HID_GET_REPORT: /* Get HID Report */
+0BA4  05C0      	DECF gbl_BufferCopy+D'1', W, 1
+0BA6  B4D8      	BTFSC STATUS,Z
+
+                                // Add Get_Report Function here and uncomment following two lines
+                                //	BD0IST = 0xc8;	// Turn over BDT to SIE
+                                break;
+                            case HID_GET_IDLE:
+0BAA  0E02      	MOVLW 0x02
+0BAC  63C0      	CPFSEQ gbl_BufferCopy+D'1', 1
+0BAE  D014      	BRA	label99
+0BD4            label98
+
+                                /* Get Idle */
+                                STALL_EP0;
+0BD4  8070      	BSF gbl_uep0,0
+
+                                break;
+                            default:
+0BD8            label99
+
+                                // device does not support get idle, just stall
+                                STALL_EP0;
+0BD8  8070      	BSF gbl_uep0,0
+
+                        }
+                        break;
+                    case 0x22:
+0B4A  0E22      	MOVLW 0x22
+0B4C  63BF      	CPFSEQ gbl_BufferCopy, 1
+0B4E  D001      	BRA	label86
+0B50  D045      	BRA	label100
+0B52            label86
+0BDC            label100
+
+                        /* Host2DevReportRequest */
+                        STALL_EP0;
+0BDC  8070      	BSF gbl_uep0,0
+
+                        break;
+                    case 0x23:
+0B52  0E23      	MOVLW 0x23
+0B54  63BF      	CPFSEQ gbl_BufferCopy, 1
+0B56  D001      	BRA	label87
+0B58  D043      	BRA	label101
+0B5A            label87
+0BE0            label101
+
+                        /* Host2DevPhysicalRequest */
+                        STALL_EP0;
+0BE0  8070      	BSF gbl_uep0,0
+
+                        break;
+                    case 0xA2:
+0B5A  0EA2      	MOVLW 0xA2
+0B5C  63BF      	CPFSEQ gbl_BufferCopy, 1
+0B5E  D001      	BRA	label88
+0B60  D041      	BRA	label102
+0B62            label88
+0BE4            label102
+
+                        /* Dev2HostReportRequest */
+                        STALL_EP0;
+0BE4  8070      	BSF gbl_uep0,0
+
+                        break;
+                    case 0xA3:
+0B62  0EA3      	MOVLW 0xA3
+0B64  63BF      	CPFSEQ gbl_BufferCopy, 1
+0B66  D042      	BRA	label104
+0BE8            label103
+
+                        /* Dev2HostPhysicalRequest */
+                        STALL_EP0;
+0BE8  8070      	BSF gbl_uep0,0
+
+                        break;
+                    default:
+0BEC            label104
+
+                        STALL_EP0;
+0BEC  8070      	BSF gbl_uep0,0
+
+                }
+            }
+        }
+    }
+}
+01F4  0012      	RETURN
+01FA  0012      	RETURN
+0200  0012      	RETURN
+0202  0012      	RETURN
+0216  0012      	RETURN
+021C  0012      	RETURN
+021E  0012      	RETURN
+022A  0012      	RETURN
+0318  0012      	RETURN
+031C  0012      	RETURN
+0340  0012      	RETURN
+0344  0012      	RETURN
+0364  0012      	RETURN
+0368  0012      	RETURN
+039E  0012      	RETURN
+03A2  0012      	RETURN
+03E0  0012      	RETURN
+03E4  0012      	RETURN
+03E8  0012      	RETURN
+043E  0012      	RETURN
+0472  0012      	RETURN
+0476  0012      	RETURN
+047A  0012      	RETURN
+04D0  0012      	RETURN
+0504  0012      	RETURN
+0508  0012      	RETURN
+050C  0012      	RETURN
+0510  0012      	RETURN
+0528  0012      	RETURN
+0570  0012      	RETURN
+05F6  0012      	RETURN
+0678  0012      	RETURN
+0716  0012      	RETURN
+078A  0012      	RETURN
+07FE  0012      	RETURN
+0806  0012      	RETURN
+080E  0012      	RETURN
+0854  0012      	RETURN
+0866  0012      	RETURN
+08CE  0012      	RETURN
+08D2  0012      	RETURN
+0946  0012      	RETURN
+0986  0012      	RETURN
+098A  0012      	RETURN
+09F6  0012      	RETURN
+09FA  0012      	RETURN
+0A62  0012      	RETURN
+0A66  0012      	RETURN
+0A6A  0012      	RETURN
+0A70  0012      	RETURN
+0B06  0012      	RETURN
+0B0A  0012      	RETURN
+0B0E  0012      	RETURN
+0B78  0012      	RETURN
+0B92  0012      	RETURN
+0B96  0012      	RETURN
+0B9A  0012      	RETURN
+0BA8  0012      	RETURN
+0BD2  0012      	RETURN
+0BD6  0012      	RETURN
+0BDA  0012      	RETURN
+0BDE  0012      	RETURN
+0BE2  0012      	RETURN
+0BE6  0012      	RETURN
+0BEA  0012      	RETURN
+0BEE  0012      	RETURN
+
+
+/***********************************************************************************
+ Branch off and service the USB interrupt flags
+***********************************************************************************/
+void ServiceUSB() {
+
+    // ED changed to use register bits for my own clarity
+    if (uir.TRNIF)
+0C7E  B668      	BTFSC gbl_uir,3
+
+        Process_Req();
+0C80  ECA3F000  	CALL Process_Re_0000D
+
+
+    if (uir.STALLIF)
+0C84  BA68      	BTFSC gbl_uir,5
+
+        USBStall();
+0C86  EC9AF000  	CALL USBStall_00000
+
+
+    if (uir.UERRIF)
+0C8A  B268      	BTFSC gbl_uir,1
+
+        Count_Error();
+0C8C  ECF8F005  	CALL Count_Erro_0000C
+
+
+    if (uie.IDLEIE)
+0C90  B869      	BTFSC gbl_uie,4
+
+        USBSleep();
+0C92  EC9CF000  	CALL USBSleep_00000
+
+}
+0C96  0012      	RETURN
+
+
+/***********************************************************************************
+ Interrupt service routine. Branch off to different interrupts
+***********************************************************************************/
+void interrupt(void) {
+
+    // Handle USB interrupt
+    if (pir2.USBIF) {
+116E  CFEAF001  	MOVFF FSR0H,  Int1Context
+1172  CFE9F002  	MOVFF FSR0L,  Int1Context+D'1'
+1176  CFF4F003  	MOVFF PRODH,  Int1Context+D'2'
+117A  CFF3F004  	MOVFF PRODL,  Int1Context+D'3'
+117E  AAA1      	BTFSS gbl_pir2,5
+1180  D023      	BRA	label131
+11C8            label131
+
+        // ED changed to use register bits for my own clarity
+        if (uir.ACTVIF && uie.ACTVIE) // WAS IT AN ACTIVITY WAKEUP?
+1182  A468      	BTFSS gbl_uir,2
+1184  D003      	BRA	label126
+1186  B469      	BTFSC gbl_uie,2
+
+            USBActivity();
+1188  EC53F000  	CALL USBActivit_0000A
+118C            label126
+
+
+        if (uir.URSTIF && uie.URSTIE) // USB reset must be serviced immediately
+118C  A068      	BTFSS gbl_uir,0
+118E  D004      	BRA	label127
+1190  A069      	BTFSS gbl_uie,0
+1192  D002      	BRA	label127
+1198            label127
+
+            USBReset();
+1194  EC3AF000  	CALL USBReset_00000
+
+
+        if (uir.TRNIF && uie.TRNIE) { // WAS IT A TOKEN DONE
+1198  A668      	BTFSS gbl_uir,3
+119A  D015      	BRA	label130
+119C  A669      	BTFSS gbl_uie,3
+119E  D013      	BRA	label130
+11C6            label130
+
+            if (USB_dev_req == SET_ADDRESS)	{
+11A0  0E05      	MOVLW 0x05
+11A2  0100      	MOVLB 0x00
+11A4  63F0      	CPFSEQ gbl_USB_dev_req, 1
+11A6  D00E      	BRA	label129
+
+                // Finish Set Address
+                USB_dev_req = NULL;
+11A8  6BF0      	CLRF gbl_USB_dev_req, 1
+
+                USB_Curr_Config = 0;
+11AA  6BEE      	CLRF gbl_USB_Curr_Config, 1
+
+                uaddr = USB_address_pending;
+11AC  51EF      	MOVF gbl_USB_address_pending, W, 1
+11AE  6E6E      	MOVWF gbl_uaddr
+
+                uie = 00000001b;		// enable just the reset interrupt
+11B0  0E01      	MOVLW 0x01
+11B2  6E69      	MOVWF gbl_uie
+
+                 if (USB_address_pending > 0)
+11B4  0E00      	MOVLW 0x00
+11B6  65EF      	CPFSGT gbl_USB_address_pending, 1
+11B8  D003      	BRA	label128
+11C0            label128
+
+                    USWSTAT= ADDRESS_STATE;
+11BA  0E02      	MOVLW 0x02
+11BC  6FF4      	MOVWF gbl_USWSTAT, 1
+
+                else
+11BE  D002      	BRA	label129
+11C4            label129
+
+                    USWSTAT= DEFAULT_STATE;
+11C0  0E01      	MOVLW 0x01
+11C2  6FF4      	MOVWF gbl_USWSTAT, 1
+
+            }
+            uir.TRNIF = 0; // clear Token Done flag
+11C4  9668      	BCF gbl_uir,3
+
+        }
+        pir2.USBIF = 0;	 // Clear USB interrupt flag
+11C6  9AA1      	BCF gbl_pir2,5
+
+    }
+    // Handle Timer0 interrupt
+    // ED moved this to an interrupt and flag task
+    if (intcon.TMR0IF) {
+11C8  A4F2      	BTFSS gbl_intcon,2
+11CA  D003      	BRA	label132
+11D2            label132
+
+        cTask.TASK_TIMER0 = 1;
+11CC  0100      	MOVLB 0x00
+11CE  83EB      	BSF gbl_cTask,1, 1
+
+        intcon.TMR0IF = 0; // Clear the timer interrupt flag
+11D0  94F2      	BCF gbl_intcon,2
+
+    }
+    // Handle Timer1 interrupt
+    // ED added this for a timeout timer
+    if (pir1.TMR1IF) {
+11D2  A09E      	BTFSS gbl_pir1,0
+11D4  D019      	BRA	label135
+1208            label135
+
+        // Bresenham's Algorithm zero-error
+        // Based on https://www.romanblack.com/one_sec.htm
+        // uses 1 variable; unsigned 16 bit int bres
+        // gets here every TMR1 int
+        // TMR1 will interrupt every 43.691ms (43691us) with a 24MHz clock and prescaler of 1/4
+        // Count 1 second intervals
+        bres += 2731; // add (43691/16) ticks to bresenham total
+11D6  0EAB      	MOVLW 0xAB
+11D8  0100      	MOVLB 0x00
+11DA  27CB      	ADDWF gbl_bres, F, 1
+11DC  0E0A      	MOVLW 0x0A
+11DE  23CC      	ADDWFC gbl_bres+D'1', F, 1
+
+        if (bres >= 62500) { // if reached 1 second (1000000/16)
+11E0  0EF4      	MOVLW 0xF4
+11E2  5DCC      	SUBWF gbl_bres+D'1', W, 1
+11E4  E104      	BNZ	label133
+11E6  0E24      	MOVLW 0x24
+11E8  61CB      	CPFSLT gbl_bres, 1
+11EA  D001      	BRA	label133
+11EC  D00C      	BRA	label134
+11EE            label133
+11EE  E30B      	BNC	label134
+
+            bres -= 62500; // subtract 1 second, retain error
+11F0  0E24      	MOVLW 0x24
+11F2  5FCB      	SUBWF gbl_bres, F, 1
+11F4  0EF4      	MOVLW 0xF4
+11F6  5BCC      	SUBWFB gbl_bres+D'1', F, 1
+
+            // Tick 1 second
+            iSec++;
+11F8  2BE9      	INCF gbl_iSec, F, 1
+
+            if (iSec == 60) {
+11FA  0E3C      	MOVLW 0x3C
+11FC  63E9      	CPFSEQ gbl_iSec, 1
+11FE  D003      	BRA	label134
+1206            label134
+
+                // Tick minutes
+                iMin++;
+1200  2BEA      	INCF gbl_iMin, F, 1
+
+                iSec = 0;
+1202  6BE9      	CLRF gbl_iSec, 1
+
+                cTask.TASK_TIMER1_MIN = 1;
+1204  85EB      	BSF gbl_cTask,2, 1
+
+            }
+        }
+        pir1.TMR1IF = 0; // Clear the timer interrupt flag
+1206  909E      	BCF gbl_pir1,0
+
+    }
+}
+1208  C004FFF3  	MOVFF Int1Context+D'3',  PRODL
+120C  C003FFF4  	MOVFF Int1Context+D'2',  PRODH
+1210  C002FFE9  	MOVFF Int1Context+D'1',  FSR0L
+1214  C001FFEA  	MOVFF Int1Context,  FSR0H
+1218  0011      	RETFIE 1
+
+
+/***********************************************************************************
+ Resets and starts timer 1
+***********************************************************************************/
+void timer1Set(bit isOn) {
+
+    iSec = 0;
+0C4A  6BE9      	CLRF gbl_iSec, 1
+
+    iMin = 0;
+0C4C  6BEA      	CLRF gbl_iMin, 1
+
+    bres = 0;
+0C4E  6BCB      	CLRF gbl_bres, 1
+0C50  6BCC      	CLRF gbl_bres+D'1', 1
+
+    t1con.TMR1ON = isOn;
+0C52  B1FC      	BTFSC timer1Set_00000_arg_isOn,0, 1
+0C54  80CD      	BSF gbl_t1con,0
+0C56  A1FC      	BTFSS timer1Set_00000_arg_isOn,0, 1
+0C58  90CD      	BCF gbl_t1con,0
+
+}
+0C5A  0012      	RETURN
+
+
+/***********************************************************************************
+ Button testing, call every ~10ms
+ Based on
+ https://hackaday.com/2015/12/10/embed-with-elliot-debounce-your-noisy-buttons-part-ii/
+***********************************************************************************/
+char testButton() {
+
+    buttonState <<= 1;
+0C5C  90D8      	BCF STATUS,C
+0C5E  0100      	MOVLB 0x00
+0C60  37E8      	RLCF gbl_buttonState, F, 1
+
+    if (!BUTTON)
+0C62  A481      	BTFSS gbl_portb,2
+
+        buttonState.0 = 1; // Set the last bit
+0C64  81E8      	BSF gbl_buttonState,0, 1
+
+    // Test if button state is set three times, ignoring the three times before (bouncing period)
+    if ((buttonState & 0b11000111) == 0b00000111) {
+0C66  0EC7      	MOVLW 0xC7
+0C68  15E8      	ANDWF gbl_buttonState, W, 1
+0C6A  6FFC      	MOVWF CompTempVar728, 1
+0C6C  0E07      	MOVLW 0x07
+0C6E  63FC      	CPFSEQ CompTempVar728, 1
+0C70  D004      	BRA	label111
+0C7A            label111
+
+        buttonState = 0b11111111;
+0C72  69E8      	SETF gbl_buttonState, 1
+
+        return 1;
+0C74  0E01      	MOVLW 0x01
+0C76  6FFD      	MOVWF CompTempVarRet727, 1
+
+    }
+    return 0;
+0C7A  6BFD      	CLRF CompTempVarRet727, 1
+
+}
+0C78  0012      	RETURN
+0C7C  0012      	RETURN
+
+
+/***********************************************************************************
+ THE MAIN PROGRAM
+***********************************************************************************/
+void main() {
+
+
+    // ED added IO ports setup
+    // IO ports setup
+    // RB0 is set as an input as GND is flowing through it to simplify stripboard layout
+    // RB2 has the switch connected to it, with external pull up resistor
+    trisa = 0x00; // all ouptuts
+0D52  6A92      	CLRF gbl_trisa
+
+    porta = 0x00; // set to off
+0D54  6A80      	CLRF gbl_porta
+
+    trisb = 0x05; // RB0, RB2 input
+0D56  0E05      	MOVLW 0x05
+0D58  6E93      	MOVWF gbl_trisb
+
+    portb = 0x00; // set to off
+0D5A  6A81      	CLRF gbl_portb
+
+    trisc = 0x00; // all ouptuts
+0D5C  6A94      	CLRF gbl_trisc
+
+    portc = 0x00; // set to off
+0D5E  6A82      	CLRF gbl_portc
+
+
+    //intcon2.RBPU = 0; // Port B pull-ups enabled
+
+    // ADC setup
+    adcon0 = 0x00; //  ADC off
+0D60  6AC2      	CLRF gbl_adcon0
+
+    //adcon1 = 0x0F; // All digital I/O - no need to set adcon1 if CONFIG3H<1> is cleared
+
+    unsigned char i;
+    unsigned short j;
+    signed char buffer[3];
+    const signed char tablex [] = {-1, -1, -1, 1, 1, 1,  1,  1, 1, -1,  -1, -1};
+0D62  0101      	MOVLB 0x01
+0D64  6900      	SETF main_1_tablex, 1
+0D66  6901      	SETF main_1_tablex+D'1', 1
+0D68  6902      	SETF main_1_tablex+D'2', 1
+0D6A  0E01      	MOVLW 0x01
+0D6C  6F03      	MOVWF main_1_tablex+D'3', 1
+0D6E  6F04      	MOVWF main_1_tablex+D'4', 1
+0D70  6F05      	MOVWF main_1_tablex+D'5', 1
+0D72  6F06      	MOVWF main_1_tablex+D'6', 1
+0D74  6F07      	MOVWF main_1_tablex+D'7', 1
+0D76  6F08      	MOVWF main_1_tablex+D'8', 1
+0D78  6909      	SETF main_1_tablex+D'9', 1
+0D7A  690A      	SETF main_1_tablex+D'10', 1
+0D7C  690B      	SETF main_1_tablex+D'11', 1
+
+    const signed char tabley [] = {-1, 0, 1,  1,  0, -1, -1, 0,  1, 1, 0, -1 };
+0D7E  690C      	SETF main_1_tabley, 1
+0D80  6B0D      	CLRF main_1_tabley+D'1', 1
+0D82  0E01      	MOVLW 0x01
+0D84  6F0E      	MOVWF main_1_tabley+D'2', 1
+0D86  6F0F      	MOVWF main_1_tabley+D'3', 1
+0D88  6B10      	CLRF main_1_tabley+D'4', 1
+0D8A  6911      	SETF main_1_tabley+D'5', 1
+0D8C  6912      	SETF main_1_tabley+D'6', 1
+0D8E  6B13      	CLRF main_1_tabley+D'7', 1
+0D90  0E01      	MOVLW 0x01
+0D92  6F14      	MOVWF main_1_tabley+D'8', 1
+0D94  6F15      	MOVWF main_1_tabley+D'9', 1
+0D96  6B16      	CLRF main_1_tabley+D'10', 1
+0D98  6917      	SETF main_1_tabley+D'11', 1
+
+    // The table array contains the directional data for simulated mouse movement to
+    // form the infinity symbol (i.e. figure 8). Movements are relative to the
+    // previous position.
+    delay_ms(14);
+0D9A  0E0E      	MOVLW 0x0E
+0D9C  0100      	MOVLB 0x00
+0D9E  6FFC      	MOVWF delay_ms_00000_arg_del, 1
+0DA0  EC06F000  	CALL delay_ms_00000
+
+
+    InitUSB(); // allow SIE to come online before beginning USB initialization
+0DA4  EC8DF006  	CALL InitUSB_00000
+
+    buffer[0] = 0;	//we won't be simulating mouse buttons
+0DA8  6BF9      	CLRF main_1_buffer, 1
+
+    i = 10;
+0DAA  0E0A      	MOVLW 0x0A
+0DAC  6FF6      	MOVWF main_1_i, 1
+
+    j = 0;
+0DAE  6BF7      	CLRF main_1_j, 1
+0DB0  6BF8      	CLRF main_1_j+D'1', 1
+
+
+    // ED clarified timer setup
+    // Set up timer0 as 8 bit timer with prescaler of 256 and enable
+    // 4/24* 10^6 * 256 * 256 = 10.9 msec timer overflow
+    // t0con defaults to 1111 1111
+    //t0con.T0PS2 = 1;
+    //t0con.T0PS1 = 1;
+    //t0con.T0PS0 = 1;
+    //t0con.T08BIT = 1;
+    //t0con.TMR0ON = 1;
+    t0con.T0CS = 0; // internal source
+0DB2  9AD5      	BCF gbl_t0con,5
+
+    t0con.PSA = 0; // timer0 clock comes from prescaler output
+0DB4  96D5      	BCF gbl_t0con,3
+
+    // Enable timer0 to interrupt
+    intcon.TMR0IE = 1;
+0DB6  8AF2      	BSF gbl_intcon,5
+
+
+    // ED added timer 1
+    // Set up timer1 as a second/minute timer, used to timeout the jiggle function
+    // t1con defaults to 0000 0000
+    //t1con.T1SYNC = 1;    // bit 2 Timer1 External Clock Input Synchronization Control bit...1 = Do not synchronize external clock input
+    //t1con.TMR1CS = 0;    // bit 1 Timer1 Clock Source Select bit...0 = Internal clock (FOSC/4)
+    //t1con.TMR1ON = 1;    // bit 0 enables timer
+    // Prescaler 1/4
+    t1con.T1CKPS1 = 1;   // bits 5-4  Prescaler Rate Select bits
+0DB8  8ACD      	BSF gbl_t1con,5
+
+    t1con.T1CKPS0 = 0;   // bit 4
+0DBA  98CD      	BCF gbl_t1con,4
+
+    // Enable timer1 to interrupt
+    pie1.TMR1IE = 1;
+0DBC  809D      	BSF gbl_pie1,0
+
+
+    // ED moved this here
+    // Enable GIE & PEIE
+    intcon.GIE = 1;
+0DBE  8EF2      	BSF gbl_intcon,7
+
+    intcon.PEIE = 1;
+0DC0  8CF2      	BSF gbl_intcon,6
+
+
+    while (1) {
+0DC2            label115
+0E70  D7A8      	BRA	label115
+
+        // ED Simple Task Scheduler
+        if (cTask.TASK_TIMER0) {
+0DC2  0100      	MOVLB 0x00
+0DC4  A3EB      	BTFSS gbl_cTask,1, 1
+0DC6  D032      	BRA	label120
+0E2C            label120
+
+            // This task should be flagged every 10.9ms
+            // Check button state
+            if (testButton()) {
+0DC8  EC2EF006  	CALL testButton_00000
+0DCC  53FD      	MOVF CompTempVarRet727, F, 1
+0DCE  E00D      	BZ	label117
+
+                // Button was pushed, toggle status
+                if (!isJiggling) {
+0DD0  B1E7      	BTFSC gbl_isJiggling,0, 1
+0DD2  D006      	BRA	label116
+0DE0            label116
+
+                    timer1Set(1); // Turn on timer
+0DD4  81FC      	BSF timer1Set_00000_arg_isOn,0, 1
+0DD6  EC25F006  	CALL timer1Set_00000
+
+                    isJiggling = 1;
+0DDA  81E7      	BSF gbl_isJiggling,0, 1
+
+                    LED = 1;
+0DDC  8281      	BSF gbl_portb,1
+
+                } else {
+0DDE  D005      	BRA	label117
+0DEA            label117
+
+                    timer1Set(0); // Turn off timer
+0DE0  91FC      	BCF timer1Set_00000_arg_isOn,0, 1
+0DE2  EC25F006  	CALL timer1Set_00000
+
+                    isJiggling = 0;
+0DE6  91E7      	BCF gbl_isJiggling,0, 1
+
+                    LED = 0;
+0DE8  9281      	BCF gbl_portb,1
+
+                }
+            }
+
+            ServiceUSB(); // Service USB functions
+0DEA  EC3FF006  	CALL ServiceUSB_00000
+
+            // ED only update buffer if jiggling
+            if (isJiggling) {
+0DEE  0100      	MOVLB 0x00
+0DF0  A1E7      	BTFSS gbl_isJiggling,0, 1
+0DF2  D01B      	BRA	label119
+0E2A            label119
+
+                // send same data 10 times (100 msec)
+                if (i > 9) {
+0DF4  0E09      	MOVLW 0x09
+0DF6  65F6      	CPFSGT main_1_i, 1
+0DF8  D00A      	BRA	label118
+
+                    i = 0;
+0DFA  6BF6      	CLRF main_1_i, 1
+
+                    j++;
+0DFC  4BF7      	INFSNZ main_1_j, F, 1
+0DFE  2BF8      	INCF main_1_j+D'1', F, 1
+
+                    // (limit to length of table array)
+                    if (j == 12)
+0E00  0E0C      	MOVLW 0x0C
+0E02  63F7      	CPFSEQ main_1_j, 1
+0E04  D004      	BRA	label118
+0E06  51F8      	MOVF main_1_j+D'1', W, 1
+0E08  E102      	BNZ	label118
+0E0E            label118
+
+                        j = 0;
+0E0A  6BF7      	CLRF main_1_j, 1
+0E0C  6BF8      	CLRF main_1_j+D'1', 1
+
+                }
+                // Increment infinity vectors
+                buffer[1] = tablex[j];	// X vector
+0E0E  EE01F000  	LFSR 0x00,  main_1_tablex
+0E12  50E9      	MOVF FSR0L, W
+0E14  51F7      	MOVF main_1_j, W, 1
+0E16  26E9      	ADDWF FSR0L, F
+0E18  50EF      	MOVF INDF0, W
+0E1A  6FFA      	MOVWF main_1_buffer+D'1', 1
+
+                buffer[2] = tabley[j];	// Y vector
+0E1C  EE01F00C  	LFSR 0x00,  main_1_tabley
+0E20  50E9      	MOVF FSR0L, W
+0E22  51F7      	MOVF main_1_j, W, 1
+0E24  26E9      	ADDWF FSR0L, F
+0E26  50EF      	MOVF INDF0, W
+0E28  6FFB      	MOVWF main_1_buffer+D'2', 1
+
+            }
+            cTask.TASK_TIMER0 = 0;
+0E2A  93EB      	BCF gbl_cTask,1, 1
+
+        }
+        if (cTask.TASK_TIMER1_MIN) {
+0E2C  A5EB      	BTFSS gbl_cTask,2, 1
+0E2E  D00C      	BRA	label123
+0E48            label123
+
+            // See if minutes reached timeout
+            if (iMin >= JIGGLE_TIMEOUT) {
+0E30  0E1E      	MOVLW 0x1E
+0E32  61EA      	CPFSLT gbl_iMin, 1
+0E34  D001      	BRA	label121
+0E36  D007      	BRA	label122
+0E38            label121
+
+                timer1Set(0); // Turn off timer
+0E38  91FC      	BCF timer1Set_00000_arg_isOn,0, 1
+0E3A  EC25F006  	CALL timer1Set_00000
+
+                if (isJiggling) {
+0E3E  A1E7      	BTFSS gbl_isJiggling,0, 1
+0E40  D002      	BRA	label122
+0E46            label122
+
+                    isJiggling = 0;
+0E42  91E7      	BCF gbl_isJiggling,0, 1
+
+                    LED = 0;
+0E44  9281      	BCF gbl_portb,1
+
+                }
+            }
+            cTask.TASK_TIMER1_MIN = 0;
+0E46  95EB      	BCF gbl_cTask,2, 1
+
+        }
+
+        if (ConfiguredUSB()) {
+0E48  0E03      	MOVLW 0x03
+0E4A  15F4      	ANDWF gbl_USWSTAT, W, 1
+0E4C  6FFC      	MOVWF CompTempVar734, 1
+0E4E  0E03      	MOVLW 0x03
+0E50  63FC      	CPFSEQ CompTempVar734, 1
+0E52  D7B7      	BRA	label115
+
+            // Wait until device is configured before using EP1.  If Endpoints 1 or 2 are used before
+            //   the device is configured, errors will occur.
+            // ED only send data if jiggling
+            if (isJiggling) {
+0E54  A1E7      	BTFSS gbl_isJiggling,0, 1
+0E56  D7B5      	BRA	label115
+
+                if (PutEP1(3, buffer)) {
+0E58  0E03      	MOVLW 0x03
+0E5A  6FFC      	MOVWF PutEP1_00000_arg_bytes, 1
+0E5C  0E00      	MOVLW HIGH(main_1_buffer+D'0')
+0E5E  6FFE      	MOVWF PutEP1_00000_arg_buffer+D'1', 1
+0E60  0EF9      	MOVLW LOW(main_1_buffer+D'0')
+0E62  6FFD      	MOVWF PutEP1_00000_arg_buffer, 1
+0E64  EC4CF006  	CALL PutEP1_00000
+0E68  531B      	MOVF CompTempVarRet569, F, 1
+0E6A  E002      	BZ	label124
+
+                    // Increment i if EP1 IN buffer is accessible to the PIC.
+                    // If not accessible, try again next time.
+                    i++;
+0E6C  0100      	MOVLB 0x00
+0E6E  2BF6      	INCF main_1_i, F, 1
+
+                }
+            }
+        }
+    }
+}
+
+
+////////////////////////////////////////
+// Code with no source :-)
+////////////////////////////////////////
+0000  EF39F007  	GOTO	_startup
+
+0008  EFB7F008  	GOTO	interrupt
+000C            delay_ms_00000
+000C            ; { delay_ms ; function begin
+000C  53FC      	MOVF delay_ms_00000_arg_del, F, 1
+000E  0000      	NOP
+0010  E101      	BNZ	label1
+0012  0012      	RETURN
+0014            label1
+0014  0EF9      	MOVLW 0xF9
+0016            label2
+0016  0000      	NOP
+0018  0000      	NOP
+001A  0000      	NOP
+001C  0000      	NOP
+001E  0000      	NOP
+0020  0000      	NOP
+0022  0000      	NOP
+0024  0000      	NOP
+0026  0000      	NOP
+0028  0000      	NOP
+002A  0000      	NOP
+002C  0000      	NOP
+002E  0000      	NOP
+0030  0000      	NOP
+0032  0000      	NOP
+0034  0000      	NOP
+0036  0000      	NOP
+0038  0000      	NOP
+003A  0000      	NOP
+003C  0000      	NOP
+003E  0FFF      	ADDLW 0xFF
+0040  A4D8      	BTFSS STATUS,Z
+0042  D7E9      	BRA	label2
+0044  0000      	NOP
+0046  0000      	NOP
+0048  0000      	NOP
+004A  0000      	NOP
+004C  0000      	NOP
+004E  0000      	NOP
+0050  0000      	NOP
+0052  0000      	NOP
+0054  0000      	NOP
+0056  0000      	NOP
+0058  0000      	NOP
+005A  0000      	NOP
+005C  0000      	NOP
+005E  0000      	NOP
+0060  0000      	NOP
+0062  0000      	NOP
+0064  0000      	NOP
+0066  0000      	NOP
+0068  0000      	NOP
+006A  0000      	NOP
+006C  0000      	NOP
+006E  2FFC      	DECFSZ delay_ms_00000_arg_del, F, 1
+0070  D7D1      	BRA	label1
+0072  0012      	RETURN
+0074            ; } delay_ms function end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0E72            _startup
+
+116A  EFA9F006  	GOTO	main
+
+300000  0E30      	DW 0x0E30
+300002  1E3E      	DW 0x1E3E
+300004  00FF      	DW 0x00FF
+300006  FF80      	DW 0xFF80
+300008  C00F      	DW 0xC00F
+30000A  E00F      	DW 0xE00F
+30000C  400F      	DW 0x400F

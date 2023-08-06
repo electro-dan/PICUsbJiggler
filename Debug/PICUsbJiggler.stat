@@ -1,0 +1,20 @@
+// SourceBoost Linker Function Resource Usage Dump
+
+#GLOBAL:"global",line = 0,ram = 244.1,rom = 0;
+PutEP1(unsigned char,signed char*):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 237,ram = 10.0,rom = 130;
+USBSleep(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 259,ram = 0.0,rom = 14;
+USBActivity(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 271,ram = 0.0,rom = 12;
+USBReset(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 286,ram = 0.0,rom = 50;
+CopyDescriptorToEP0(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 317,ram = 6.0,rom = 130;
+InitUSB(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 340,ram = 3.0,rom = 56;
+USBStall(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 372,ram = 0.0,rom = 4;
+Count_Error(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 380,ram = 0.0,rom = 90;
+Process_Req(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 415,ram = 22.0,rom = 2730;
+ServiceUSB(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 827,ram = 0.0,rom = 26;
+interrupt(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 845,ram = 0.0,rom = 172;
+timer1Set(bit):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 904,ram = 0.0,rom = 18;
+testButton(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 916,ram = 2.0,rom = 34;
+main(void):"Z:\home\dan\PIC\PICUsbJiggler2\PICUsbJiggler.c",line = 936,ram = 31.0,rom = 288;
+delay_ms(unsigned char):"NoSourceFile",line = 0,ram = 0.0,rom = 104;
+_startup(void):"NoSourceFile",line = 0,ram = 0.0,rom = 764;
+#HEAP_BLOCK: 0, 1048, 1000;

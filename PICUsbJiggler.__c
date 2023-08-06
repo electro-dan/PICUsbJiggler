@@ -1,0 +1,22 @@
+[Settings]
+Active Directory=Z:\home\dan\PIC\PICUsbJiggler2\
+Target=PIC18F2550
+Active Compiler=BoostC
+Active Config=Debug
+Last Ext=c
+Type=0
+Warnings=1
+Model=0
+Config=1
+[Files]
+Count=2
+File0=PICUsbJiggler.c
+File1=PICUsbJiggler.h
+[Browse]
+Count=1
+[Tools]
+BoostDir=C:\Program Files\SourceBoost\
+Programmer=
+PrefixWithBuildThreadNum=0
+[Debugger]
+DebugFromMain=1
