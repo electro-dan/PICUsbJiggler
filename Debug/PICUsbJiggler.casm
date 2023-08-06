@@ -4050,6 +4050,10 @@ void main() {
 					LED = 0;
 0E44  9281      	BCF gbl_portb,1
 
+						LED = 0;
+097A  9281      	BCF gbl_portb,1
+
+					}
 				}
 			}
 			cTask.TASK_TIMER1_MIN = 0;
