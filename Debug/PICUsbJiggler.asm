@@ -157,6 +157,7 @@ gbl_tosl                         EQU	0x00000FFD ; bytes:1
 gbl_tosh                         EQU	0x00000FFE ; bytes:1
 gbl_tosu                         EQU	0x00000FFF ; bytes:1
 gbl_isJiggling                   EQU	0x000000E7 ; bit:0
+gbl_isMoving                     EQU	0x000000E7 ; bit:1
 gbl_buttonState                  EQU	0x000000E8 ; bytes:1
 gbl_bres                         EQU	0x000000CB ; bytes:2
 gbl_iSec                         EQU	0x000000E9 ; bytes:1
@@ -2258,17 +2259,21 @@ label115
 	BSF timer1Set_00000_arg_isOn,0, 1
 	CALL timer1Set_00000
 	BSF gbl_isJiggling,0, 1
+	BSF gbl_isMoving,1, 1
 	BSF gbl_portb,1
 	BRA	label117
 label116
 	BCF timer1Set_00000_arg_isOn,0, 1
 	CALL timer1Set_00000
 	BCF gbl_isJiggling,0, 1
+	BCF gbl_isMoving,1, 1
 	BCF gbl_portb,1
 label117
 	CALL ServiceUSB_00000
 	MOVLB 0x00
 	BTFSS gbl_isJiggling,0, 1
+	BRA	label119
+	BTFSS gbl_isMoving,1, 1
 	BRA	label119
 	MOVLW 0x09
 	CPFSGT main_1_i, 1
@@ -2283,6 +2288,7 @@ label117
 	BNZ	label118
 	CLRF main_1_j, 1
 	CLRF main_1_j+D'1', 1
+	BCF gbl_isMoving,1, 1
 label118
 	LFSR 0x00,  main_1_tablex
 	MOVF FSR0L, W
@@ -2300,8 +2306,8 @@ label119
 	BCF gbl_cTask,1, 1
 label120
 	BTFSS gbl_cTask,2, 1
-	BRA	label123
-	MOVLW 0x1E
+	BRA	label124
+	MOVLW 0x78
 	CPFSLT gbl_iMin, 1
 	BRA	label121
 	BRA	label122
@@ -2309,12 +2315,16 @@ label121
 	BCF timer1Set_00000_arg_isOn,0, 1
 	CALL timer1Set_00000
 	BTFSS gbl_isJiggling,0, 1
-	BRA	label122
+	BRA	label123
 	BCF gbl_isJiggling,0, 1
+	BCF gbl_isMoving,1, 1
 	BCF gbl_portb,1
+	BRA	label123
 label122
-	BCF gbl_cTask,2, 1
+	BSF gbl_isMoving,1, 1
 label123
+	BCF gbl_cTask,2, 1
+label124
 	MOVLW 0x03
 	ANDWF gbl_USWSTAT, W, 1
 	MOVWF CompTempVar734, 1
@@ -2322,6 +2332,8 @@ label123
 	CPFSEQ CompTempVar734, 1
 	BRA	label115
 	BTFSS gbl_isJiggling,0, 1
+	BRA	label115
+	BTFSS gbl_isMoving,1, 1
 	BRA	label115
 	MOVLW 0x03
 	MOVWF PutEP1_00000_arg_bytes, 1
@@ -2331,17 +2343,18 @@ label123
 	MOVWF PutEP1_00000_arg_buffer, 1
 	CALL PutEP1_00000
 	MOVF CompTempVarRet569, F, 1
-	BZ	label124
+	BZ	label125
 	MOVLB 0x00
 	INCF main_1_i, F, 1
-label124
+label125
 	BRA	label115
 ; } main function end
 
-	ORG 0x00000E72
+	ORG 0x00000E86
 _startup
 	MOVLB 0x00
 	BCF gbl_isJiggling,0, 1
+	BCF gbl_isMoving,1, 1
 	CLRF gbl_buttonState, 1
 	CLRF gbl_bres, 1
 	CLRF gbl_bres+D'1', 1
@@ -2721,7 +2734,7 @@ _startup
 	MOVWF gbl_HIDDescriptor+D'7', 1
 	CLRF gbl_HIDDescriptor+D'8', 1
 	GOTO	main
-	ORG 0x0000116E
+	ORG 0x00001184
 interrupt
 ; { interrupt ; function begin
 	MOVFF FSR0H,  Int1Context
@@ -2729,26 +2742,26 @@ interrupt
 	MOVFF PRODH,  Int1Context+D'2'
 	MOVFF PRODL,  Int1Context+D'3'
 	BTFSS gbl_pir2,5
-	BRA	label131
+	BRA	label132
 	BTFSS gbl_uir,2
-	BRA	label126
+	BRA	label127
 	BTFSC gbl_uie,2
 	CALL USBActivit_0000A
-label126
-	BTFSS gbl_uir,0
-	BRA	label127
-	BTFSS gbl_uie,0
-	BRA	label127
-	CALL USBReset_00000
 label127
+	BTFSS gbl_uir,0
+	BRA	label128
+	BTFSS gbl_uie,0
+	BRA	label128
+	CALL USBReset_00000
+label128
 	BTFSS gbl_uir,3
-	BRA	label130
+	BRA	label131
 	BTFSS gbl_uie,3
-	BRA	label130
+	BRA	label131
 	MOVLW 0x05
 	MOVLB 0x00
 	CPFSEQ gbl_USB_dev_req, 1
-	BRA	label129
+	BRA	label130
 	CLRF gbl_USB_dev_req, 1
 	CLRF gbl_USB_Curr_Config, 1
 	MOVF gbl_USB_address_pending, W, 1
@@ -2757,26 +2770,26 @@ label127
 	MOVWF gbl_uie
 	MOVLW 0x00
 	CPFSGT gbl_USB_address_pending, 1
-	BRA	label128
+	BRA	label129
 	MOVLW 0x02
 	MOVWF gbl_USWSTAT, 1
-	BRA	label129
-label128
+	BRA	label130
+label129
 	MOVLW 0x01
 	MOVWF gbl_USWSTAT, 1
-label129
-	BCF gbl_uir,3
 label130
-	BCF gbl_pir2,5
+	BCF gbl_uir,3
 label131
+	BCF gbl_pir2,5
+label132
 	BTFSS gbl_intcon,2
-	BRA	label132
+	BRA	label133
 	MOVLB 0x00
 	BSF gbl_cTask,1, 1
 	BCF gbl_intcon,2
-label132
+label133
 	BTFSS gbl_pir1,0
-	BRA	label135
+	BRA	label136
 	MOVLW 0xAB
 	MOVLB 0x00
 	ADDWF gbl_bres, F, 1
@@ -2784,13 +2797,13 @@ label132
 	ADDWFC gbl_bres+D'1', F, 1
 	MOVLW 0xF4
 	SUBWF gbl_bres+D'1', W, 1
-	BNZ	label133
+	BNZ	label134
 	MOVLW 0x24
 	CPFSLT gbl_bres, 1
-	BRA	label133
 	BRA	label134
-label133
-	BNC	label134
+	BRA	label135
+label134
+	BNC	label135
 	MOVLW 0x24
 	SUBWF gbl_bres, F, 1
 	MOVLW 0xF4
@@ -2798,13 +2811,13 @@ label133
 	INCF gbl_iSec, F, 1
 	MOVLW 0x3C
 	CPFSEQ gbl_iSec, 1
-	BRA	label134
+	BRA	label135
 	INCF gbl_iMin, F, 1
 	CLRF gbl_iSec, 1
 	BSF gbl_cTask,2, 1
-label134
-	BCF gbl_pir1,0
 label135
+	BCF gbl_pir1,0
+label136
 	MOVFF Int1Context+D'3',  PRODL
 	MOVFF Int1Context+D'2',  PRODH
 	MOVFF Int1Context+D'1',  FSR0L

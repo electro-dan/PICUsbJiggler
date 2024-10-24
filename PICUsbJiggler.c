@@ -1002,24 +1002,28 @@ void main() {
                 if (!isJiggling) {
                     timer1Set(1); // Turn on timer
                     isJiggling = 1;
+                    isMoving = 1;
                     LED = 1;
                 } else {
                     timer1Set(0); // Turn off timer
                     isJiggling = 0;
+                    isMoving = 0;
                     LED = 0;
                 }
             }
 
             ServiceUSB(); // Service USB functions
             // ED only update buffer if jiggling
-            if (isJiggling) {
+            if (isJiggling && isMoving) {
                 // send same data 10 times (100 msec)
                 if (i > 9) {
                     i = 0;
                     j++;
                     // (limit to length of table array)
-                    if (j == 12)
+                    if (j == 12) {
                         j = 0;
+                        isMoving = 0; // stop moving after completing the array
+                    }
                 }
                 // Increment infinity vectors
                 buffer[1] = tablex[j];	// X vector
@@ -1033,8 +1037,12 @@ void main() {
                 timer1Set(0); // Turn off timer
                 if (isJiggling) {
                     isJiggling = 0;
+                    isMoving = 0;
                     LED = 0;
                 }
+            } else {
+                // Jiggle once a minute
+                isMoving = 1;
             }
             cTask.TASK_TIMER1_MIN = 0;
         }
@@ -1042,8 +1050,8 @@ void main() {
         if (ConfiguredUSB()) {
             // Wait until device is configured before using EP1.  If Endpoints 1 or 2 are used before
             //   the device is configured, errors will occur.
-            // ED only send data if jiggling
-            if (isJiggling) {
+            // ED only send data if jiggling and moving
+            if (isJiggling && isMoving) {
                 if (PutEP1(3, buffer)) {
                     // Increment i if EP1 IN buffer is accessible to the PIC.
                     // If not accessible, try again next time.

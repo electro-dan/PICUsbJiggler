@@ -6,9 +6,9 @@
 ;/////////////////////////////////////////////////////////////////////////////////
 
 	ORG 0x00000000
-0000  EF39F007  	GOTO	_startup
+0000  EF43F007  	GOTO	_startup
 	ORG 0x00000008
-0008  EFB7F008  	GOTO	interrupt
+0008  EFC2F008  	GOTO	interrupt
 	ORG 0x0000000C
 000C            delay_ms_00000
 000C            ; { delay_ms ; function begin
@@ -1930,568 +1930,580 @@
 0DC2            label115
 0DC2  0100      	MOVLB 0x00
 0DC4  A3EB      	BTFSS gbl_cTask,1, 1
-0DC6  D032      	BRA	label120
+0DC6  D037      	BRA	label120
 0DC8  EC2EF006  	CALL testButton_00000
 0DCC  53FD      	MOVF CompTempVarRet727, F, 1
-0DCE  E00D      	BZ	label117
+0DCE  E00F      	BZ	label117
 0DD0  B1E7      	BTFSC gbl_isJiggling,0, 1
-0DD2  D006      	BRA	label116
+0DD2  D007      	BRA	label116
 0DD4  81FC      	BSF timer1Set_00000_arg_isOn,0, 1
 0DD6  EC25F006  	CALL timer1Set_00000
 0DDA  81E7      	BSF gbl_isJiggling,0, 1
-0DDC  8281      	BSF gbl_portb,1
-0DDE  D005      	BRA	label117
-0DE0            label116
-0DE0  91FC      	BCF timer1Set_00000_arg_isOn,0, 1
-0DE2  EC25F006  	CALL timer1Set_00000
-0DE6  91E7      	BCF gbl_isJiggling,0, 1
-0DE8  9281      	BCF gbl_portb,1
-0DEA            label117
-0DEA  EC3FF006  	CALL ServiceUSB_00000
-0DEE  0100      	MOVLB 0x00
-0DF0  A1E7      	BTFSS gbl_isJiggling,0, 1
-0DF2  D01B      	BRA	label119
-0DF4  0E09      	MOVLW 0x09
-0DF6  65F6      	CPFSGT main_1_i, 1
-0DF8  D00A      	BRA	label118
-0DFA  6BF6      	CLRF main_1_i, 1
-0DFC  4BF7      	INFSNZ main_1_j, F, 1
-0DFE  2BF8      	INCF main_1_j+D'1', F, 1
-0E00  0E0C      	MOVLW 0x0C
-0E02  63F7      	CPFSEQ main_1_j, 1
-0E04  D004      	BRA	label118
-0E06  51F8      	MOVF main_1_j+D'1', W, 1
-0E08  E102      	BNZ	label118
-0E0A  6BF7      	CLRF main_1_j, 1
-0E0C  6BF8      	CLRF main_1_j+D'1', 1
-0E0E            label118
-0E0E  EE01F000  	LFSR 0x00,  main_1_tablex
-0E12  50E9      	MOVF FSR0L, W
-0E14  51F7      	MOVF main_1_j, W, 1
-0E16  26E9      	ADDWF FSR0L, F
-0E18  50EF      	MOVF INDF0, W
-0E1A  6FFA      	MOVWF main_1_buffer+D'1', 1
-0E1C  EE01F00C  	LFSR 0x00,  main_1_tabley
-0E20  50E9      	MOVF FSR0L, W
-0E22  51F7      	MOVF main_1_j, W, 1
-0E24  26E9      	ADDWF FSR0L, F
-0E26  50EF      	MOVF INDF0, W
-0E28  6FFB      	MOVWF main_1_buffer+D'2', 1
-0E2A            label119
-0E2A  93EB      	BCF gbl_cTask,1, 1
-0E2C            label120
-0E2C  A5EB      	BTFSS gbl_cTask,2, 1
-0E2E  D00C      	BRA	label123
-0E30  0E1E      	MOVLW 0x1E
-0E32  61EA      	CPFSLT gbl_iMin, 1
-0E34  D001      	BRA	label121
-0E36  D007      	BRA	label122
-0E38            label121
-0E38  91FC      	BCF timer1Set_00000_arg_isOn,0, 1
-0E3A  EC25F006  	CALL timer1Set_00000
-0E3E  A1E7      	BTFSS gbl_isJiggling,0, 1
-0E40  D002      	BRA	label122
-0E42  91E7      	BCF gbl_isJiggling,0, 1
-0E44  9281      	BCF gbl_portb,1
-0E46            label122
-0E46  95EB      	BCF gbl_cTask,2, 1
-0E48            label123
-0E48  0E03      	MOVLW 0x03
-0E4A  15F4      	ANDWF gbl_USWSTAT, W, 1
-0E4C  6FFC      	MOVWF CompTempVar734, 1
-0E4E  0E03      	MOVLW 0x03
-0E50  63FC      	CPFSEQ CompTempVar734, 1
-0E52  D7B7      	BRA	label115
-0E54  A1E7      	BTFSS gbl_isJiggling,0, 1
-0E56  D7B5      	BRA	label115
+0DDC  83E7      	BSF gbl_isMoving,1, 1
+0DDE  8281      	BSF gbl_portb,1
+0DE0  D006      	BRA	label117
+0DE2            label116
+0DE2  91FC      	BCF timer1Set_00000_arg_isOn,0, 1
+0DE4  EC25F006  	CALL timer1Set_00000
+0DE8  91E7      	BCF gbl_isJiggling,0, 1
+0DEA  93E7      	BCF gbl_isMoving,1, 1
+0DEC  9281      	BCF gbl_portb,1
+0DEE            label117
+0DEE  EC3FF006  	CALL ServiceUSB_00000
+0DF2  0100      	MOVLB 0x00
+0DF4  A1E7      	BTFSS gbl_isJiggling,0, 1
+0DF6  D01E      	BRA	label119
+0DF8  A3E7      	BTFSS gbl_isMoving,1, 1
+0DFA  D01C      	BRA	label119
+0DFC  0E09      	MOVLW 0x09
+0DFE  65F6      	CPFSGT main_1_i, 1
+0E00  D00B      	BRA	label118
+0E02  6BF6      	CLRF main_1_i, 1
+0E04  4BF7      	INFSNZ main_1_j, F, 1
+0E06  2BF8      	INCF main_1_j+D'1', F, 1
+0E08  0E0C      	MOVLW 0x0C
+0E0A  63F7      	CPFSEQ main_1_j, 1
+0E0C  D005      	BRA	label118
+0E0E  51F8      	MOVF main_1_j+D'1', W, 1
+0E10  E103      	BNZ	label118
+0E12  6BF7      	CLRF main_1_j, 1
+0E14  6BF8      	CLRF main_1_j+D'1', 1
+0E16  93E7      	BCF gbl_isMoving,1, 1
+0E18            label118
+0E18  EE01F000  	LFSR 0x00,  main_1_tablex
+0E1C  50E9      	MOVF FSR0L, W
+0E1E  51F7      	MOVF main_1_j, W, 1
+0E20  26E9      	ADDWF FSR0L, F
+0E22  50EF      	MOVF INDF0, W
+0E24  6FFA      	MOVWF main_1_buffer+D'1', 1
+0E26  EE01F00C  	LFSR 0x00,  main_1_tabley
+0E2A  50E9      	MOVF FSR0L, W
+0E2C  51F7      	MOVF main_1_j, W, 1
+0E2E  26E9      	ADDWF FSR0L, F
+0E30  50EF      	MOVF INDF0, W
+0E32  6FFB      	MOVWF main_1_buffer+D'2', 1
+0E34            label119
+0E34  93EB      	BCF gbl_cTask,1, 1
+0E36            label120
+0E36  A5EB      	BTFSS gbl_cTask,2, 1
+0E38  D00F      	BRA	label124
+0E3A  0E78      	MOVLW 0x78
+0E3C  61EA      	CPFSLT gbl_iMin, 1
+0E3E  D001      	BRA	label121
+0E40  D009      	BRA	label122
+0E42            label121
+0E42  91FC      	BCF timer1Set_00000_arg_isOn,0, 1
+0E44  EC25F006  	CALL timer1Set_00000
+0E48  A1E7      	BTFSS gbl_isJiggling,0, 1
+0E4A  D005      	BRA	label123
+0E4C  91E7      	BCF gbl_isJiggling,0, 1
+0E4E  93E7      	BCF gbl_isMoving,1, 1
+0E50  9281      	BCF gbl_portb,1
+0E52  D001      	BRA	label123
+0E54            label122
+0E54  83E7      	BSF gbl_isMoving,1, 1
+0E56            label123
+0E56  95EB      	BCF gbl_cTask,2, 1
+0E58            label124
 0E58  0E03      	MOVLW 0x03
-0E5A  6FFC      	MOVWF PutEP1_00000_arg_bytes, 1
-0E5C  0E00      	MOVLW HIGH(main_1_buffer+D'0')
-0E5E  6FFE      	MOVWF PutEP1_00000_arg_buffer+D'1', 1
-0E60  0EF9      	MOVLW LOW(main_1_buffer+D'0')
-0E62  6FFD      	MOVWF PutEP1_00000_arg_buffer, 1
-0E64  EC4CF006  	CALL PutEP1_00000
-0E68  531B      	MOVF CompTempVarRet569, F, 1
-0E6A  E002      	BZ	label124
-0E6C  0100      	MOVLB 0x00
-0E6E  2BF6      	INCF main_1_i, F, 1
-0E70            label124
-0E70  D7A8      	BRA	label115
-0E72            ; } main function end
+0E5A  15F4      	ANDWF gbl_USWSTAT, W, 1
+0E5C  6FFC      	MOVWF CompTempVar734, 1
+0E5E  0E03      	MOVLW 0x03
+0E60  63FC      	CPFSEQ CompTempVar734, 1
+0E62  D7AF      	BRA	label115
+0E64  A1E7      	BTFSS gbl_isJiggling,0, 1
+0E66  D7AD      	BRA	label115
+0E68  A3E7      	BTFSS gbl_isMoving,1, 1
+0E6A  D7AB      	BRA	label115
+0E6C  0E03      	MOVLW 0x03
+0E6E  6FFC      	MOVWF PutEP1_00000_arg_bytes, 1
+0E70  0E00      	MOVLW HIGH(main_1_buffer+D'0')
+0E72  6FFE      	MOVWF PutEP1_00000_arg_buffer+D'1', 1
+0E74  0EF9      	MOVLW LOW(main_1_buffer+D'0')
+0E76  6FFD      	MOVWF PutEP1_00000_arg_buffer, 1
+0E78  EC4CF006  	CALL PutEP1_00000
+0E7C  531B      	MOVF CompTempVarRet569, F, 1
+0E7E  E002      	BZ	label125
+0E80  0100      	MOVLB 0x00
+0E82  2BF6      	INCF main_1_i, F, 1
+0E84            label125
+0E84  D79E      	BRA	label115
+0E86            ; } main function end
 
-	ORG 0x00000E72
-0E72            _startup
-0E72  0100      	MOVLB 0x00
-0E74  91E7      	BCF gbl_isJiggling,0, 1
-0E76  6BE8      	CLRF gbl_buttonState, 1
-0E78  6BCB      	CLRF gbl_bres, 1
-0E7A  6BCC      	CLRF gbl_bres+D'1', 1
-0E7C  6BE9      	CLRF gbl_iSec, 1
-0E7E  6BEA      	CLRF gbl_iMin, 1
-0E80  0E08      	MOVLW 0x08
-0E82  0104      	MOVLB 0x04
-0E84  6F01      	MOVWF gbl_bd0cntoe, 1
-0E86  6B02      	CLRF gbl_bd0adrloe, 1
-0E88  0E05      	MOVLW 0x05
-0E8A  6F03      	MOVWF gbl_bd0adrhoe, 1
-0E8C  0E08      	MOVLW 0x08
-0E8E  6F05      	MOVWF gbl_bd0cntie, 1
-0E90  0E80      	MOVLW 0x80
-0E92  6F06      	MOVWF gbl_bd0adrlie, 1
-0E94  0E05      	MOVLW 0x05
-0E96  6F07      	MOVWF gbl_bd0adrhie, 1
-0E98  0E08      	MOVLW 0x08
-0E9A  6F09      	MOVWF gbl_bd1cntoe, 1
-0E9C  6B0A      	CLRF gbl_bd1adrloe, 1
-0E9E  0E06      	MOVLW 0x06
-0EA0  6F0B      	MOVWF gbl_bd1adrhoe, 1
+	ORG 0x00000E86
+0E86            _startup
+0E86  0100      	MOVLB 0x00
+0E88  91E7      	BCF gbl_isJiggling,0, 1
+0E8A  93E7      	BCF gbl_isMoving,1, 1
+0E8C  6BE8      	CLRF gbl_buttonState, 1
+0E8E  6BCB      	CLRF gbl_bres, 1
+0E90  6BCC      	CLRF gbl_bres+D'1', 1
+0E92  6BE9      	CLRF gbl_iSec, 1
+0E94  6BEA      	CLRF gbl_iMin, 1
+0E96  0E08      	MOVLW 0x08
+0E98  0104      	MOVLB 0x04
+0E9A  6F01      	MOVWF gbl_bd0cntoe, 1
+0E9C  6B02      	CLRF gbl_bd0adrloe, 1
+0E9E  0E05      	MOVLW 0x05
+0EA0  6F03      	MOVWF gbl_bd0adrhoe, 1
 0EA2  0E08      	MOVLW 0x08
-0EA4  6F0D      	MOVWF gbl_bd1cntie, 1
+0EA4  6F05      	MOVWF gbl_bd0cntie, 1
 0EA6  0E80      	MOVLW 0x80
-0EA8  6F0E      	MOVWF gbl_bd1adrlie, 1
-0EAA  0E06      	MOVLW 0x06
-0EAC  6F0F      	MOVWF gbl_bd1adrhie, 1
+0EA8  6F06      	MOVWF gbl_bd0adrlie, 1
+0EAA  0E05      	MOVLW 0x05
+0EAC  6F07      	MOVWF gbl_bd0adrhie, 1
 0EAE  0E08      	MOVLW 0x08
-0EB0  6F11      	MOVWF gbl_bd2cntoe, 1
-0EB2  6B12      	CLRF gbl_bd2adrloe, 1
-0EB4  0E07      	MOVLW 0x07
-0EB6  6F13      	MOVWF gbl_bd2adrhoe, 1
+0EB0  6F09      	MOVWF gbl_bd1cntoe, 1
+0EB2  6B0A      	CLRF gbl_bd1adrloe, 1
+0EB4  0E06      	MOVLW 0x06
+0EB6  6F0B      	MOVWF gbl_bd1adrhoe, 1
 0EB8  0E08      	MOVLW 0x08
-0EBA  6F15      	MOVWF gbl_bd2cntie, 1
+0EBA  6F0D      	MOVWF gbl_bd1cntie, 1
 0EBC  0E80      	MOVLW 0x80
-0EBE  6F16      	MOVWF gbl_bd2adrlie, 1
-0EC0  0E07      	MOVLW 0x07
-0EC2  6F17      	MOVWF gbl_bd2adrhie, 1
-0EC4  0100      	MOVLB 0x00
-0EC6  6BCD      	CLRF gbl_USB_PID_ERR, 1
-0EC8  6BCE      	CLRF gbl_USB_PID_ERR+D'1', 1
-0ECA  6BCF      	CLRF gbl_USB_CRC5_ERR, 1
-0ECC  6BD0      	CLRF gbl_USB_CRC5_ERR+D'1', 1
-0ECE  6BD1      	CLRF gbl_USB_CRC16_ERR, 1
-0ED0  6BD2      	CLRF gbl_USB_CRC16_ERR+D'1', 1
-0ED2  6BD3      	CLRF gbl_USB_DFN8_ERR, 1
-0ED4  6BD4      	CLRF gbl_USB_DFN8_ERR+D'1', 1
-0ED6  6BD5      	CLRF gbl_USB_BTO_ERR, 1
-0ED8  6BD6      	CLRF gbl_USB_BTO_ERR+D'1', 1
-0EDA  6BD7      	CLRF gbl_USB_WRT_ERR, 1
-0EDC  6BD8      	CLRF gbl_USB_WRT_ERR+D'1', 1
-0EDE  6BD9      	CLRF gbl_USB_OWN_ERR, 1
-0EE0  6BDA      	CLRF gbl_USB_OWN_ERR+D'1', 1
-0EE2  6BDB      	CLRF gbl_USB_BTS_ERR, 1
-0EE4  6BDC      	CLRF gbl_USB_BTS_ERR+D'1', 1
-0EE6  6BE1      	CLRF gbl_BDT, 1
-0EE8  0E04      	MOVLW 0x04
-0EEA  6FE2      	MOVWF gbl_BDT+D'1', 1
-0EEC  0E04      	MOVLW 0x04
-0EEE  6FC7      	MOVWF gbl_String0, 1
-0EF0  0E03      	MOVLW 0x03
-0EF2  6FC8      	MOVWF gbl_String0+D'1', 1
-0EF4  0E09      	MOVLW 0x09
-0EF6  6FC9      	MOVWF gbl_String0+D'2', 1
-0EF8  0E04      	MOVLW 0x04
-0EFA  6FCA      	MOVWF gbl_String0+D'3', 1
-0EFC  0E14      	MOVLW 0x14
-0EFE  6F90      	MOVWF gbl_String1, 1
-0F00  0E03      	MOVLW 0x03
-0F02  6F91      	MOVWF gbl_String1+D'1', 1
-0F04  0E4D      	MOVLW 0x4D
-0F06  6F92      	MOVWF gbl_String1+D'2', 1
-0F08  6B93      	CLRF gbl_String1+D'3', 1
-0F0A  0E69      	MOVLW 0x69
-0F0C  6F94      	MOVWF gbl_String1+D'4', 1
-0F0E  6B95      	CLRF gbl_String1+D'5', 1
-0F10  0E63      	MOVLW 0x63
-0F12  6F96      	MOVWF gbl_String1+D'6', 1
-0F14  6B97      	CLRF gbl_String1+D'7', 1
-0F16  0E72      	MOVLW 0x72
-0F18  6F98      	MOVWF gbl_String1+D'8', 1
-0F1A  6B99      	CLRF gbl_String1+D'9', 1
-0F1C  0E6F      	MOVLW 0x6F
-0F1E  6F9A      	MOVWF gbl_String1+D'10', 1
-0F20  6B9B      	CLRF gbl_String1+D'11', 1
-0F22  0E63      	MOVLW 0x63
-0F24  6F9C      	MOVWF gbl_String1+D'12', 1
-0F26  6B9D      	CLRF gbl_String1+D'13', 1
-0F28  0E68      	MOVLW 0x68
-0F2A  6F9E      	MOVWF gbl_String1+D'14', 1
-0F2C  6B9F      	CLRF gbl_String1+D'15', 1
-0F2E  0E69      	MOVLW 0x69
-0F30  6FA0      	MOVWF gbl_String1+D'16', 1
-0F32  6BA1      	CLRF gbl_String1+D'17', 1
-0F34  0E70      	MOVLW 0x70
-0F36  6FA2      	MOVWF gbl_String1+D'18', 1
-0F38  6BA3      	CLRF gbl_String1+D'19', 1
-0F3A  0E30      	MOVLW 0x30
-0F3C  6F60      	MOVWF gbl_String2, 1
-0F3E  0E03      	MOVLW 0x03
-0F40  6F61      	MOVWF gbl_String2+D'1', 1
-0F42  0E50      	MOVLW 0x50
-0F44  6F62      	MOVWF gbl_String2+D'2', 1
-0F46  6B63      	CLRF gbl_String2+D'3', 1
-0F48  0E49      	MOVLW 0x49
-0F4A  6F64      	MOVWF gbl_String2+D'4', 1
-0F4C  6B65      	CLRF gbl_String2+D'5', 1
-0F4E  0E43      	MOVLW 0x43
-0F50  6F66      	MOVWF gbl_String2+D'6', 1
-0F52  6B67      	CLRF gbl_String2+D'7', 1
-0F54  0E31      	MOVLW 0x31
-0F56  6F68      	MOVWF gbl_String2+D'8', 1
-0F58  6B69      	CLRF gbl_String2+D'9', 1
-0F5A  0E38      	MOVLW 0x38
-0F5C  6F6A      	MOVWF gbl_String2+D'10', 1
-0F5E  6B6B      	CLRF gbl_String2+D'11', 1
-0F60  0E46      	MOVLW 0x46
-0F62  6F6C      	MOVWF gbl_String2+D'12', 1
-0F64  6B6D      	CLRF gbl_String2+D'13', 1
-0F66  0E32      	MOVLW 0x32
-0F68  6F6E      	MOVWF gbl_String2+D'14', 1
-0F6A  6B6F      	CLRF gbl_String2+D'15', 1
-0F6C  0E35      	MOVLW 0x35
-0F6E  6F70      	MOVWF gbl_String2+D'16', 1
-0F70  6B71      	CLRF gbl_String2+D'17', 1
-0F72  0E35      	MOVLW 0x35
-0F74  6F72      	MOVWF gbl_String2+D'18', 1
-0F76  6B73      	CLRF gbl_String2+D'19', 1
-0F78  0E30      	MOVLW 0x30
-0F7A  6F74      	MOVWF gbl_String2+D'20', 1
-0F7C  6B75      	CLRF gbl_String2+D'21', 1
-0F7E  0E20      	MOVLW 0x20
-0F80  6F76      	MOVWF gbl_String2+D'22', 1
-0F82  6B77      	CLRF gbl_String2+D'23', 1
-0F84  0E4A      	MOVLW 0x4A
-0F86  6F78      	MOVWF gbl_String2+D'24', 1
-0F88  6B79      	CLRF gbl_String2+D'25', 1
-0F8A  0E69      	MOVLW 0x69
-0F8C  6F7A      	MOVWF gbl_String2+D'26', 1
-0F8E  6B7B      	CLRF gbl_String2+D'27', 1
-0F90  0E67      	MOVLW 0x67
-0F92  6F7C      	MOVWF gbl_String2+D'28', 1
-0F94  6B7D      	CLRF gbl_String2+D'29', 1
-0F96  0E67      	MOVLW 0x67
-0F98  6F7E      	MOVWF gbl_String2+D'30', 1
-0F9A  6B7F      	CLRF gbl_String2+D'31', 1
-0F9C  0E6C      	MOVLW 0x6C
-0F9E  6F80      	MOVWF gbl_String2+D'32', 1
-0FA0  6B81      	CLRF gbl_String2+D'33', 1
-0FA2  0E65      	MOVLW 0x65
-0FA4  6F82      	MOVWF gbl_String2+D'34', 1
-0FA6  6B83      	CLRF gbl_String2+D'35', 1
-0FA8  0E20      	MOVLW 0x20
-0FAA  6F84      	MOVWF gbl_String2+D'36', 1
-0FAC  6B85      	CLRF gbl_String2+D'37', 1
-0FAE  0E4D      	MOVLW 0x4D
-0FB0  6F86      	MOVWF gbl_String2+D'38', 1
-0FB2  6B87      	CLRF gbl_String2+D'39', 1
-0FB4  0E6F      	MOVLW 0x6F
-0FB6  6F88      	MOVWF gbl_String2+D'40', 1
-0FB8  6B89      	CLRF gbl_String2+D'41', 1
-0FBA  0E75      	MOVLW 0x75
-0FBC  6F8A      	MOVWF gbl_String2+D'42', 1
-0FBE  6B8B      	CLRF gbl_String2+D'43', 1
-0FC0  0E73      	MOVLW 0x73
-0FC2  6F8C      	MOVWF gbl_String2+D'44', 1
-0FC4  6B8D      	CLRF gbl_String2+D'45', 1
-0FC6  0E65      	MOVLW 0x65
-0FC8  6F8E      	MOVWF gbl_String2+D'46', 1
-0FCA  6B8F      	CLRF gbl_String2+D'47', 1
-0FCC  0E05      	MOVLW 0x05
-0FCE  6E05      	MOVWF gbl_ReportDescriptor1
-0FD0  0E01      	MOVLW 0x01
-0FD2  6E06      	MOVWF gbl_ReportDescriptor1+D'1'
-0FD4  0E09      	MOVLW 0x09
-0FD6  6E07      	MOVWF gbl_ReportDescriptor1+D'2'
-0FD8  0E02      	MOVLW 0x02
-0FDA  6E08      	MOVWF gbl_ReportDescriptor1+D'3'
-0FDC  0EA1      	MOVLW 0xA1
-0FDE  6E09      	MOVWF gbl_ReportDescriptor1+D'4'
-0FE0  0E01      	MOVLW 0x01
-0FE2  6E0A      	MOVWF gbl_ReportDescriptor1+D'5'
-0FE4  0E09      	MOVLW 0x09
-0FE6  6E0B      	MOVWF gbl_ReportDescriptor1+D'6'
-0FE8  0E01      	MOVLW 0x01
-0FEA  6E0C      	MOVWF gbl_ReportDescriptor1+D'7'
-0FEC  0EA1      	MOVLW 0xA1
-0FEE  6E0D      	MOVWF gbl_ReportDescriptor1+D'8'
-0FF0  6A0E      	CLRF gbl_ReportDescriptor1+D'9'
-0FF2  0E05      	MOVLW 0x05
-0FF4  6E0F      	MOVWF gbl_ReportDescriptor1+D'10'
-0FF6  0E09      	MOVLW 0x09
-0FF8  6E10      	MOVWF gbl_ReportDescriptor1+D'11'
-0FFA  0E19      	MOVLW 0x19
-0FFC  6E11      	MOVWF gbl_ReportDescriptor1+D'12'
+0EBE  6F0E      	MOVWF gbl_bd1adrlie, 1
+0EC0  0E06      	MOVLW 0x06
+0EC2  6F0F      	MOVWF gbl_bd1adrhie, 1
+0EC4  0E08      	MOVLW 0x08
+0EC6  6F11      	MOVWF gbl_bd2cntoe, 1
+0EC8  6B12      	CLRF gbl_bd2adrloe, 1
+0ECA  0E07      	MOVLW 0x07
+0ECC  6F13      	MOVWF gbl_bd2adrhoe, 1
+0ECE  0E08      	MOVLW 0x08
+0ED0  6F15      	MOVWF gbl_bd2cntie, 1
+0ED2  0E80      	MOVLW 0x80
+0ED4  6F16      	MOVWF gbl_bd2adrlie, 1
+0ED6  0E07      	MOVLW 0x07
+0ED8  6F17      	MOVWF gbl_bd2adrhie, 1
+0EDA  0100      	MOVLB 0x00
+0EDC  6BCD      	CLRF gbl_USB_PID_ERR, 1
+0EDE  6BCE      	CLRF gbl_USB_PID_ERR+D'1', 1
+0EE0  6BCF      	CLRF gbl_USB_CRC5_ERR, 1
+0EE2  6BD0      	CLRF gbl_USB_CRC5_ERR+D'1', 1
+0EE4  6BD1      	CLRF gbl_USB_CRC16_ERR, 1
+0EE6  6BD2      	CLRF gbl_USB_CRC16_ERR+D'1', 1
+0EE8  6BD3      	CLRF gbl_USB_DFN8_ERR, 1
+0EEA  6BD4      	CLRF gbl_USB_DFN8_ERR+D'1', 1
+0EEC  6BD5      	CLRF gbl_USB_BTO_ERR, 1
+0EEE  6BD6      	CLRF gbl_USB_BTO_ERR+D'1', 1
+0EF0  6BD7      	CLRF gbl_USB_WRT_ERR, 1
+0EF2  6BD8      	CLRF gbl_USB_WRT_ERR+D'1', 1
+0EF4  6BD9      	CLRF gbl_USB_OWN_ERR, 1
+0EF6  6BDA      	CLRF gbl_USB_OWN_ERR+D'1', 1
+0EF8  6BDB      	CLRF gbl_USB_BTS_ERR, 1
+0EFA  6BDC      	CLRF gbl_USB_BTS_ERR+D'1', 1
+0EFC  6BE1      	CLRF gbl_BDT, 1
+0EFE  0E04      	MOVLW 0x04
+0F00  6FE2      	MOVWF gbl_BDT+D'1', 1
+0F02  0E04      	MOVLW 0x04
+0F04  6FC7      	MOVWF gbl_String0, 1
+0F06  0E03      	MOVLW 0x03
+0F08  6FC8      	MOVWF gbl_String0+D'1', 1
+0F0A  0E09      	MOVLW 0x09
+0F0C  6FC9      	MOVWF gbl_String0+D'2', 1
+0F0E  0E04      	MOVLW 0x04
+0F10  6FCA      	MOVWF gbl_String0+D'3', 1
+0F12  0E14      	MOVLW 0x14
+0F14  6F90      	MOVWF gbl_String1, 1
+0F16  0E03      	MOVLW 0x03
+0F18  6F91      	MOVWF gbl_String1+D'1', 1
+0F1A  0E4D      	MOVLW 0x4D
+0F1C  6F92      	MOVWF gbl_String1+D'2', 1
+0F1E  6B93      	CLRF gbl_String1+D'3', 1
+0F20  0E69      	MOVLW 0x69
+0F22  6F94      	MOVWF gbl_String1+D'4', 1
+0F24  6B95      	CLRF gbl_String1+D'5', 1
+0F26  0E63      	MOVLW 0x63
+0F28  6F96      	MOVWF gbl_String1+D'6', 1
+0F2A  6B97      	CLRF gbl_String1+D'7', 1
+0F2C  0E72      	MOVLW 0x72
+0F2E  6F98      	MOVWF gbl_String1+D'8', 1
+0F30  6B99      	CLRF gbl_String1+D'9', 1
+0F32  0E6F      	MOVLW 0x6F
+0F34  6F9A      	MOVWF gbl_String1+D'10', 1
+0F36  6B9B      	CLRF gbl_String1+D'11', 1
+0F38  0E63      	MOVLW 0x63
+0F3A  6F9C      	MOVWF gbl_String1+D'12', 1
+0F3C  6B9D      	CLRF gbl_String1+D'13', 1
+0F3E  0E68      	MOVLW 0x68
+0F40  6F9E      	MOVWF gbl_String1+D'14', 1
+0F42  6B9F      	CLRF gbl_String1+D'15', 1
+0F44  0E69      	MOVLW 0x69
+0F46  6FA0      	MOVWF gbl_String1+D'16', 1
+0F48  6BA1      	CLRF gbl_String1+D'17', 1
+0F4A  0E70      	MOVLW 0x70
+0F4C  6FA2      	MOVWF gbl_String1+D'18', 1
+0F4E  6BA3      	CLRF gbl_String1+D'19', 1
+0F50  0E30      	MOVLW 0x30
+0F52  6F60      	MOVWF gbl_String2, 1
+0F54  0E03      	MOVLW 0x03
+0F56  6F61      	MOVWF gbl_String2+D'1', 1
+0F58  0E50      	MOVLW 0x50
+0F5A  6F62      	MOVWF gbl_String2+D'2', 1
+0F5C  6B63      	CLRF gbl_String2+D'3', 1
+0F5E  0E49      	MOVLW 0x49
+0F60  6F64      	MOVWF gbl_String2+D'4', 1
+0F62  6B65      	CLRF gbl_String2+D'5', 1
+0F64  0E43      	MOVLW 0x43
+0F66  6F66      	MOVWF gbl_String2+D'6', 1
+0F68  6B67      	CLRF gbl_String2+D'7', 1
+0F6A  0E31      	MOVLW 0x31
+0F6C  6F68      	MOVWF gbl_String2+D'8', 1
+0F6E  6B69      	CLRF gbl_String2+D'9', 1
+0F70  0E38      	MOVLW 0x38
+0F72  6F6A      	MOVWF gbl_String2+D'10', 1
+0F74  6B6B      	CLRF gbl_String2+D'11', 1
+0F76  0E46      	MOVLW 0x46
+0F78  6F6C      	MOVWF gbl_String2+D'12', 1
+0F7A  6B6D      	CLRF gbl_String2+D'13', 1
+0F7C  0E32      	MOVLW 0x32
+0F7E  6F6E      	MOVWF gbl_String2+D'14', 1
+0F80  6B6F      	CLRF gbl_String2+D'15', 1
+0F82  0E35      	MOVLW 0x35
+0F84  6F70      	MOVWF gbl_String2+D'16', 1
+0F86  6B71      	CLRF gbl_String2+D'17', 1
+0F88  0E35      	MOVLW 0x35
+0F8A  6F72      	MOVWF gbl_String2+D'18', 1
+0F8C  6B73      	CLRF gbl_String2+D'19', 1
+0F8E  0E30      	MOVLW 0x30
+0F90  6F74      	MOVWF gbl_String2+D'20', 1
+0F92  6B75      	CLRF gbl_String2+D'21', 1
+0F94  0E20      	MOVLW 0x20
+0F96  6F76      	MOVWF gbl_String2+D'22', 1
+0F98  6B77      	CLRF gbl_String2+D'23', 1
+0F9A  0E4A      	MOVLW 0x4A
+0F9C  6F78      	MOVWF gbl_String2+D'24', 1
+0F9E  6B79      	CLRF gbl_String2+D'25', 1
+0FA0  0E69      	MOVLW 0x69
+0FA2  6F7A      	MOVWF gbl_String2+D'26', 1
+0FA4  6B7B      	CLRF gbl_String2+D'27', 1
+0FA6  0E67      	MOVLW 0x67
+0FA8  6F7C      	MOVWF gbl_String2+D'28', 1
+0FAA  6B7D      	CLRF gbl_String2+D'29', 1
+0FAC  0E67      	MOVLW 0x67
+0FAE  6F7E      	MOVWF gbl_String2+D'30', 1
+0FB0  6B7F      	CLRF gbl_String2+D'31', 1
+0FB2  0E6C      	MOVLW 0x6C
+0FB4  6F80      	MOVWF gbl_String2+D'32', 1
+0FB6  6B81      	CLRF gbl_String2+D'33', 1
+0FB8  0E65      	MOVLW 0x65
+0FBA  6F82      	MOVWF gbl_String2+D'34', 1
+0FBC  6B83      	CLRF gbl_String2+D'35', 1
+0FBE  0E20      	MOVLW 0x20
+0FC0  6F84      	MOVWF gbl_String2+D'36', 1
+0FC2  6B85      	CLRF gbl_String2+D'37', 1
+0FC4  0E4D      	MOVLW 0x4D
+0FC6  6F86      	MOVWF gbl_String2+D'38', 1
+0FC8  6B87      	CLRF gbl_String2+D'39', 1
+0FCA  0E6F      	MOVLW 0x6F
+0FCC  6F88      	MOVWF gbl_String2+D'40', 1
+0FCE  6B89      	CLRF gbl_String2+D'41', 1
+0FD0  0E75      	MOVLW 0x75
+0FD2  6F8A      	MOVWF gbl_String2+D'42', 1
+0FD4  6B8B      	CLRF gbl_String2+D'43', 1
+0FD6  0E73      	MOVLW 0x73
+0FD8  6F8C      	MOVWF gbl_String2+D'44', 1
+0FDA  6B8D      	CLRF gbl_String2+D'45', 1
+0FDC  0E65      	MOVLW 0x65
+0FDE  6F8E      	MOVWF gbl_String2+D'46', 1
+0FE0  6B8F      	CLRF gbl_String2+D'47', 1
+0FE2  0E05      	MOVLW 0x05
+0FE4  6E05      	MOVWF gbl_ReportDescriptor1
+0FE6  0E01      	MOVLW 0x01
+0FE8  6E06      	MOVWF gbl_ReportDescriptor1+D'1'
+0FEA  0E09      	MOVLW 0x09
+0FEC  6E07      	MOVWF gbl_ReportDescriptor1+D'2'
+0FEE  0E02      	MOVLW 0x02
+0FF0  6E08      	MOVWF gbl_ReportDescriptor1+D'3'
+0FF2  0EA1      	MOVLW 0xA1
+0FF4  6E09      	MOVWF gbl_ReportDescriptor1+D'4'
+0FF6  0E01      	MOVLW 0x01
+0FF8  6E0A      	MOVWF gbl_ReportDescriptor1+D'5'
+0FFA  0E09      	MOVLW 0x09
+0FFC  6E0B      	MOVWF gbl_ReportDescriptor1+D'6'
 0FFE  0E01      	MOVLW 0x01
-1000  6E12      	MOVWF gbl_ReportDescriptor1+D'13'
-1002  0E29      	MOVLW 0x29
-1004  6E13      	MOVWF gbl_ReportDescriptor1+D'14'
-1006  0E03      	MOVLW 0x03
-1008  6E14      	MOVWF gbl_ReportDescriptor1+D'15'
-100A  0E15      	MOVLW 0x15
-100C  6E15      	MOVWF gbl_ReportDescriptor1+D'16'
-100E  6A16      	CLRF gbl_ReportDescriptor1+D'17'
-1010  0E25      	MOVLW 0x25
-1012  6E17      	MOVWF gbl_ReportDescriptor1+D'18'
+1000  6E0C      	MOVWF gbl_ReportDescriptor1+D'7'
+1002  0EA1      	MOVLW 0xA1
+1004  6E0D      	MOVWF gbl_ReportDescriptor1+D'8'
+1006  6A0E      	CLRF gbl_ReportDescriptor1+D'9'
+1008  0E05      	MOVLW 0x05
+100A  6E0F      	MOVWF gbl_ReportDescriptor1+D'10'
+100C  0E09      	MOVLW 0x09
+100E  6E10      	MOVWF gbl_ReportDescriptor1+D'11'
+1010  0E19      	MOVLW 0x19
+1012  6E11      	MOVWF gbl_ReportDescriptor1+D'12'
 1014  0E01      	MOVLW 0x01
-1016  6E18      	MOVWF gbl_ReportDescriptor1+D'19'
-1018  0E95      	MOVLW 0x95
-101A  6E19      	MOVWF gbl_ReportDescriptor1+D'20'
+1016  6E12      	MOVWF gbl_ReportDescriptor1+D'13'
+1018  0E29      	MOVLW 0x29
+101A  6E13      	MOVWF gbl_ReportDescriptor1+D'14'
 101C  0E03      	MOVLW 0x03
-101E  6E1A      	MOVWF gbl_ReportDescriptor1+D'21'
-1020  0E75      	MOVLW 0x75
-1022  6E1B      	MOVWF gbl_ReportDescriptor1+D'22'
-1024  0E01      	MOVLW 0x01
-1026  6E1C      	MOVWF gbl_ReportDescriptor1+D'23'
-1028  0E81      	MOVLW 0x81
-102A  6E1D      	MOVWF gbl_ReportDescriptor1+D'24'
-102C  0E02      	MOVLW 0x02
-102E  6E1E      	MOVWF gbl_ReportDescriptor1+D'25'
-1030  0E95      	MOVLW 0x95
-1032  6E1F      	MOVWF gbl_ReportDescriptor1+D'26'
-1034  0E01      	MOVLW 0x01
-1036  6E20      	MOVWF gbl_ReportDescriptor1+D'27'
-1038  0E75      	MOVLW 0x75
-103A  6E21      	MOVWF gbl_ReportDescriptor1+D'28'
-103C  0E05      	MOVLW 0x05
-103E  6E22      	MOVWF gbl_ReportDescriptor1+D'29'
-1040  0E81      	MOVLW 0x81
-1042  6E23      	MOVWF gbl_ReportDescriptor1+D'30'
-1044  0E01      	MOVLW 0x01
-1046  6E24      	MOVWF gbl_ReportDescriptor1+D'31'
-1048  0E05      	MOVLW 0x05
-104A  6E25      	MOVWF gbl_ReportDescriptor1+D'32'
-104C  0E01      	MOVLW 0x01
-104E  6E26      	MOVWF gbl_ReportDescriptor1+D'33'
-1050  0E09      	MOVLW 0x09
-1052  6E27      	MOVWF gbl_ReportDescriptor1+D'34'
-1054  0E30      	MOVLW 0x30
-1056  6E28      	MOVWF gbl_ReportDescriptor1+D'35'
-1058  0E09      	MOVLW 0x09
-105A  6E29      	MOVWF gbl_ReportDescriptor1+D'36'
-105C  0E31      	MOVLW 0x31
-105E  6E2A      	MOVWF gbl_ReportDescriptor1+D'37'
-1060  0E15      	MOVLW 0x15
-1062  6E2B      	MOVWF gbl_ReportDescriptor1+D'38'
-1064  0E81      	MOVLW 0x81
-1066  6E2C      	MOVWF gbl_ReportDescriptor1+D'39'
-1068  0E25      	MOVLW 0x25
-106A  6E2D      	MOVWF gbl_ReportDescriptor1+D'40'
-106C  0E7F      	MOVLW 0x7F
-106E  6E2E      	MOVWF gbl_ReportDescriptor1+D'41'
-1070  0E75      	MOVLW 0x75
-1072  6E2F      	MOVWF gbl_ReportDescriptor1+D'42'
-1074  0E08      	MOVLW 0x08
-1076  6E30      	MOVWF gbl_ReportDescriptor1+D'43'
-1078  0E95      	MOVLW 0x95
-107A  6E31      	MOVWF gbl_ReportDescriptor1+D'44'
-107C  0E02      	MOVLW 0x02
-107E  6E32      	MOVWF gbl_ReportDescriptor1+D'45'
-1080  0E81      	MOVLW 0x81
-1082  6E33      	MOVWF gbl_ReportDescriptor1+D'46'
-1084  0E06      	MOVLW 0x06
-1086  6E34      	MOVWF gbl_ReportDescriptor1+D'47'
-1088  0EC0      	MOVLW 0xC0
-108A  6E35      	MOVWF gbl_ReportDescriptor1+D'48'
-108C  0EC0      	MOVLW 0xC0
-108E  6E36      	MOVWF gbl_ReportDescriptor1+D'49'
-1090  0E12      	MOVLW 0x12
-1092  6FA4      	MOVWF gbl_DeviceDescriptor, 1
-1094  0E01      	MOVLW 0x01
-1096  6FA5      	MOVWF gbl_DeviceDescriptor+D'1', 1
-1098  0E10      	MOVLW 0x10
-109A  6FA6      	MOVWF gbl_DeviceDescriptor+D'2', 1
-109C  0E01      	MOVLW 0x01
-109E  6FA7      	MOVWF gbl_DeviceDescriptor+D'3', 1
-10A0  6BA8      	CLRF gbl_DeviceDescriptor+D'4', 1
-10A2  6BA9      	CLRF gbl_DeviceDescriptor+D'5', 1
-10A4  6BAA      	CLRF gbl_DeviceDescriptor+D'6', 1
-10A6  0E08      	MOVLW 0x08
-10A8  6FAB      	MOVWF gbl_DeviceDescriptor+D'7', 1
-10AA  0ED8      	MOVLW 0xD8
-10AC  6FAC      	MOVWF gbl_DeviceDescriptor+D'8', 1
-10AE  0E04      	MOVLW 0x04
-10B0  6FAD      	MOVWF gbl_DeviceDescriptor+D'9', 1
-10B2  0E09      	MOVLW 0x09
-10B4  6FAE      	MOVWF gbl_DeviceDescriptor+D'10', 1
-10B6  6BAF      	CLRF gbl_DeviceDescriptor+D'11', 1
-10B8  6BB0      	CLRF gbl_DeviceDescriptor+D'12', 1
-10BA  0E02      	MOVLW 0x02
-10BC  6FB1      	MOVWF gbl_DeviceDescriptor+D'13', 1
-10BE  0E01      	MOVLW 0x01
-10C0  6FB2      	MOVWF gbl_DeviceDescriptor+D'14', 1
-10C2  0E02      	MOVLW 0x02
-10C4  6FB3      	MOVWF gbl_DeviceDescriptor+D'15', 1
-10C6  6BB4      	CLRF gbl_DeviceDescriptor+D'16', 1
-10C8  0E01      	MOVLW 0x01
-10CA  6FB5      	MOVWF gbl_DeviceDescriptor+D'17', 1
-10CC  0E09      	MOVLW 0x09
-10CE  6E37      	MOVWF gbl_ConfigDescriptor
+101E  6E14      	MOVWF gbl_ReportDescriptor1+D'15'
+1020  0E15      	MOVLW 0x15
+1022  6E15      	MOVWF gbl_ReportDescriptor1+D'16'
+1024  6A16      	CLRF gbl_ReportDescriptor1+D'17'
+1026  0E25      	MOVLW 0x25
+1028  6E17      	MOVWF gbl_ReportDescriptor1+D'18'
+102A  0E01      	MOVLW 0x01
+102C  6E18      	MOVWF gbl_ReportDescriptor1+D'19'
+102E  0E95      	MOVLW 0x95
+1030  6E19      	MOVWF gbl_ReportDescriptor1+D'20'
+1032  0E03      	MOVLW 0x03
+1034  6E1A      	MOVWF gbl_ReportDescriptor1+D'21'
+1036  0E75      	MOVLW 0x75
+1038  6E1B      	MOVWF gbl_ReportDescriptor1+D'22'
+103A  0E01      	MOVLW 0x01
+103C  6E1C      	MOVWF gbl_ReportDescriptor1+D'23'
+103E  0E81      	MOVLW 0x81
+1040  6E1D      	MOVWF gbl_ReportDescriptor1+D'24'
+1042  0E02      	MOVLW 0x02
+1044  6E1E      	MOVWF gbl_ReportDescriptor1+D'25'
+1046  0E95      	MOVLW 0x95
+1048  6E1F      	MOVWF gbl_ReportDescriptor1+D'26'
+104A  0E01      	MOVLW 0x01
+104C  6E20      	MOVWF gbl_ReportDescriptor1+D'27'
+104E  0E75      	MOVLW 0x75
+1050  6E21      	MOVWF gbl_ReportDescriptor1+D'28'
+1052  0E05      	MOVLW 0x05
+1054  6E22      	MOVWF gbl_ReportDescriptor1+D'29'
+1056  0E81      	MOVLW 0x81
+1058  6E23      	MOVWF gbl_ReportDescriptor1+D'30'
+105A  0E01      	MOVLW 0x01
+105C  6E24      	MOVWF gbl_ReportDescriptor1+D'31'
+105E  0E05      	MOVLW 0x05
+1060  6E25      	MOVWF gbl_ReportDescriptor1+D'32'
+1062  0E01      	MOVLW 0x01
+1064  6E26      	MOVWF gbl_ReportDescriptor1+D'33'
+1066  0E09      	MOVLW 0x09
+1068  6E27      	MOVWF gbl_ReportDescriptor1+D'34'
+106A  0E30      	MOVLW 0x30
+106C  6E28      	MOVWF gbl_ReportDescriptor1+D'35'
+106E  0E09      	MOVLW 0x09
+1070  6E29      	MOVWF gbl_ReportDescriptor1+D'36'
+1072  0E31      	MOVLW 0x31
+1074  6E2A      	MOVWF gbl_ReportDescriptor1+D'37'
+1076  0E15      	MOVLW 0x15
+1078  6E2B      	MOVWF gbl_ReportDescriptor1+D'38'
+107A  0E81      	MOVLW 0x81
+107C  6E2C      	MOVWF gbl_ReportDescriptor1+D'39'
+107E  0E25      	MOVLW 0x25
+1080  6E2D      	MOVWF gbl_ReportDescriptor1+D'40'
+1082  0E7F      	MOVLW 0x7F
+1084  6E2E      	MOVWF gbl_ReportDescriptor1+D'41'
+1086  0E75      	MOVLW 0x75
+1088  6E2F      	MOVWF gbl_ReportDescriptor1+D'42'
+108A  0E08      	MOVLW 0x08
+108C  6E30      	MOVWF gbl_ReportDescriptor1+D'43'
+108E  0E95      	MOVLW 0x95
+1090  6E31      	MOVWF gbl_ReportDescriptor1+D'44'
+1092  0E02      	MOVLW 0x02
+1094  6E32      	MOVWF gbl_ReportDescriptor1+D'45'
+1096  0E81      	MOVLW 0x81
+1098  6E33      	MOVWF gbl_ReportDescriptor1+D'46'
+109A  0E06      	MOVLW 0x06
+109C  6E34      	MOVWF gbl_ReportDescriptor1+D'47'
+109E  0EC0      	MOVLW 0xC0
+10A0  6E35      	MOVWF gbl_ReportDescriptor1+D'48'
+10A2  0EC0      	MOVLW 0xC0
+10A4  6E36      	MOVWF gbl_ReportDescriptor1+D'49'
+10A6  0E12      	MOVLW 0x12
+10A8  6FA4      	MOVWF gbl_DeviceDescriptor, 1
+10AA  0E01      	MOVLW 0x01
+10AC  6FA5      	MOVWF gbl_DeviceDescriptor+D'1', 1
+10AE  0E10      	MOVLW 0x10
+10B0  6FA6      	MOVWF gbl_DeviceDescriptor+D'2', 1
+10B2  0E01      	MOVLW 0x01
+10B4  6FA7      	MOVWF gbl_DeviceDescriptor+D'3', 1
+10B6  6BA8      	CLRF gbl_DeviceDescriptor+D'4', 1
+10B8  6BA9      	CLRF gbl_DeviceDescriptor+D'5', 1
+10BA  6BAA      	CLRF gbl_DeviceDescriptor+D'6', 1
+10BC  0E08      	MOVLW 0x08
+10BE  6FAB      	MOVWF gbl_DeviceDescriptor+D'7', 1
+10C0  0ED8      	MOVLW 0xD8
+10C2  6FAC      	MOVWF gbl_DeviceDescriptor+D'8', 1
+10C4  0E04      	MOVLW 0x04
+10C6  6FAD      	MOVWF gbl_DeviceDescriptor+D'9', 1
+10C8  0E09      	MOVLW 0x09
+10CA  6FAE      	MOVWF gbl_DeviceDescriptor+D'10', 1
+10CC  6BAF      	CLRF gbl_DeviceDescriptor+D'11', 1
+10CE  6BB0      	CLRF gbl_DeviceDescriptor+D'12', 1
 10D0  0E02      	MOVLW 0x02
-10D2  6E38      	MOVWF gbl_ConfigDescriptor+D'1'
-10D4  0E22      	MOVLW 0x22
-10D6  6E39      	MOVWF gbl_ConfigDescriptor+D'2'
-10D8  6A3A      	CLRF gbl_ConfigDescriptor+D'3'
-10DA  0E01      	MOVLW 0x01
-10DC  6E3B      	MOVWF gbl_ConfigDescriptor+D'4'
+10D2  6FB1      	MOVWF gbl_DeviceDescriptor+D'13', 1
+10D4  0E01      	MOVLW 0x01
+10D6  6FB2      	MOVWF gbl_DeviceDescriptor+D'14', 1
+10D8  0E02      	MOVLW 0x02
+10DA  6FB3      	MOVWF gbl_DeviceDescriptor+D'15', 1
+10DC  6BB4      	CLRF gbl_DeviceDescriptor+D'16', 1
 10DE  0E01      	MOVLW 0x01
-10E0  6E3C      	MOVWF gbl_ConfigDescriptor+D'5'
-10E2  6A3D      	CLRF gbl_ConfigDescriptor+D'6'
-10E4  0EA0      	MOVLW 0xA0
-10E6  6E3E      	MOVWF gbl_ConfigDescriptor+D'7'
-10E8  0E32      	MOVLW 0x32
-10EA  6E3F      	MOVWF gbl_ConfigDescriptor+D'8'
-10EC  0E09      	MOVLW 0x09
-10EE  6E40      	MOVWF gbl_ConfigDescriptor+D'9'
-10F0  0E04      	MOVLW 0x04
-10F2  6E41      	MOVWF gbl_ConfigDescriptor+D'10'
-10F4  6A42      	CLRF gbl_ConfigDescriptor+D'11'
-10F6  6A43      	CLRF gbl_ConfigDescriptor+D'12'
-10F8  0E01      	MOVLW 0x01
-10FA  6E44      	MOVWF gbl_ConfigDescriptor+D'13'
-10FC  0E03      	MOVLW 0x03
-10FE  6E45      	MOVWF gbl_ConfigDescriptor+D'14'
-1100  0E01      	MOVLW 0x01
-1102  6E46      	MOVWF gbl_ConfigDescriptor+D'15'
-1104  0E02      	MOVLW 0x02
-1106  6E47      	MOVWF gbl_ConfigDescriptor+D'16'
-1108  6A48      	CLRF gbl_ConfigDescriptor+D'17'
-110A  0E09      	MOVLW 0x09
-110C  6E49      	MOVWF gbl_ConfigDescriptor+D'18'
-110E  0E21      	MOVLW 0x21
-1110  6E4A      	MOVWF gbl_ConfigDescriptor+D'19'
-1112  0E10      	MOVLW 0x10
-1114  6E4B      	MOVWF gbl_ConfigDescriptor+D'20'
+10E0  6FB5      	MOVWF gbl_DeviceDescriptor+D'17', 1
+10E2  0E09      	MOVLW 0x09
+10E4  6E37      	MOVWF gbl_ConfigDescriptor
+10E6  0E02      	MOVLW 0x02
+10E8  6E38      	MOVWF gbl_ConfigDescriptor+D'1'
+10EA  0E22      	MOVLW 0x22
+10EC  6E39      	MOVWF gbl_ConfigDescriptor+D'2'
+10EE  6A3A      	CLRF gbl_ConfigDescriptor+D'3'
+10F0  0E01      	MOVLW 0x01
+10F2  6E3B      	MOVWF gbl_ConfigDescriptor+D'4'
+10F4  0E01      	MOVLW 0x01
+10F6  6E3C      	MOVWF gbl_ConfigDescriptor+D'5'
+10F8  6A3D      	CLRF gbl_ConfigDescriptor+D'6'
+10FA  0EA0      	MOVLW 0xA0
+10FC  6E3E      	MOVWF gbl_ConfigDescriptor+D'7'
+10FE  0E32      	MOVLW 0x32
+1100  6E3F      	MOVWF gbl_ConfigDescriptor+D'8'
+1102  0E09      	MOVLW 0x09
+1104  6E40      	MOVWF gbl_ConfigDescriptor+D'9'
+1106  0E04      	MOVLW 0x04
+1108  6E41      	MOVWF gbl_ConfigDescriptor+D'10'
+110A  6A42      	CLRF gbl_ConfigDescriptor+D'11'
+110C  6A43      	CLRF gbl_ConfigDescriptor+D'12'
+110E  0E01      	MOVLW 0x01
+1110  6E44      	MOVWF gbl_ConfigDescriptor+D'13'
+1112  0E03      	MOVLW 0x03
+1114  6E45      	MOVWF gbl_ConfigDescriptor+D'14'
 1116  0E01      	MOVLW 0x01
-1118  6E4C      	MOVWF gbl_ConfigDescriptor+D'21'
-111A  6A4D      	CLRF gbl_ConfigDescriptor+D'22'
-111C  0E01      	MOVLW 0x01
-111E  6E4E      	MOVWF gbl_ConfigDescriptor+D'23'
-1120  0E22      	MOVLW 0x22
-1122  6E4F      	MOVWF gbl_ConfigDescriptor+D'24'
-1124  0E32      	MOVLW 0x32
-1126  6E50      	MOVWF gbl_ConfigDescriptor+D'25'
-1128  6A51      	CLRF gbl_ConfigDescriptor+D'26'
-112A  0E07      	MOVLW 0x07
-112C  6E52      	MOVWF gbl_ConfigDescriptor+D'27'
-112E  0E05      	MOVLW 0x05
-1130  6E53      	MOVWF gbl_ConfigDescriptor+D'28'
-1132  0E81      	MOVLW 0x81
-1134  6E54      	MOVWF gbl_ConfigDescriptor+D'29'
-1136  0E03      	MOVLW 0x03
-1138  6E55      	MOVWF gbl_ConfigDescriptor+D'30'
-113A  0E03      	MOVLW 0x03
-113C  6E56      	MOVWF gbl_ConfigDescriptor+D'31'
-113E  6A57      	CLRF gbl_ConfigDescriptor+D'32'
-1140  0E0A      	MOVLW 0x0A
-1142  6E58      	MOVWF gbl_ConfigDescriptor+D'33'
-1144  0E32      	MOVLW 0x32
-1146  6FE5      	MOVWF gbl_ReportDescrSize, 1
-1148  6BE6      	CLRF gbl_ReportDescrSize+D'1', 1
-114A  0E09      	MOVLW 0x09
-114C  6FB6      	MOVWF gbl_HIDDescriptor, 1
-114E  0E21      	MOVLW 0x21
-1150  6FB7      	MOVWF gbl_HIDDescriptor+D'1', 1
-1152  0E10      	MOVLW 0x10
-1154  6FB8      	MOVWF gbl_HIDDescriptor+D'2', 1
-1156  0E01      	MOVLW 0x01
-1158  6FB9      	MOVWF gbl_HIDDescriptor+D'3', 1
-115A  6BBA      	CLRF gbl_HIDDescriptor+D'4', 1
-115C  0E01      	MOVLW 0x01
-115E  6FBB      	MOVWF gbl_HIDDescriptor+D'5', 1
-1160  0E22      	MOVLW 0x22
-1162  6FBC      	MOVWF gbl_HIDDescriptor+D'6', 1
-1164  0E32      	MOVLW 0x32
-1166  6FBD      	MOVWF gbl_HIDDescriptor+D'7', 1
-1168  6BBE      	CLRF gbl_HIDDescriptor+D'8', 1
-116A  EFA9F006  	GOTO	main
-	ORG 0x0000116E
-116E            interrupt
-116E            ; { interrupt ; function begin
-116E  CFEAF001  	MOVFF FSR0H,  Int1Context
-1172  CFE9F002  	MOVFF FSR0L,  Int1Context+D'1'
-1176  CFF4F003  	MOVFF PRODH,  Int1Context+D'2'
-117A  CFF3F004  	MOVFF PRODL,  Int1Context+D'3'
-117E  AAA1      	BTFSS gbl_pir2,5
-1180  D023      	BRA	label131
-1182  A468      	BTFSS gbl_uir,2
-1184  D003      	BRA	label126
-1186  B469      	BTFSC gbl_uie,2
-1188  EC53F000  	CALL USBActivit_0000A
-118C            label126
-118C  A068      	BTFSS gbl_uir,0
-118E  D004      	BRA	label127
-1190  A069      	BTFSS gbl_uie,0
-1192  D002      	BRA	label127
-1194  EC3AF000  	CALL USBReset_00000
-1198            label127
-1198  A668      	BTFSS gbl_uir,3
-119A  D015      	BRA	label130
-119C  A669      	BTFSS gbl_uie,3
-119E  D013      	BRA	label130
-11A0  0E05      	MOVLW 0x05
-11A2  0100      	MOVLB 0x00
-11A4  63F0      	CPFSEQ gbl_USB_dev_req, 1
-11A6  D00E      	BRA	label129
-11A8  6BF0      	CLRF gbl_USB_dev_req, 1
-11AA  6BEE      	CLRF gbl_USB_Curr_Config, 1
-11AC  51EF      	MOVF gbl_USB_address_pending, W, 1
-11AE  6E6E      	MOVWF gbl_uaddr
-11B0  0E01      	MOVLW 0x01
-11B2  6E69      	MOVWF gbl_uie
-11B4  0E00      	MOVLW 0x00
-11B6  65EF      	CPFSGT gbl_USB_address_pending, 1
-11B8  D003      	BRA	label128
-11BA  0E02      	MOVLW 0x02
-11BC  6FF4      	MOVWF gbl_USWSTAT, 1
-11BE  D002      	BRA	label129
-11C0            label128
-11C0  0E01      	MOVLW 0x01
-11C2  6FF4      	MOVWF gbl_USWSTAT, 1
-11C4            label129
-11C4  9668      	BCF gbl_uir,3
-11C6            label130
-11C6  9AA1      	BCF gbl_pir2,5
-11C8            label131
-11C8  A4F2      	BTFSS gbl_intcon,2
-11CA  D003      	BRA	label132
-11CC  0100      	MOVLB 0x00
-11CE  83EB      	BSF gbl_cTask,1, 1
-11D0  94F2      	BCF gbl_intcon,2
-11D2            label132
-11D2  A09E      	BTFSS gbl_pir1,0
-11D4  D019      	BRA	label135
-11D6  0EAB      	MOVLW 0xAB
-11D8  0100      	MOVLB 0x00
-11DA  27CB      	ADDWF gbl_bres, F, 1
-11DC  0E0A      	MOVLW 0x0A
-11DE  23CC      	ADDWFC gbl_bres+D'1', F, 1
-11E0  0EF4      	MOVLW 0xF4
-11E2  5DCC      	SUBWF gbl_bres+D'1', W, 1
-11E4  E104      	BNZ	label133
-11E6  0E24      	MOVLW 0x24
-11E8  61CB      	CPFSLT gbl_bres, 1
-11EA  D001      	BRA	label133
-11EC  D00C      	BRA	label134
-11EE            label133
-11EE  E30B      	BNC	label134
-11F0  0E24      	MOVLW 0x24
-11F2  5FCB      	SUBWF gbl_bres, F, 1
-11F4  0EF4      	MOVLW 0xF4
-11F6  5BCC      	SUBWFB gbl_bres+D'1', F, 1
-11F8  2BE9      	INCF gbl_iSec, F, 1
-11FA  0E3C      	MOVLW 0x3C
-11FC  63E9      	CPFSEQ gbl_iSec, 1
-11FE  D003      	BRA	label134
-1200  2BEA      	INCF gbl_iMin, F, 1
-1202  6BE9      	CLRF gbl_iSec, 1
-1204  85EB      	BSF gbl_cTask,2, 1
-1206            label134
-1206  909E      	BCF gbl_pir1,0
-1208            label135
-1208  C004FFF3  	MOVFF Int1Context+D'3',  PRODL
-120C  C003FFF4  	MOVFF Int1Context+D'2',  PRODH
-1210  C002FFE9  	MOVFF Int1Context+D'1',  FSR0L
-1214  C001FFEA  	MOVFF Int1Context,  FSR0H
-1218  0011      	RETFIE 1
-121A            ; } interrupt function end
+1118  6E46      	MOVWF gbl_ConfigDescriptor+D'15'
+111A  0E02      	MOVLW 0x02
+111C  6E47      	MOVWF gbl_ConfigDescriptor+D'16'
+111E  6A48      	CLRF gbl_ConfigDescriptor+D'17'
+1120  0E09      	MOVLW 0x09
+1122  6E49      	MOVWF gbl_ConfigDescriptor+D'18'
+1124  0E21      	MOVLW 0x21
+1126  6E4A      	MOVWF gbl_ConfigDescriptor+D'19'
+1128  0E10      	MOVLW 0x10
+112A  6E4B      	MOVWF gbl_ConfigDescriptor+D'20'
+112C  0E01      	MOVLW 0x01
+112E  6E4C      	MOVWF gbl_ConfigDescriptor+D'21'
+1130  6A4D      	CLRF gbl_ConfigDescriptor+D'22'
+1132  0E01      	MOVLW 0x01
+1134  6E4E      	MOVWF gbl_ConfigDescriptor+D'23'
+1136  0E22      	MOVLW 0x22
+1138  6E4F      	MOVWF gbl_ConfigDescriptor+D'24'
+113A  0E32      	MOVLW 0x32
+113C  6E50      	MOVWF gbl_ConfigDescriptor+D'25'
+113E  6A51      	CLRF gbl_ConfigDescriptor+D'26'
+1140  0E07      	MOVLW 0x07
+1142  6E52      	MOVWF gbl_ConfigDescriptor+D'27'
+1144  0E05      	MOVLW 0x05
+1146  6E53      	MOVWF gbl_ConfigDescriptor+D'28'
+1148  0E81      	MOVLW 0x81
+114A  6E54      	MOVWF gbl_ConfigDescriptor+D'29'
+114C  0E03      	MOVLW 0x03
+114E  6E55      	MOVWF gbl_ConfigDescriptor+D'30'
+1150  0E03      	MOVLW 0x03
+1152  6E56      	MOVWF gbl_ConfigDescriptor+D'31'
+1154  6A57      	CLRF gbl_ConfigDescriptor+D'32'
+1156  0E0A      	MOVLW 0x0A
+1158  6E58      	MOVWF gbl_ConfigDescriptor+D'33'
+115A  0E32      	MOVLW 0x32
+115C  6FE5      	MOVWF gbl_ReportDescrSize, 1
+115E  6BE6      	CLRF gbl_ReportDescrSize+D'1', 1
+1160  0E09      	MOVLW 0x09
+1162  6FB6      	MOVWF gbl_HIDDescriptor, 1
+1164  0E21      	MOVLW 0x21
+1166  6FB7      	MOVWF gbl_HIDDescriptor+D'1', 1
+1168  0E10      	MOVLW 0x10
+116A  6FB8      	MOVWF gbl_HIDDescriptor+D'2', 1
+116C  0E01      	MOVLW 0x01
+116E  6FB9      	MOVWF gbl_HIDDescriptor+D'3', 1
+1170  6BBA      	CLRF gbl_HIDDescriptor+D'4', 1
+1172  0E01      	MOVLW 0x01
+1174  6FBB      	MOVWF gbl_HIDDescriptor+D'5', 1
+1176  0E22      	MOVLW 0x22
+1178  6FBC      	MOVWF gbl_HIDDescriptor+D'6', 1
+117A  0E32      	MOVLW 0x32
+117C  6FBD      	MOVWF gbl_HIDDescriptor+D'7', 1
+117E  6BBE      	CLRF gbl_HIDDescriptor+D'8', 1
+1180  EFA9F006  	GOTO	main
+	ORG 0x00001184
+1184            interrupt
+1184            ; { interrupt ; function begin
+1184  CFEAF001  	MOVFF FSR0H,  Int1Context
+1188  CFE9F002  	MOVFF FSR0L,  Int1Context+D'1'
+118C  CFF4F003  	MOVFF PRODH,  Int1Context+D'2'
+1190  CFF3F004  	MOVFF PRODL,  Int1Context+D'3'
+1194  AAA1      	BTFSS gbl_pir2,5
+1196  D023      	BRA	label132
+1198  A468      	BTFSS gbl_uir,2
+119A  D003      	BRA	label127
+119C  B469      	BTFSC gbl_uie,2
+119E  EC53F000  	CALL USBActivit_0000A
+11A2            label127
+11A2  A068      	BTFSS gbl_uir,0
+11A4  D004      	BRA	label128
+11A6  A069      	BTFSS gbl_uie,0
+11A8  D002      	BRA	label128
+11AA  EC3AF000  	CALL USBReset_00000
+11AE            label128
+11AE  A668      	BTFSS gbl_uir,3
+11B0  D015      	BRA	label131
+11B2  A669      	BTFSS gbl_uie,3
+11B4  D013      	BRA	label131
+11B6  0E05      	MOVLW 0x05
+11B8  0100      	MOVLB 0x00
+11BA  63F0      	CPFSEQ gbl_USB_dev_req, 1
+11BC  D00E      	BRA	label130
+11BE  6BF0      	CLRF gbl_USB_dev_req, 1
+11C0  6BEE      	CLRF gbl_USB_Curr_Config, 1
+11C2  51EF      	MOVF gbl_USB_address_pending, W, 1
+11C4  6E6E      	MOVWF gbl_uaddr
+11C6  0E01      	MOVLW 0x01
+11C8  6E69      	MOVWF gbl_uie
+11CA  0E00      	MOVLW 0x00
+11CC  65EF      	CPFSGT gbl_USB_address_pending, 1
+11CE  D003      	BRA	label129
+11D0  0E02      	MOVLW 0x02
+11D2  6FF4      	MOVWF gbl_USWSTAT, 1
+11D4  D002      	BRA	label130
+11D6            label129
+11D6  0E01      	MOVLW 0x01
+11D8  6FF4      	MOVWF gbl_USWSTAT, 1
+11DA            label130
+11DA  9668      	BCF gbl_uir,3
+11DC            label131
+11DC  9AA1      	BCF gbl_pir2,5
+11DE            label132
+11DE  A4F2      	BTFSS gbl_intcon,2
+11E0  D003      	BRA	label133
+11E2  0100      	MOVLB 0x00
+11E4  83EB      	BSF gbl_cTask,1, 1
+11E6  94F2      	BCF gbl_intcon,2
+11E8            label133
+11E8  A09E      	BTFSS gbl_pir1,0
+11EA  D019      	BRA	label136
+11EC  0EAB      	MOVLW 0xAB
+11EE  0100      	MOVLB 0x00
+11F0  27CB      	ADDWF gbl_bres, F, 1
+11F2  0E0A      	MOVLW 0x0A
+11F4  23CC      	ADDWFC gbl_bres+D'1', F, 1
+11F6  0EF4      	MOVLW 0xF4
+11F8  5DCC      	SUBWF gbl_bres+D'1', W, 1
+11FA  E104      	BNZ	label134
+11FC  0E24      	MOVLW 0x24
+11FE  61CB      	CPFSLT gbl_bres, 1
+1200  D001      	BRA	label134
+1202  D00C      	BRA	label135
+1204            label134
+1204  E30B      	BNC	label135
+1206  0E24      	MOVLW 0x24
+1208  5FCB      	SUBWF gbl_bres, F, 1
+120A  0EF4      	MOVLW 0xF4
+120C  5BCC      	SUBWFB gbl_bres+D'1', F, 1
+120E  2BE9      	INCF gbl_iSec, F, 1
+1210  0E3C      	MOVLW 0x3C
+1212  63E9      	CPFSEQ gbl_iSec, 1
+1214  D003      	BRA	label135
+1216  2BEA      	INCF gbl_iMin, F, 1
+1218  6BE9      	CLRF gbl_iSec, 1
+121A  85EB      	BSF gbl_cTask,2, 1
+121C            label135
+121C  909E      	BCF gbl_pir1,0
+121E            label136
+121E  C004FFF3  	MOVFF Int1Context+D'3',  PRODL
+1222  C003FFF4  	MOVFF Int1Context+D'2',  PRODH
+1226  C002FFE9  	MOVFF Int1Context+D'1',  FSR0L
+122A  C001FFEA  	MOVFF Int1Context,  FSR0H
+122E  0011      	RETFIE 1
+1230            ; } interrupt function end
 
 	ORG 0x00300000
 300000  0E30      	DW 0x0E30

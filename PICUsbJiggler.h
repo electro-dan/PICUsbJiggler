@@ -4,9 +4,10 @@
 #define LED (portb.1) // LED pin
 #define BUTTON (portb.2) // Button (switch) pin
 
-#define JIGGLE_TIMEOUT 30 // How many minutes to jiggle for
+#define JIGGLE_TIMEOUT 120 // How many minutes to jiggle for
 
 bit isJiggling = 0; // When 0, device does nothing
+bit isMoving = 0; // When 1, mouse is currently moving
 char buttonState = 0; // Records state every 10.9ms
 
 unsigned int bres = 0;

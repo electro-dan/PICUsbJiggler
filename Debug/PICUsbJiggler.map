@@ -28,10 +28,10 @@ Address  Length   Unique Name      Name
 00000C7E:0000001A ServiceUSB_00000 ServiceUSB(void)  
 00000C98:00000082 PutEP1_00000     PutEP1(unsigned char,signed char*)  
 00000D1A:00000038 InitUSB_00000    InitUSB(void)  
-00000D52:00000120 main             main(void)  
-00000E72:000002FC _startup_00000   _startup(void)  
-0000116E:000000AC interrupt        interrupt(void)  
-0000121A:00006DE6 *Unused Block 
+00000D52:00000134 main             main(void)  
+00000E86:000002FE _startup_00000   _startup(void)  
+00001184:000000AC interrupt        interrupt(void)  
+00001230:00006DD0 *Unused Block 
 
 Register usage
 ==============
@@ -63,7 +63,7 @@ Address  Bit Lengh Bit Mask   Unique Name                      Name
 000000E1:00000010             gbl_BDT                          BDT
 000000E3:00000010             gbl_Buffer                       Buffer
 000000E5:00000010             gbl_ReportDescrSize              ReportDescrSize
-000000E7:00000001  0b00000001 gbl_isJiggling                   isJiggling
+000000E7:00000001  0b00000010 gbl_isMoving                     isMoving
 000000E8:00000008             gbl_buttonState                  buttonState
 000000E9:00000008             gbl_iSec                         iSec
 000000EA:00000008             gbl_iMin                         iMin
@@ -270,4 +270,4 @@ Memory Usage Report
 ===================
 RAM available:2048 bytes, used:326 bytes (16.0%), free:1722 bytes (84.0%), 
 Heap size:1000 bytes, Heap max single alloc:127 bytes
-ROM available:32768 bytes, used:4634 bytes (14.2%), free:28134 bytes (85.8%)
+ROM available:32768 bytes, used:4656 bytes (14.3%), free:28112 bytes (85.7%)
